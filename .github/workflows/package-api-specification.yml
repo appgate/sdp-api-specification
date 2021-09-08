@@ -1,0 +1,16 @@
+name: Package API specification
+on:
+  push:
+    branches:
+      - 'v*'
+jobs:
+  package:
+    runs_on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Make tarball
+      run: tar -cvzf "$(echo $GITHUB_REF | grep -oP "v\d+$").tgz" *.y*ml
+    - name: Upload tarball
+      uses: softprops/action-gh-release@v1
+      with:
+        files: "*.tgz"
