@@ -2,7 +2,9 @@ name: Package API specification
 on:
   push:
     branches:
-      - 'v*'
+      - "v*"
+    tags:
+      - "v*"
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -12,5 +14,6 @@ jobs:
       run: tar -cvzf "$(echo $GITHUB_REF | grep -oP "v\d+$").tgz" *.y*ml
     - name: Upload tarball
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "*.tgz"
