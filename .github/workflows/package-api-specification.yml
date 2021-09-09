@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Make tarball
-      run: tar -cvzf "appgate-sdp-api-spec-$(echo $GITHUB_REF | grep -oP "v\d+$").tgz" *.y*ml
+      run: tar -cvzf "appgate-sdp-api-spec-$(echo $GITHUB_REF | grep -oP "v\d+$").tar.gz" *.y*ml
     - name: Upload tarball
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
