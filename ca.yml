@@ -365,6 +365,18 @@ definitions:
       - type: object
         description: CA details.
         properties:
+          nameConstraintsPermitted:
+            type: array
+            description: Name constraints extension details for permitted hostnames or IPs.
+            items:
+              type: string
+              example: appgate.company.com
+          nameConstraintsExcluded:
+            type: array
+            description: Name constraints extension details for excluded hostnames or IPs.
+            items:
+              type: string
+              example: company.com
           crlUrl:
             type: string
             description: The URL where the CRL is hosted.
