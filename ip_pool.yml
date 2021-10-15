@@ -226,6 +226,7 @@ definitions:
             default: 30
           total:
             type: integer
+            format: int64
             readOnly: true
             description: The total size of the IP Pool.
             example: 254
