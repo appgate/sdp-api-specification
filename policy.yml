@@ -269,6 +269,9 @@ definitions:
             items:
               type: object
               description: A domain name and a list of DNS servers.
+              required:
+                - domain
+                - servers
               properties:
                 domain:
                   type: string

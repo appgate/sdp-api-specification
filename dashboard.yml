@@ -692,7 +692,7 @@ definitions:
         type: object
         description: >-
           The session details per Gateway.
-          The key is the Gateway hostname and the value contains the Active Client Session details.
+          The key is the Appliance name and the value contains the Active Client Session details.
         additionalProperties:
           type: object
           description: Session Details reported by the Gateway.
