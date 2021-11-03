@@ -189,6 +189,12 @@ responses:
       application/json:
         schema:
           $ref: '#/definitions/Error'
+  PaymentError:
+    description: Insufficient license.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
   TokenError:
     description: Token error. Login again.
     content:

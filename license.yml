@@ -5,36 +5,36 @@ license:
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         $ref: '#/responses/LicenseDetails'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Upload a new License.
     description: Upload a new License and override the existing one.
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         $ref: '#/responses/License'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/LicenseImport'
   delete:
@@ -43,16 +43,16 @@ license:
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: License was deleted successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 license-next:
   get:
     summary: Get the current License.
@@ -62,38 +62,38 @@ license-next:
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         $ref: '#/responses/LicenseDetails'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Upload a new next License.
     description: Upload a new next License to be switched when CA certificate is switched.
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         $ref: '#/responses/License'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/LicenseImport'
   delete:
@@ -102,16 +102,16 @@ license-next:
     tags:
       - License
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: License was deleted successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 responses:
   LicenseDetails:

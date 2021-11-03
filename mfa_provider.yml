@@ -5,46 +5,46 @@ mfa-providers:
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/query'
-      - $ref: 'common.yml#/parameters/range'
-      - $ref: 'common.yml#/parameters/orderBy'
-      - $ref: 'common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
     responses:
-      200:
+      '200':
         description: List of MFA Providers.
         content:
           application/json:
             schema:
               $ref: '#/definitions/MfaProviderList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Create a new MFA Provider.
     description: Create a new MFA Provider.
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         $ref: '#/responses/MfaProvider'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      409:
-        $ref: 'common.yml#/responses/ConflictError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '409':
+        $ref: './common.yml#/responses/ConflictError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/MfaProvider'
 mfa-providers-id:
@@ -54,42 +54,42 @@ mfa-providers-id:
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         $ref: '#/responses/MfaProvider'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update an existing MFA Provider.
     description: Update an existing MFA Provider.
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         $ref: '#/responses/MfaProvider'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/MfaProvider'
   delete:
@@ -98,19 +98,19 @@ mfa-providers-id:
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      204:
+      '204':
         description: MFA Provider was deleted successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 mfa-providers-test:
   post:
     summary: Test a MFA Provider connection.
@@ -118,9 +118,9 @@ mfa-providers-test:
     tags:
       - MFA Providers
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: Test result.
         content:
           application/json:
@@ -134,14 +134,14 @@ mfa-providers-test:
                   type: boolean
                   description: The error text if the connection fails.
                   example: Connection timed out.
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
     requestBody:
       $ref: '#/requestBodies/MfaProvider'
 
@@ -165,7 +165,7 @@ requestBodies:
 definitions:
   MfaProviderList:
     allOf:
-      - $ref: 'common.yml#/definitions/ResultList'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         description: Represents a list of MFA Providers.
         properties:
@@ -176,7 +176,7 @@ definitions:
               $ref: '#/definitions/MfaProvider'
   MfaProvider:
     allOf:
-      - $ref: 'common.yml#/definitions/BaseEntity'
+      - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
         description: Represents a MFA Provider.
         required:
@@ -203,6 +203,7 @@ definitions:
           sharedSecret:
             type: string
             writeOnly: true
+            format: password
             description: Radius shared secret to authenticate to the server.
           authenticationProtocol:
             type: string
@@ -239,6 +240,7 @@ definitions:
           challengeSharedSecret:
             type: string
             writeOnly: true
+            format: password
             description: ->
               Password sent to RADIUS to initiate multi-factor authentication. Required if "useUserPassword" is not
               enabled.

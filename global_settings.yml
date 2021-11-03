@@ -5,56 +5,56 @@ global-settings:
     tags:
       - Global Settings
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: Global Settings.
         content:
           application/json:
             schema:
               $ref: '#/definitions/GlobalSettings'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   delete:
     summary: Reset all Global Settings to the default values.
     description: Reset all Global Settings to the default values.
     tags:
       - Global Settings
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: Global Settings were reset successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update all Global Settings.
     description: Update all Global Settings.
     tags:
       - Global Settings
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: Global Settings were updated successfully.
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       content:
         application/json:
@@ -70,16 +70,16 @@ global-settings-backup-passphrase:
     tags:
       - Global Settings
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: Backup passphrase was reset successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 definitions:
   GlobalSettings:

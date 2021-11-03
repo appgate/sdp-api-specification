@@ -5,50 +5,50 @@ trusted-certificates:
     tags:
       - Trusted Certificates
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/query'
-      - $ref: 'common.yml#/parameters/range'
-      - $ref: 'common.yml#/parameters/orderBy'
-      - $ref: 'common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
     responses:
-      200:
+      '200':
         description: List of Trusted Certificates.
         content:
           application/json:
             schema:
               $ref: '#/definitions/TrustedCertificateList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Create a new Trusted Certificate.
     description: Create a new Trusted Certificate.
     tags:
       - Trusted Certificates
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: Created Trusted Certificate.
         content:
           application/json:
             schema:
               $ref: '#/definitions/TrustedCertificate'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      409:
-        $ref: 'common.yml#/responses/ConflictError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '409':
+        $ref: './common.yml#/responses/ConflictError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/TrustedCertificate'
 trusted-certificates-id:
@@ -58,50 +58,50 @@ trusted-certificates-id:
     tags:
       - Trusted Certificates
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         description: Single Trusted Certificate.
         content:
           application/json:
             schema:
               $ref: '#/definitions/TrustedCertificate'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update an existing Trusted Certificate.
     description: Update an existing Trusted Certificate.
     tags:
       - Trusted Certificates
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         description: Updated Trusted Certificate.
         content:
           application/json:
             schema:
               $ref: '#/definitions/TrustedCertificate'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/TrustedCertificate'
   delete:
@@ -110,19 +110,19 @@ trusted-certificates-id:
     tags:
       - Trusted Certificates
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      204:
+      '204':
         description: Trusted Certificate was deleted successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 requestBodies:
   TrustedCertificate:
@@ -136,7 +136,7 @@ requestBodies:
 definitions:
   TrustedCertificateList:
     allOf:
-      - $ref: 'common.yml#/definitions/ResultList'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         description: Represents a list of Trusted Certificates.
         properties:
@@ -147,7 +147,7 @@ definitions:
               $ref: '#/definitions/TrustedCertificate'
   TrustedCertificate:
     allOf:
-      - $ref: 'common.yml#/definitions/BaseEntity'
+      - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
         description: Represents a Trusted Certificate.
         required:
@@ -155,10 +155,11 @@ definitions:
         properties:
           pem:
             type: string
+            format: PEM
             description: A certificate in PEM format.
             example: |-
               -----BEGIN CERTIFICATE-----
               ....
               -----END CERTIFICATE-----
           details:
-            $ref: 'ca.yml#/definitions/CertificateDetails'
+            $ref: './ca.yml#/definitions/CertificateDetails'

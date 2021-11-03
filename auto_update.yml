@@ -5,40 +5,40 @@ auto-update-settings:
     tags:
       - Client Auto-Update
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: Client Auto-Update settings.
         content:
           application/json:
             schema:
               $ref: '#/definitions/AutoUpdateSettings'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update Client Auto-Update settings.
     description: Update Client Auto-Update settings.
     tags:
       - Client Auto-Update
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      204:
+      '204':
         description: Client Auto-Update settings were updated successfully.
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       content:
         application/json:
@@ -68,6 +68,8 @@ definitions:
         $ref: '#/definitions/Client'
       fedora:
         $ref: '#/definitions/Client'
+      redHat7:
+        $ref: '#/definitions/Client'
   Client:
     type: object
     description: Client Auto-Update settings for the specified platform.
@@ -75,7 +77,7 @@ definitions:
       url:
         type: string
         description: A publicly acceessible URL for Clients to download the installer from.
-        example: 'https://sdpdownloads.cyxtera.com/AppGate-SDP-4.1/clients/AppGate-SDP-4.1.3-Installer.exe'
+        example: 'https://sdpdownloads.appgate.com/AppGate-SDP-4.1/clients/AppGate-SDP-4.1.3-Installer.exe'
       version:
         type: string
         description: >-

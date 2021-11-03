@@ -5,24 +5,24 @@ fido2-devices:
     tags:
       - FIDO2 Devices
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/query'
-      - $ref: 'common.yml#/parameters/range'
-      - $ref: 'common.yml#/parameters/orderBy'
-      - $ref: 'common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
     responses:
-      200:
+      '200':
         description: List of FIDO2 Devices.
         content:
           application/json:
             schema:
               $ref: '#/definitions/Fido2DeviceList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 fido2-devices-distinguished-name:
   delete:
     summary: Delete a registered FIDO2 Device for the given Distinguished Name.
@@ -30,7 +30,7 @@ fido2-devices-distinguished-name:
     tags:
       - FIDO2 Devices
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
       - name: distinguished-name
         in: path
         description: >-
@@ -40,21 +40,21 @@ fido2-devices-distinguished-name:
           type: string
           example: 'CN=user,OU=ldap'
     responses:
-      204:
+      '204':
         description: registered FIDO2 Device was removed successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 definitions:
   Fido2DeviceList:
     allOf:
-      - $ref: 'common.yml#/definitions/ResultList'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         description: Represents a list of registered FIDO2 Devices.
         properties:
@@ -65,7 +65,7 @@ definitions:
               $ref: '#/definitions/Fido2Device'
   Fido2Device:
     allOf:
-      - $ref: 'common.yml#/definitions/User'
+      - $ref: './common.yml#/definitions/User'
       - type: object
         properties:
           deviceId:

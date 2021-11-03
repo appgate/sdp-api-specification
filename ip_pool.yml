@@ -5,50 +5,50 @@ ip-pools:
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/query'
-      - $ref: 'common.yml#/parameters/range'
-      - $ref: 'common.yml#/parameters/orderBy'
-      - $ref: 'common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
     responses:
-      200:
+      '200':
         description: List of IP Pools.
         content:
           application/json:
             schema:
               $ref: '#/definitions/IpPoolList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Create a new IP Pool.
     description: Create a new IP Pool.
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: Created IP Pool.
         content:
           application/json:
             schema:
               $ref: '#/definitions/IpPool'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      409:
-        $ref: 'common.yml#/responses/ConflictError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '409':
+        $ref: './common.yml#/responses/ConflictError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/IpPool'
 ip-pools-id:
@@ -58,50 +58,50 @@ ip-pools-id:
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         description: Single IP Pool.
         content:
           application/json:
             schema:
               $ref: '#/definitions/IpPool'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update an existing IP Pool.
     description: Update an existing IP Pool.
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      200:
+      '200':
         description: Updated IP Pool.
         content:
           application/json:
             schema:
               $ref: '#/definitions/IpPool'
-      400:
-        $ref: 'common.yml#/responses/JsonError'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      422:
-        $ref: 'common.yml#/responses/ValidationError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/IpPool'
   delete:
@@ -110,19 +110,19 @@ ip-pools-id:
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
     responses:
-      204:
+      '204':
         description: IP Pool was deleted successfully.
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      404:
-        $ref: 'common.yml#/responses/NotFoundError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 allocated-ips-by-dn:
   get:
     summary: List all Allocated IPs by Distinguished Name.
@@ -130,21 +130,21 @@ allocated-ips-by-dn:
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
-      - $ref: 'common.yml#/parameters/distinguishedName'
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/distinguishedName'
     responses:
-      200:
+      '200':
         description: List of Allocated IPs.
         content:
           application/json:
             schema:
               $ref: '#/definitions/AllocatedIpList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 allocated-ips:
   get:
     summary: List all Allocated IPs in the system.
@@ -152,20 +152,20 @@ allocated-ips:
     tags:
       - IP Pools
     parameters:
-      - $ref: 'common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/authorization'
     responses:
-      200:
+      '200':
         description: List of Allocated IPs.
         content:
           application/json:
             schema:
               $ref: '#/definitions/AllocatedIpList'
-      401:
-        $ref: 'common.yml#/responses/TokenError'
-      403:
-        $ref: 'common.yml#/responses/PermissionError'
-      500:
-        $ref: 'common.yml#/responses/UnexpectedError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 requestBodies:
   IpPool:
@@ -179,7 +179,7 @@ requestBodies:
 definitions:
   IpPoolList:
     allOf:
-      - $ref: 'common.yml#/definitions/ResultList'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         description: Represents a list of IP Pools.
         properties:
@@ -190,7 +190,7 @@ definitions:
               $ref: '#/definitions/IpPool'
   IpPool:
     allOf:
-      - $ref: 'common.yml#/definitions/BaseEntity'
+      - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
         description: Represents an IP Pool.
         properties:
@@ -255,6 +255,7 @@ definitions:
       poolId:
         type: string
         format: uuid
+        x-uuid-ref: IpPool
         description: ID of the IP Pool that has allocated this address.
         example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
       distinguishedName:
