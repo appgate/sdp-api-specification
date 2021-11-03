@@ -160,7 +160,7 @@ authentication-otp-initialize:
                   description: >-
                     A URL for triggering TOTP apps directly and configuring an entry automatically.
                     Only available in Secret type.
-                  example: 'otpauth://totp/admin@local@appgate.company.com?secret=6XOEKS6WZASFPA5A&issuer=AppGate%20SDP'
+                  example: 'otpauth://totp/admin@local@appgate.company.com?secret=6XOEKS6WZASFPA5A&issuer=Appgate%20SDP'
                 barcode:
                   type: string
                   format: byte
@@ -371,4 +371,4 @@ definitions:
       messageOfTheDay:
         type: string
         description: Message of the day configured by an admin.
-        example: Welcome to AppGate SDP.
+        example: Welcome to Appgate SDP.

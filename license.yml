@@ -163,12 +163,6 @@ definitions:
         type: string
         description: Error message if there is a problem with the license.
         example: License is expired.
-      used:
-        allOf:
-          - $ref: '#/definitions/License'
-          - type: object
-            description: License usage information. Deprecated.
-            deprecated: true
   License:
     type: object
     description: License details.

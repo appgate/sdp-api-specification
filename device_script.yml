@@ -1,9 +1,9 @@
 device-scripts:
   get:
-    summary: List all Device Scripts.
-    description: List all Device Scripts visible to current user.
+    summary: List all Device Claim Scripts.
+    description: List all Device Claim Scripts visible to current user.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
@@ -13,7 +13,7 @@ device-scripts:
       - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
-        description: List of Device Scripts.
+        description: List of Device Claim Scripts.
         content:
           application/json:
             schema:
@@ -25,15 +25,15 @@ device-scripts:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
-    summary: Create a new Device Script.
-    description: Create a new Device Script.
+    summary: Create a new Device Claim Script.
+    description: Create a new Device Claim Script.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
-        description: Created Device Script.
+        description: Created Device Claim Script.
         content:
           application/json:
             schema:
@@ -54,16 +54,16 @@ device-scripts:
       $ref: '#/requestBodies/DeviceScript'
 device-scripts-id:
   get:
-    summary: Get a specific Device Script.
-    description: Get a specific Device Script.
+    summary: Get a specific Device Claim Script.
+    description: Get a specific Device Claim Script.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Single Device Script.
+        description: Single Device Claim Script.
         content:
           application/json:
             schema:
@@ -77,16 +77,16 @@ device-scripts-id:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
-    summary: Update an existing Device Script.
-    description: Update an existing Device Script.
+    summary: Update an existing Device Claim Script.
+    description: Update an existing Device Claim Script.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Updated Device Script.
+        description: Updated Device Claim Script.
         content:
           application/json:
             schema:
@@ -106,16 +106,16 @@ device-scripts-id:
     requestBody:
       $ref: '#/requestBodies/DeviceScript'
   delete:
-    summary: Delete a specific Device Script.
-    description: Delete a specific Device Script.
+    summary: Delete a specific Device Claim Script.
+    description: Delete a specific Device Claim Script.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
-        description: Device Script was deleted successfully.
+        description: Device Claim Script was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -126,23 +126,23 @@ device-scripts-id:
         $ref: './common.yml#/responses/UnexpectedError'
 device-scripts-download-id:
   get:
-    summary: Download a Device Script.
+    summary: Download a Device Claim Script.
     description: Download the raw script.
     tags:
-      - Device Scripts
+      - Device Claim Scripts
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Device Script including the binary.
+        description: Device Claim Script including the binary.
         content:
           application/json:
             schema:
               properties:
                 name:
                   type: string
-                  description: Name of the Device Script object.
+                  description: Name of the Device Claim Script object.
                   example: AntivirusCheck
                 filename:
                   type: string
@@ -151,7 +151,7 @@ device-scripts-download-id:
                 file:
                   type: string
                   format: byte
-                  description: The Device Script binary in Base64 format.
+                  description: The Device Claim Script binary in Base64 format.
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -167,7 +167,7 @@ requestBodies:
       application/json:
         schema:
           $ref: '#/definitions/DeviceScript'
-    description: Device Script object.
+    description: Device Claim Script object.
     required: true
 
 definitions:
@@ -175,18 +175,18 @@ definitions:
     allOf:
       - $ref: './common.yml#/definitions/ResultList'
       - type: object
-        description: Represents a list of Device Scripts.
+        description: Represents a list of Device Claim Scripts.
         properties:
           data:
             type: array
-            description: List of Device Scripts.
+            description: List of Device Claim Scripts.
             items:
               $ref: '#/definitions/DeviceScript'
   DeviceScript:
     allOf:
       - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
-        description: Represents a Device Script.
+        description: Represents a Device Claim Script.
         required:
           - filename
         properties:
@@ -198,7 +198,7 @@ definitions:
             type: string
             format: byte
             writeOnly: true
-            description: The Device Script binary in Base64 format.
+            description: The Device Claim Script binary in Base64 format.
           checksum:
             type: string
             readOnly: true

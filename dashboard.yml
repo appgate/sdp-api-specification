@@ -449,7 +449,7 @@ active-sessions:
       '200':
         description: >-
           Active Client Sessions per Gateway.
-          Note that the AppGate SDP Admin UI aggregates this data to list device&users.
+          Note that the Appgate SDP Admin UI aggregates this data to list device&users.
           Disconnected Clients disappear after 5 minutes.
           When a Client fails over to another Gateway, the API may return the Client on multiple Gateways until during
           this period.
@@ -600,6 +600,10 @@ session-info-distinguished-name:
                                 type: object
                                 description: Firewall Rule.
                                 properties:
+                                  name:
+                                    type: string
+                                    description: Name of the rule.
+                                    example: entitlement-1
                                   protocol:
                                     type: string
                                     description: The protocol for the Firewall Rule.

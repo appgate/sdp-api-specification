@@ -100,7 +100,7 @@ certificate-authority-ca-next-generate:
               subject:
                 type: string
                 description: X509 subject name for the CA certificate.
-                default: 'CN=AppGate SDP CA'
+                default: 'CN=Appgate SDP CA'
               validityYears:
                 type: number
                 description: How long the new CA certificate will be valid.
@@ -174,11 +174,11 @@ definitions:
       issuer:
         type: string
         description: The issuer name of the certificate.
-        example: CN=AppGate SDP CA
+        example: CN=Appgate SDP CA
       subject:
         type: string
         description: The subject name of the certificate.
-        example: CN=AppGate SDP CA
+        example: CN=Appgate SDP CA
       validFrom:
         type: string
         format: 'date-time'

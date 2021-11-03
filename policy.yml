@@ -195,6 +195,20 @@ definitions:
             items:
               type: string
               example: developer
+# Not fully implemented yet
+#          dnsRules:
+#            type: array
+#            description: List of DNS Rule IDs in this Policy.
+#            items:
+#              type: string
+#              format: uuid
+#              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+#          dnsRuleLinks:
+#            type: array
+#            description: List of DNS Rule tags in this Policy.
+#            items:
+#              type: string
+#              example: developer
           tamperProofing:
             type: boolean
             description: >-
@@ -210,6 +224,28 @@ definitions:
               This overrides Entitlement's own Site and to be used only in specific network layouts.
               Otherwise the assigned site on individual Entitlements will be used.
             example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          proxyAutoConfig:
+            type: object
+            description: Client configures PAC URL on the client OS.
+            properties:
+              enabled:
+                type: boolean
+              url:
+                type: string
+                description: The URL to set on the Client OS.
+                example: 'https://pac.company.com/file.pac'
+              persist:
+                type: boolean
+                description: If true Client will leave the PAC URL configured after signing out.
+          trustedNetworkCheck:
+            type: object
+            description: Client suspends operations when it's in a trusted network.
+            properties:
+              enabled:
+                type: boolean
+              dnsSuffix:
+                type: string
+                description: Client checks if the DNS suffix has been configured on the OS to decide whether it's on a trusted network or not.
           administrativeRoles:
             type: array
             description: List of Administrative Role IDs in this Policy.

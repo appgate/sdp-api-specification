@@ -1,32 +1,32 @@
 openapi: 3.0.0
 tags:
-  - name: AppGate SDP
+  - name: Appgate SDP
   - name: Controller
 info:
-  title: AppGate SDP Controller REST API
-  version: API version 13
+  title: Appgate SDP Controller REST API
+  version: API version 14
   description: |-
     # About
-      This specification documents the REST API calls for the AppGate SDP Controller.
+      This specification documents the REST API calls for the Appgate SDP Controller.
 
-      Please refer to the Integration chapter in the manual or contact AppGate support with any questions about
+      Please refer to the Integration chapter in the manual or contact Appgate support with any questions about
       this functionality.
     # Getting Started
       Requirements for API scripting:
-      - Access to the peer interface (default port 444) of a Controller appliance.
-        (https://sdphelp.appgate.com/adminguide/appliances-configure.html?anchor=peer)
+      - Access to the Admin Interface (default port 8443) of a Controller appliance.
+        (https://sdphelp.appgate.com/adminguide/appliances-admin-interface-configure.html)
       - An API user with relevant permissions.
         (https://sdphelp.appgate.com/adminguide/administrative-roles-configure.html)
       - In order to use the simple login API, Admin MFA must be disabled or the API user must be excluded.
         (https://sdphelp.appgate.com/adminguide/mfa-for-admins.html)
     # Base path
-      HTTPS requests must be sent to the Peer Interface hostname and port, with **/admin** path.
+      HTTPS requests must be sent to the Admin Interface hostname and port, with **/admin** path.
 
-      For example: **https://appgate.company.com:444/admin**
+      For example: **https://appgate.company.com:8443/admin**
 
       All requests must have the **Accept** header as:
 
-      **application/vnd.appgate.peer-v13+json**
+      **application/vnd.appgate.peer-v14+json**
     # API Conventions
       API conventions are  important to understand and follow strictly.
 
@@ -71,9 +71,10 @@ info:
            "userDistinguishedName" field, which does not include the CN for Device ID.
            This identifies a user on every device.
   x-logo:
-    url: data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTE1LjkgMjA5LjQiPjxzdHlsZT4uc3Qwe2ZpbGw6IzAwMjczY30uc3Qxe2ZpbGw6I2ExMTc4YX08L3N0eWxlPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xODUuNCA2Ny4yaDExLjVsMjAuOCA1MS44aC0xMS44bC0zLjMtOC41aC0yMy4zTDE3NiAxMTloLTExLjFsMjAuNS01MS44em0xMy41IDMzLjlsLTguMS0yMC41LTguMSAyMC41aDE2LjJ6TTIyMC4yIDgwLjNsOC41LS42LjkgMy41YzIuMS0yLjUgNi00LjQgMTQuNC00LjQgMTMuNSAwIDE2LjggOS4yIDE2LjggMjAuNXMtMy41IDIwLjQtMTcuNCAyMC40Yy03LjEgMC0xMC40LTEuNC0xMi4yLTMuN3YxNC41aC0xMC45VjgwLjNoLS4xem0yOS41IDE5LjRjMC02LjMtMS40LTExLTguNS0xMS03LjUgMC0xMC4xIDMuNC0xMC4xIDExIDAgNy41IDIuMiAxMC43IDEwLjEgMTAuNyA3IDAgOC41LTQuNSA4LjUtMTAuN3pNMjY0LjcgODAuM2w4LjUtLjYuOSAzLjVjMi4xLTIuNSA2LTQuNCAxNC40LTQuNCAxMy41IDAgMTYuOCA5LjIgMTYuOCAyMC41cy0zLjUgMjAuNC0xNy40IDIwLjRjLTcuMSAwLTEwLjQtMS40LTEyLjItMy43djE0LjVoLTEwLjlsLS4xLTUwLjJ6bTI5LjUgMTkuNGMwLTYuMy0xLjQtMTEtOC41LTExLTcuNSAwLTEwLjEgMy40LTEwLjEgMTEgMCA3LjUgMi4yIDEwLjcgMTAuMSAxMC43IDcgMCA4LjUtNC41IDguNS0xMC43ek0zMDcuMyA5My4yYzAtMTguNiA5LjctMjYuNSAyNy4xLTI2LjUgMTAuNCAwIDE2LjcgMy4xIDIwLjggNy4zbC03LjggNy45Yy0yLjYtMi41LTYtNC43LTEzLjEtNC43LTExLjMgMC0xNS42IDUuNi0xNS42IDE2LjMgMCAxMS4zIDMuMSAxNi44IDE1LjUgMTYuOCAxMCAwIDEyLjktMy4zIDEyLjktMTAuNnYtMS4xaC0xNC40di05LjRoMjUuNnY4LjRjMCAxNC43LTUuOCAyMi4zLTI0LjcgMjIuMy0yMC42LS4yLTI2LjMtOS42LTI2LjMtMjYuN3pNMzc0LjUgMTE5LjZjLTEyLjIgMC0xNC44LTUuMy0xNC44LTEyLjIgMC0xMS4xIDcuOC0xMy44IDI1LjItMTMuOGgxLjZjLS4xLTMuNS0uOS01LjMtNy44LTUuMy00LjggMC05IDEuNy0xMS40IDMuMmwtNS40LThjMi44LTEuOSA5LjctNC44IDE4LTQuOCAxNC4yIDAgMTcuMSA0LjUgMTcuMSAxNS42djEyYzAgMy4xLjIgMy42IDMuNCAzLjZ2OC45Yy0uOC4yLTIuMi4zLTQuNi4zLTQuMiAwLTYtLjgtNy41LTMuOS0yIDIuNy02LjQgNC40LTEzLjggNC40em0xMi0xNi45di0xLjVoLS45Yy0xMy45IDAtMTUuNiAxLjEtMTUuNiA1LjMgMCAyLjkgMS42IDQuMyA2LjYgNC4zIDYuOS4xIDkuOS0yLjQgOS45LTguMXpNNDE4LjggMTE5LjFjLTEwLjYgMC0xMy43LTMuNi0xMy43LTEyLjRWODguOWgtNi41di05LjNoN2wxLjgtOS42IDguNS0xLjd2MTEuM2g5LjN2OS4zaC05LjN2MTYuMmMwIDMuMS40IDQuNyA1LjEgNC43aDQuMnY5LjFjLTEuNi4yLTQuNS4yLTYuNC4yek00NDcuMyAxMTkuN2MtMTcgMC0yMC41LTkuMy0yMC41LTIwLjUgMC0xMSAzLjYtMjAuNSAyMC40LTIwLjUgMTcuMyAwIDE3LjkgMTEuNSAxNy41IDI0LjdoLTI3LjRjLjYgNC43IDIuOSA3LjUgOS45IDcuNSA2IDAgOS40LTEuNSAxMi40LTMuNmw1LjUgNy4xYy01IDMuOC0xMCA1LjMtMTcuOCA1LjN6bS05LjktMjQuMWgxNy40Yy0uMy00LjUtMS4yLTcuOC03LjktNy44cy04LjkgMy05LjUgNy44eiIvPjxnPjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0zODcuOSAxNTUuOGwxLjktMi45YzMuMiAyLjEgNi41IDIuOSA5LjggMi45IDUuNiAwIDcuNy0xLjQgNy43LTQuOHMtMy00LTcuOC00LjhjLTYuMy0xLTEwLjMtMi4xLTEwLjMtNy44IDAtNS41IDMuNS03LjcgMTAuMy03LjcgNC42IDAgNy44IDEuMSAxMCAyLjVsLTIgMy4xYy0xLjktMS4zLTQuOS0yLjItOC0yLjItNC44IDAtNi42IDEuMi02LjYgNC4xIDAgMy4xIDIuNyAzLjcgNy41IDQuNSA2LjIgMSAxMC41IDIgMTAuNSA3LjkgMCA1LjUtMy40IDguMy0xMS4zIDguMy00LjMuMS04LjMtLjgtMTEuNy0zLjF6TTQxNS4yIDEzMS4xaDkuMmMxMC41IDAgMTQuNCAzIDE0LjQgMTMuNyAwIDEwLjUtNC4zIDEzLjgtMTQuOSAxMy44aC04LjhsLjEtMjcuNXptOSAyNC4xYzguNCAwIDEwLjktMi43IDEwLjktMTAuMyAwLTcuNy0yLjEtMTAuMi0xMC42LTEwLjJINDE5djIwLjVoNS4yek00NDIuNiAxMzEuMUg0NTVjNi45IDAgOS43IDIuOSA5LjcgOC41IDAgNS43LTIuNyA5LjEtOS44IDkuMWgtOC42djEwaC0zLjd2LTI3LjZ6bTEyLjMgMTQuMWMzLjkgMCA2LTEuNCA2LTUuNHMtMi01LjItNi4xLTUuMmgtOC42djEwLjZoOC43eiIvPjwvZz48cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTg5LjEgMTQ1aDE4OS44djMuNEgxODkuMXoiLz48cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTg5LjEgMTMwLjVoMy40djE2LjJoLTMuNHoiLz48Zz48bGluZWFyR3JhZGllbnQgaWQ9IlNWR0lEXzFfIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwLjYyMjQiIHkxPSI1NTUuNjk1MSIgeDI9IjE1Mi44MjI0IiB5Mj0iNTU1LjY5NTEiIGdyYWRpZW50VHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtNDUzLjc5NTEpIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNkNzAwODciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM2NTAwOTIiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGQ9Ik0xMDEuNyA1MC44Yy0yOC4yIDAtNTEuMSAyMi45LTUxLjEgNTEuMVM3My41IDE1MyAxMDEuNyAxNTNzNTEuMS0yMi45IDUxLjEtNTEuMS0yMi45LTUxLjEtNTEuMS01MS4xem0wIDk0Yy0yMy43IDAtNDIuOS0xOS4yLTQyLjktNDIuOVM3OCA1OSAxMDEuNyA1OXM0Mi45IDE5LjIgNDIuOSA0Mi45LTE5LjIgNDIuOS00Mi45IDQyLjl6IiBmaWxsPSJ1cmwoI1NWR0lEXzFfKSIvPjxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfMl8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iNTAuNTM2NyIgeTE9IjU1NS42NDUxIiB4Mj0iMTUyLjk3MTgiIHkyPSI1NTUuNjQ1MSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgwIC00NTMuNzk1MSkiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2Q3MDA4NyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzY1MDA5MiIvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZD0iTTExNi42IDExMC40TDk2IDg2LjZsNi44LTYuMSAxNy45IDIwLjVIMTM2Yy0uNC0xOC42LTE1LjYtMzMuNi0zNC40LTMzLjZzLTM0IDE1LTM0LjQgMzMuNmgxN2w4IDkuMmgtMjRjMy45IDE1LjEgMTcuNCAyNi4xIDMzLjUgMjYuMXMyOS42LTExIDMzLjMtMjUuOWgtMTguNHoiIGZpbGw9InVybCgjU1ZHSURfMl8pIi8+PC9nPjwvc3ZnPg==
+    # Generated by api_logo.svg manually
+    url: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI0LjIuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgdmlld0JveD0iMCAwIDUxNS45IDIwOS40IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTUuOSAyMDkuNDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtkaXNwbGF5Om5vbmU7fQoJLnN0MXtkaXNwbGF5OmlubGluZTt9Cgkuc3Qye2Rpc3BsYXk6aW5saW5lO2ZpbGw6IzU0QzBERDt9Cgkuc3Qze2ZpbGw6I0Q2NDIyNjt9Cjwvc3R5bGU+CjxnIGlkPSJMYXllcl8yIiBjbGFzcz0ic3QwIj4KCTxnIGlkPSJfeDM3X2RLeUo4XzFfIiBjbGFzcz0ic3QxIj4KCQkKCQkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlOyIgd2lkdGg9IjEwOTMiIGhlaWdodD0iMjU0IiBpZD0iX3gzN19kS3lKOF8yXyIgeGxpbms6aHJlZj0iQUM1NTZBOEZCRkIxMzJDRS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgyLjAxNDIgMCAwIDIuMDE0MiAyLjYwMDggLTIwLjI4NDQpIj4KCQk8L2ltYWdlPgoJPC9nPgoJPHJlY3QgeD0iMi42IiB5PSIxMzUuOCIgY2xhc3M9InN0MiIgd2lkdGg9Ijg5My41IiBoZWlnaHQ9Ijc5Ii8+Cgk8cmVjdCB4PSI1MC42IiB5PSItNDYuOCIgY2xhc3M9InN0MiIgd2lkdGg9IjgxMy4zIiBoZWlnaHQ9IjE0My44Ii8+CjwvZz4KPGcgaWQ9IkxheWVyXzEiPgoJPGcgaWQ9Ikdyb3VwXzIxNDYiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4My44IC0xNzUuMzYpIj4KCQk8ZyBpZD0iR3JvdXBfMjE0NCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4My44IDE3NS4zNikiPgoJCQk8ZyBpZD0iR3JvdXBfMjEzMSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCA1LjM5MykiPgoJCQkJPGcgaWQ9Ikdyb3VwXzIxMzAiPgoJCQkJCTxwYXRoIGlkPSJQYXRoXzE3OTMiIGQ9Ik02OS40LDEyMy42YzYuNC0wLjIsMTEuNS01LjYsMTEuMi0xMi4xYzAuMy02LjUtNC44LTExLjktMTEuMi0xMi4yYy02LjUsMC4zLTExLjUsNS44LTExLjIsMTIuMgoJCQkJCQlDNTcuOSwxMTcuOSw2Mi45LDEyMy40LDY5LjQsMTIzLjZMNjkuNCwxMjMuNnogTTgwLjcsMTI5LjJ2LTQuM2MtMi45LDMuMy03LjEsNS4xLTExLjUsNWMtMTAuMiwwLTE4LjYtOC4yLTE4LjYtMTguNQoJCQkJCQljMC0xMC4yLDguMy0xOC41LDE4LjUtMTguNmgwLjFjNC40LTAuMiw4LjYsMS42LDExLjUsNXYtNC42bDcsM3YzNkw4MC43LDEyOS4yTDgwLjcsMTI5LjJ6Ii8+CgkJCQk8L2c+CgkJCTwvZz4KCQkJPGcgaWQ9Ikdyb3VwXzIxMzMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3LjI4OSA1LjM2NSkiPgoJCQkJPGcgaWQ9Ikdyb3VwXzIxMzIiPgoJCQkJCTxwYXRoIGlkPSJQYXRoXzE3OTQiIGQ9Ik04My44LDExMS4xYy0wLjEsNi4zLDQuOCwxMS41LDExLjEsMTEuOWM2LjMtMC40LDExLjItNS42LDExLjEtMTEuOWMwLjEtNi4zLTQuOC0xMS42LTExLjEtMTEuOQoJCQkJCQlDODguNiw5OS42LDgzLjgsMTA0LjgsODMuOCwxMTEuMXogTTc2LjgsMTQ0LjNWOTMuMmw2LjgsMi45djEuM2MzLjEtMyw3LjItNC43LDExLjUtNC43YzEwLjIsMCwxOC41LDguMywxOC41LDE4LjVsMCwwCgkJCQkJCWMwLDEwLjItOC4zLDE4LjUtMTguNSwxOC41bDAsMGMtNC4zLDAtOC40LTEuNy0xMS41LTQuN3YyMi4yTDc2LjgsMTQ0LjNMNzYuOCwxNDQuM3oiLz4KCQkJCTwvZz4KCQkJPC9nPgoJCQk8ZyBpZD0iR3JvdXBfMjEzNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzMuODQ2IDUuMzY1KSI+CgkJCQk8ZyBpZD0iR3JvdXBfMjEzNCI+CgkJCQkJPHBhdGggaWQ9IlBhdGhfMTc5NSIgZD0iTTEwOC45LDExMS4xYy0wLjEsNi4zLDQuOCwxMS41LDExLjEsMTEuOWM2LjMtMC40LDExLjItNS42LDExLjEtMTEuOWMwLjEtNi4zLTQuOC0xMS42LTExLjEtMTEuOQoJCQkJCQlDMTEzLjcsOTkuNiwxMDguOCwxMDQuOCwxMDguOSwxMTEuMUwxMDguOSwxMTEuMXogTTEwMS45LDE0NC4zVjkzLjJsNi44LDIuOXYxLjNjMy4xLTMsNy4yLTQuNywxMS41LTQuNwoJCQkJCQljMTAuMiwwLDE4LjUsOC4zLDE4LjUsMTguNWwwLDBjMCwxMC4yLTguMywxOC41LTE4LjUsMTguNWwwLDBjLTQuMywwLTguNC0xLjctMTEuNS00Ljd2MjIuMkwxMDEuOSwxNDQuM0wxMDEuOSwxNDQuM3oiLz4KCQkJCTwvZz4KCQkJPC9nPgoJCQk8ZyBpZD0iR3JvdXBfMjEzNyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTAuMDk3IDUuMjUxKSI+CgkJCQk8ZyBpZD0iR3JvdXBfMjEzNiI+CgkJCQkJPHBhdGggaWQ9IlBhdGhfMTc5NiIgZD0iTTE1Ni4yLDExMS4xYzAuMi02LjQtNC43LTExLjctMTEuMS0xMmMtNi40LDAuMy0xMS4zLDUuNy0xMSwxMmMtMC4zLDYuNCw0LjYsMTEuOCwxMSwxMi4xbDAsMAoJCQkJCQlDMTUxLjUsMTIyLjksMTU2LjQsMTE3LjUsMTU2LjIsMTExLjF6IE0xNjMuNSwxMjguOGMtMC4yLDEwLTguNSwxOC0xOC41LDE3LjhjLTUuNiwwLTEwLjktMi40LTE0LjUtNi43bDYuMy00CgkJCQkJCWMyLDIuNCw1LDMuOSw4LjEsNC4xYzcuNSwwLDEwLjktNS40LDExLjUtMTEuM3YtNC4yYy0yLjksMy4yLTcsNS4xLTExLjQsNS4xYy0xMC4yLDAtMTguNS04LjItMTguNi0xOC40YzAsMCwwLDAsMC0wLjEKCQkJCQkJYzAtMTAuMyw4LjMtMTguNiwxOC41LTE4LjZjMCwwLDAsMCwwLjEsMGM0LjMsMCw4LjQsMS43LDExLjQsNC45di00LjJsNy4xLDNMMTYzLjUsMTI4LjhMMTYzLjUsMTI4Ljh6Ii8+CgkJCQk8L2c+CgkJCTwvZz4KCQkJPGcgaWQ9Ikdyb3VwXzIxMzkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY2LjYyNiA1LjM5MykiPgoJCQkJPGcgaWQ9Ikdyb3VwXzIxMzgiPgoJCQkJCTxwYXRoIGlkPSJQYXRoXzE3OTciIGQ9Ik0xNzAuMywxMjMuNmM2LjQtMC4yLDExLjQtNS42LDExLjItMTIuMWMwLjMtNi41LTQuNy0xMS45LTExLjItMTIuMmMtNi41LDAuMy0xMS41LDUuOC0xMS4yLDEyLjIKCQkJCQkJQzE1OC44LDExNy45LDE2My44LDEyMy40LDE3MC4zLDEyMy42TDE3MC4zLDEyMy42eiBNMTgxLjYsMTI5LjJ2LTQuM2MtMi45LDMuMy03LjEsNS4xLTExLjUsNWMtMTAuMiwwLTE4LjYtOC4yLTE4LjYtMTguNQoJCQkJCQljMC0xMC4yLDguMy0xOC41LDE4LjUtMTguNmgwLjFjNC40LTAuMiw4LjYsMS42LDExLjUsNXYtNC42bDcsMi45djM2TDE4MS42LDEyOS4yeiIvPgoJCQkJPC9nPgoJCQk8L2c+CgkJCTxnIGlkPSJHcm91cF8yMTQxIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4My40NDYpIj4KCQkJCTxnIGlkPSJHcm91cF8yMTQwIj4KCQkJCQk8cGF0aCBpZD0iUGF0aF8xNzk4IiBkPSJNMTkwLjQsMTI0LjJjMCwzLjMsMS45LDQuMiw0LjksNC4ydjcuMmMtNy44LDAtMTEuOS0zLjMtMTEuOS0xMS40di0xOUgxNzd2LTYuNmg2LjR2LTE0bDcsMi45djExLjEKCQkJCQkJaDguM3Y2LjZoLTguM1YxMjQuMkwxOTAuNCwxMjQuMnoiLz4KCQkJCTwvZz4KCQkJPC9nPgoJCQk8ZyBpZD0iR3JvdXBfMjE0MyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOTMuMDQ4IDUuMzA4KSI+CgkJCQk8ZyBpZD0iR3JvdXBfMjE0MiI+CgkJCQkJPHBhdGggaWQ9IlBhdGhfMTc5OSIgZD0iTTE5OS4yLDEwOC4zaDIwLjljLTAuOS01LjEtNS4yLTguOC0xMC40LTlDMjA0LjYsOTkuNCwyMDAuMiwxMDMuMiwxOTkuMiwxMDguM0wxOTkuMiwxMDguM3oKCQkJCQkJIE0yMTcuNCwxMjBoOC41Yy0wLjUsMS0xLjEsMi0xLjgsMi45Yy0zLjQsNC41LTguNiw3LjEtMTQuMyw3LjFjLTEwLjIsMC0xOC40LTguMy0xOC40LTE4LjV2LTAuMWMtMC4xLTEwLjIsOC0xOC42LDE4LjItMTguNwoJCQkJCQljMC4xLDAsMC4xLDAsMC4yLDBjMTAuMSwwLjEsMTguMiw4LjMsMTguMSwxOC40YzAsMC4xLDAsMC4yLDAsMC4zYzAsMC45LTAuMSwxLjgtMC4yLDIuN0gxOTljMC44LDUuMyw1LjMsOS4zLDEwLjcsOS41CgkJCQkJCUMyMTIuNywxMjMuNiwyMTUuNiwxMjIuMywyMTcuNCwxMjBMMjE3LjQsMTIweiIvPgoJCQkJPC9nPgoJCQk8L2c+CgkJPC9nPgoJCTxnIGlkPSJHcm91cF8yMTQ1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNzAuODY1IDE4MC4yNzQpIj4KCQkJPHBhdGggaWQ9IlBhdGhfMTgwMCIgY2xhc3M9InN0MyIgZD0iTTIzNy4xLDEzMC4yYy0xLjgtMC4yLTMuNi0wLjYtNS40LTEuMWMtMi43LTAuOC01LjEtMi4zLTYuOS00LjVjLTEuNy0yLjItMi43LTQuOC0zLjItNy41CgkJCQloMTMuNmMwLjQsMS42LDEuNiwyLjksMy4yLDMuNGMyLDAuNyw0LjEsMSw2LjMsMC45YzEuNywwLjEsMy40LTAuMSw1LTAuN2MwLjktMC4zLDEuNi0xLjEsMS42LTIuMWMwLTAuMy0wLjEtMC43LTAuMy0xCgkJCQlzLTAuNC0wLjUtMC43LTAuN2MtMS4xLTAuNS0yLjMtMC44LTMuNi0wLjljLTEuNy0wLjItNC4zLTAuNC03LjYtMC42Yy00LjItMC4xLTguNC0xLjEtMTIuMi0zYy0yLjctMS43LTQuMi00LjgtNC04CgkJCQljLTAuMS0zLjcsMS44LTcuMiw0LjktOS4xYzQuMy0yLjUsOS4xLTMuNywxNC4xLTMuNGM1LTAuMywxMCwwLjgsMTQuNSwyLjljMy42LDIuMSw2LjIsNS44LDYuOSwxMGgtMTIuOQoJCQkJYy0wLjMtMS41LTEuNC0yLjYtMi44LTMuMWMtMS45LTAuNi00LTAuOS02LTAuOGMtMS43LTAuMS0zLjQsMC4xLTQuOSwwLjhjLTAuOCwwLjQtMS4zLDEuMS0xLjQsMmMwLDAuNCwwLjEsMC44LDAuNCwxLjEKCQkJCWMwLjQsMC40LDAuOSwwLjYsMS40LDAuOGMxLjEsMC4zLDIuMiwwLjQsMy4yLDAuNmMxLjQsMC4yLDMuMywwLjMsNS42LDAuNWMxLjgsMC4xLDMuNiwwLjMsNS40LDAuNWMxLjUsMC4yLDMsMC41LDQuNCwwLjkKCQkJCWMyLjIsMC42LDQuMywxLjgsNS44LDMuNWMxLjMsMS44LDIsNCwxLjksNi4yYzAsMS4yLTAuMiwyLjQtMC41LDMuNmMtMC4zLDEuMS0wLjksMi4yLTEuNiwzLjFjLTEuNiwyLjEtMy45LDMuNi02LjQsNC40CgkJCQljLTMuNiwxLjItNy40LDEuNy0xMS4yLDEuNkMyNDEuNiwxMzAuNiwyMzkuMywxMzAuNSwyMzcuMSwxMzAuMnoiLz4KCQkJPHBhdGggaWQ9IlBhdGhfMTgwMSIgY2xhc3M9InN0MyIgZD0iTTI2Ny44LDkzLjJoMTguNWM1LjgtMC40LDExLjUsMS4yLDE2LjIsNC41YzQsMy40LDYuMiw4LjUsNS44LDEzLjd2MC4yCgkJCQljMCwxLjktMC4yLDMuOC0wLjcsNS42Yy0wLjQsMS42LTEuMSwzLjItMS45LDQuNmMtMS44LDIuNy00LjQsNC44LTcuNSw1LjljLTMuNywxLjQtNy42LDItMTEuNiwyaC0xOC44VjkzLjJ6IE0yNzkuOSwxMDMuNHYxNS44CgkJCQloNS45YzIuNywwLjMsNS40LTAuNCw3LjYtMS45YzEuNi0xLjUsMi40LTMuNywyLjItNS45di0wLjFjMC4yLTIuMy0wLjYtNC41LTIuMy02LjFjLTIuMy0xLjQtNS4xLTIuMS03LjgtMS44SDI3OS45eiIvPgoJCQk8cGF0aCBpZD0iUGF0aF8xODAyIiBjbGFzcz0ic3QzIiBkPSJNMzI0LjksMTIwLjh2OC43SDMxM1Y5My4yaDE5LjVjNi44LDAsMTEuNywxLjIsMTQuNywzLjVjMy4xLDIuNiw0LjgsNi42LDQuNSwxMC42CgkJCQljMC4zLDMuOS0xLjUsNy44LTQuNiwxMC4yYy0zLjEsMi4zLTcuOCwzLjQtMTQuMSwzLjNMMzI0LjksMTIwLjh6IE0zMjQuOSwxMDMuMXY4LjJoNy43YzEuOSwwLjEsMy44LTAuMiw1LjUtMC45CgkJCQljMS4xLTAuNiwxLjctMS44LDEuNS0zLjFjMC4yLTEuNC0wLjUtMi43LTEuNy0zLjRjLTEuOC0wLjYtMy42LTAuOS01LjUtMC44QzMzMi40LDEwMy4xLDMyNC45LDEwMy4xLDMyNC45LDEwMy4xeiIvPgoJCTwvZz4KCTwvZz4KPC9nPgo8L3N2Zz4K
   contact:
-    name: AppGate SDP Support
+    name: Appgate SDP Support
     url: https://sdphelp.appgate.com/adminguide/help-support.html
     email: appgatesdp.support@appgate.com
 
@@ -100,6 +101,7 @@ x-tagGroups:
       - Conditions
       - Entitlements
       - Ringfence Rules
+#      - DNS Rules
   - name: System
     tags:
       - Appliances
@@ -116,7 +118,8 @@ x-tagGroups:
   - name: Scripts
     tags:
       - Criteria Scripts
-      - Device Scripts
+      - User Claim Scripts
+      - Device Claim Scripts
       - Entitlement Scripts
       - Appliance Customizations
   - name: Users & Devices
@@ -132,15 +135,12 @@ x-tagGroups:
       - Client Auto-Update
       - CA
       - License
+#      - DNS Classifications
   - name: Utilities
     tags:
       - Appliance Upgrade
       - Appliance Backup
       - Appliance Metrics
-
-x-appgate-resolver:
-  - path: /identity-providers
-    entity: IdentityProvider
 
 paths:
   /login:
@@ -195,6 +195,10 @@ paths:
     $ref: './ringfence_rule.yml#/ringfence-rules'
   /ringfence-rules/{id}:
     $ref: './ringfence_rule.yml#/ringfence-rules-id'
+  /dns-rules:
+    $ref: './dns_rule.yml#/dns-rules'
+  /dns-rules/{id}:
+    $ref: './dns_rule.yml#/dns-rules-id'
   /appliances:
     $ref: './appliance.yml#/appliances'
   /appliances/{id}:
@@ -271,6 +275,10 @@ paths:
     $ref: './criteria_script.yml#/criteria-scripts'
   /criteria-scripts/{id}:
     $ref: './criteria_script.yml#/criteria-scripts-id'
+  /user-scripts:
+    $ref: './user_script.yml#/user-scripts'
+  /user-scripts/{id}:
+    $ref: './user_script.yml#/user-scripts-id'
   /device-scripts:
     $ref: './device_script.yml#/device-scripts'
   /device-scripts/{id}:
@@ -309,8 +317,6 @@ paths:
     $ref: 'on-boarded_device.yml#/on-boarded-devices-distinguished-name'
   /global-settings:
     $ref: './global_settings.yml#/global-settings'
-  /global-settings-backup-passphrase:
-    $ref: './global_settings.yml#/global-settings-backup-passphrase'
   /client-connections:
     $ref: './client_connections.yml#/client-connections'
   /client-connections/{profileName}/url:
@@ -333,6 +339,10 @@ paths:
     $ref: './license.yml#/license'
   /license/next:
     $ref: './license.yml#/license-next'
+  /dns-classifications:
+    $ref: './dns_classification.yml#/dns-classifications'
+  /dns-classifications/{id}:
+    $ref: './dns_classification.yml#/dns-classifications-id'
   /appliances/{id}/upgrade:
     $ref: './appliance_upgrade.yml#/appliances-upgrade'
   /appliances/{id}/upgrade/prepare:
@@ -426,7 +436,7 @@ components:
             audience:
               type: string
               description: SAML audience to make sure the recipient of the Token is this Controller.
-              example: Company AppGate SDP
+              example: Company Appgate SDP
             providerCertificate:
               type: string
               description: The certificate of the SAML provider to verify the SAML tokens. In PEM format.
@@ -495,6 +505,14 @@ components:
               type: string
               description: The LDAP attribute to compare the Client certificate's Subject Alternative Name.
               default: userPrincipalName
+            certificateAttribute:
+              type: string
+              description: The LDAP attribute to compare the Client certificate binary. Leave it null to skip this comparison.
+            skipX509ExternalChecks:
+              type: boolean
+              description: >-
+                By default, Controller contacts the endpoints on the certificate extensions in order to verify revocation status and pull the intermediate CA certificates.
+                Set this flag in order to skip them.
     LdapProvider:
       allOf:
         - $ref: './identity_provider.yml#/definitions/IdentityProvider'

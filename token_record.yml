@@ -36,6 +36,7 @@ token-records-revoked-by-dn:
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/distinguishedName'
+      - $ref: '#/parameters/siteId'
       - name: tokenType
         in: query
         description: Optional query parameter to revoke only certain types of tokens.
@@ -69,6 +70,7 @@ token-records-revoked-by-type:
       - Active Devices
     parameters:
       - $ref: './common.yml#/parameters/authorization'
+      - $ref: '#/parameters/siteId'
       - name: token-type
         in: path
         description: The type of the tokens.
@@ -76,6 +78,7 @@ token-records-revoked-by-type:
         schema:
           type: string
           enum:
+            - All
             - Claims
             - AdminClaims
             - Entitlement
@@ -125,6 +128,14 @@ token-records-reeval-by-dn:
         $ref: './common.yml#/responses/PermissionError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
+
+parameters:
+  siteId:
+    name: siteId
+    in: query
+    description: Optional query parameter to revoke only entitlement tokens for the given Site ID.
+    schema:
+      type: string
 
 requestBodies:
   TokenRevocationRequest:
@@ -181,3 +192,9 @@ definitions:
           Only used when revoking all Tokens. In order to spread the workload on the Controllers, tokens are revoked in
           batches according to this value.
         default: 7
+      specificDistinguishedNames:
+        type: array
+        description: >-
+          Only used when revoking all Tokens. Specific distinguished names can be defined to renew tokens in bulk for a specific list of devices.
+        items:
+          type: string

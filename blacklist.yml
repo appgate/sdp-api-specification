@@ -17,7 +17,7 @@ blacklist:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/BlacklistEntry'
+              $ref: '#/definitions/BlackListList'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -83,6 +83,17 @@ blacklist-distinguished-name:
         $ref: './common.yml#/responses/UnexpectedError'
 
 definitions:
+  BlackListList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of blacklisted users.
+        properties:
+          data:
+            type: array
+            description: List of blacklisted users.
+            items:
+              $ref: '#/definitions/BlacklistEntry'
   BlacklistEntry:
     allOf:
       - $ref: './common.yml#/definitions/User'

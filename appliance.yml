@@ -807,16 +807,6 @@ definitions:
                       type: string
                       description: NIC name to use for routing.
                       example: 'eth0'
-          ntpServers:
-            type: array
-            writeOnly: true
-            deprecated: true
-            description: "Deprecated as of 4.3.0, use 'ntp' field instead. NTP servers to synchronize time."
-            items:
-              type: string
-            example:
-              - '91.189.89.199'
-              - '0.ubuntu.pool.ntp.org'
           ntp:
             type: object
             description: NTP configuration.
@@ -1181,7 +1171,7 @@ definitions:
           streamName:
             type: string
             description: Name of the stream.
-            example: AppGate_SDP_audit
+            example: Appgate_SDP_audit
           batchSize:
             type: integer
             description: Batch size for the stream. Used only for "Stream" type.

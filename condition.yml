@@ -224,6 +224,13 @@ definitions:
             example:
               - 1h
               - '13:32'
+          remedyLogic:
+            type: string
+            description: Whether all the Remedy Methods must succeed to pass this Condition or just one.
+            enum:
+              - and
+              - or
+            default: and
           remedyMethods:
             description: The remedy methods that will be triggered if the evaluation fails.
             type: array

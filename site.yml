@@ -265,6 +265,10 @@ definitions:
                 format: byte
                 writeOnly: true
                 description: The PKCS12 package to be used for web proxy. The file must be with no password and must include the full certificate chain and a private key. In Base64 format.
+              webProxyVerifyUpstreamCertificate:
+                type: boolean
+                description: Gateway will verify the certificate of the endpoints.
+                default: true
               webProxyCertificateSubjectName:
                 type: string
                 readOnly: true

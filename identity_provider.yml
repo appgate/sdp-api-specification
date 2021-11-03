@@ -309,27 +309,13 @@ definitions:
                 type: integer
                 description: The device limit per user. The existing on-boarded devices will still be able to sign in even if the limit is exceeded.
                 default: 100
-          onBoardingType:
-            type: string
-            description: Client on-boarding type. Deprecated as of 5.0. Use onBoarding2FA object instead.
-            enum:
-              - Require2FA
-              - Disabled
-              - NoVerification
-            deprecated: true
-            writeOnly: true
-          onBoardingOtpProvider:
-            type: string
-            format: uuid
-            x-uuid-ref: MfaProvider
-            description: On-boarding MFA Provider ID if "onBoardingType" is Require2FA.  Deprecated as of 5.0. Use onBoarding2FA object instead.
-            deprecated: true
-            writeOnly: true
-          onBoardingOtpMessage:
-            type: string
-            description: On-boarding MFA message to be displayed on the Client UI if "onBoardingType" is Require2FA. Deprecated as of 5.0. Use onBoarding2FA object instead.
-            deprecated: true
-            writeOnly: true
+              claimSuffix:
+                type: string
+                description: Upon successful on-boarding, the claim will be added as if MFA remedy action is fulfilled.
+                default: onBoarding
+              alwaysRequired:
+                type: boolean
+                description: If enabled, MFA will be required on every authentication.
           inactivityTimeoutMinutes:
             type: integer
             description: (Desktop) clients will sign out automatically after the user has been inactive on the device for the configured duration. Set it to 0 to disable.
@@ -350,7 +336,7 @@ definitions:
               the tunnels.
           dnsServers:
             type: array
-            description: The dns servers to be assigned to the Clients of the users in this Identity Provider.
+            description: The DNS servers to be assigned to the Clients of the users in this Identity Provider.
             items:
               type: string
             example:
@@ -358,7 +344,7 @@ definitions:
               - '192.100.111.31'
           dnsSearchDomains:
             type: array
-            description: The dns search domains to be assigned to Clients of the users in this Identity Provider.
+            description: The DNS search domains to be assigned to Clients of the users in this Identity Provider.
             items:
               type: string
             example:
@@ -371,6 +357,12 @@ definitions:
             $ref: '#/definitions/ClaimMappings'
           onDemandClaimMappings:
             $ref: '#/definitions/OnDemandClaimMappings'
+          userScripts:
+            type: array
+            description: ID of the User Claim Scripts to run during authorization.
+            items:
+              type: string
+              format: uuid
   ClaimMappings:
     type: array
     description: The mapping of Identity Provider attributes to claims.
@@ -386,7 +378,7 @@ definitions:
           example: 'SAMAccountName'
         claimName:
           type: string
-          description: The name of the user claim to be used in AppGate SDP.
+          description: The name of the user claim to be used in Appgate SDP.
           example: 'username'
         list:
           type: boolean
@@ -425,7 +417,7 @@ definitions:
             - runScript
         claimName:
           type: string
-          description: The name of the device claim to be used in AppGate SDP.
+          description: The name of the device claim to be used in Appgate SDP.
           example: 'antivirusRunning'
         parameters:
           type: object
@@ -435,7 +427,7 @@ definitions:
               type: string
               description: >-
                 'Used for the following commands: "serviceRunning", "processRunning", "runScript". Name of the
-                service, process or device script respectively.'
+                service, process or device claim script respectively.'
               example: 'python3'
             path:
               type: string
@@ -446,7 +438,7 @@ definitions:
               example: '/usr/bin/python3'
             args:
               type: string
-              description: Used as device script args/parameters for "runScript" command.
+              description: Used as device claim script args/parameters for "runScript" command.
               example: '--list'
         platform:
           type: string

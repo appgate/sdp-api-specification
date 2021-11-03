@@ -62,24 +62,6 @@ global-settings:
             $ref: '#/definitions/GlobalSettings'
       description: Global settings.
       required: true
-global-settings-backup-passphrase:
-  delete:
-    summary: Reset backup passphrase.
-    deprecated: true
-    description: Reset backup passphrase. Backup APIs will be disabled without a valid passphrase. Deprecated as of 5.0. Use backupApiEnabled field when editing the settings instead.
-    tags:
-      - Global Settings
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
-    responses:
-      '204':
-        description: Backup passphrase was reset successfully.
-      '401':
-        $ref: './common.yml#/responses/TokenError'
-      '403':
-        $ref: './common.yml#/responses/PermissionError'
-      '500':
-        $ref: './common.yml#/responses/UnexpectedError'
 
 definitions:
   GlobalSettings:
@@ -114,15 +96,10 @@ definitions:
       messageOfTheDay:
         type: string
         description: The configured message will be displayed after a successful loging.
-        example: Welcome to AppGate SDP.
+        example: Welcome to Appgate SDP.
       backupApiEnabled:
         type: boolean
         description: Whether the backup API is enabled or not.
-      hasBackupPassphrase:
-        type: boolean
-        readOnly: true
-        description: Whether there is a backup passphrase set or not. Deprecated as of 5.0. Use backupApiEnabled instead.
-        deprecated: true
       backupPassphrase:
         format: password
         type: string
@@ -150,6 +127,24 @@ definitions:
         items:
           type: string
           example: company.com
+# Not fully implemented yet
+#      dnsRedirectionHosts:
+#        type: array
+#        description: Redirection hosts to use in DNS Rules.
+#        items:
+#          type: object
+#          required:
+#            - host
+#          properties:
+#            id:
+#              type: string
+#              format: uuid
+#              description: ID for the host.
+#              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+#            host:
+#              type: string
+#              description: Host to redirect.
+#              example: dns-redirect.company.com
       collectiveId:
         type: string
         format: uuid
