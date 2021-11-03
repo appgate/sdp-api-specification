@@ -74,7 +74,7 @@ appliances-upgrade-complete:
                 description: Whether to reboot and switch partition to finalize the Upgrade.
 appliances-upgrade-switch-partition:
   post:
-    summary: Switch partition on the Appliance.
+    summary: Switch partition on the Appliance for completing upgrade.
     description: >-
       Reboot and switch partition on the appliance to finalize the Upgrade.
       "GET appliances/{id}/upgrade" must return "status":"success" before accepting the complete command.

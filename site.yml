@@ -10,6 +10,7 @@ sites:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Sites.
@@ -155,9 +156,12 @@ definitions:
         properties:
           shortName:
             type: string
+            description: A short 4 letter name for the Site to be displayed on the Client.
             example: AZU1
-            description: >-
-              A short 4 letter name for the site
+          description:
+            type: string
+            description: Description of the Site to be displayed on the Client.
+            example: Gives access to Azure endpoints.
           networkSubnets:
             type: array
             description: >-

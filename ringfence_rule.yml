@@ -10,6 +10,7 @@ ringfence-rules:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Ringfence Rules.
@@ -154,56 +155,60 @@ definitions:
           - actions
         properties:
           actions:
-            type: object
+            type: array
             description: List of all ringfence actions in this Ringfence Rule.
-            required:
-              - protocol
-              - direction
-              - action
-              - hosts
-            properties:
-              protocol:
-                type: string
-                description: Protocol of the ringfence action.
-                enum:
-                  - icmp
-                  - icmpv6
-                  - udp
-                  - tcp
-              direction:
-                type: string
-                description: The direction of the action
-                enum:
-                  - up
-                  - down
-              action:
-                type: string
-                description: Applied action to the traffic.
-                enum:
-                  - allow
-                  - block
-              hosts:
-                type: array
-                description: Destination address. IP address or hostname.
-                items:
+            items:
+              type: object
+              required:
+                - protocol
+                - direction
+                - action
+                - hosts
+              properties:
+                protocol:
                   type: string
-                  example: 10.0.2.0/24
-              ports:
-                type: array
-                description: >-
-                  Destination port.
-                  Multiple ports can be entered comma separated.
-                  Port ranges can be entered dash separated.
-                  Only valid for tcp and udp subtypes.
-                items:
+                  description: Protocol of the ringfence action.
+                  enum:
+                    - icmp
+                    - icmpv6
+                    - udp
+                    - tcp
+                direction:
                   type: string
-                example:
-                  - 80
-                  - 443
-                  - 1024-2048
-              types:
-                type: array
-                description: ICMP type. Only valid for icmp protocol.
-                items:
+                  description: The direction of the action
+                  enum:
+                    - up
+                    - down
+                    - out
+                    - in
+                action:
                   type: string
-                  example: 0-255
+                  description: Applied action to the traffic.
+                  enum:
+                    - allow
+                    - block
+                hosts:
+                  type: array
+                  description: Destination address. IP address or hostname.
+                  items:
+                    type: string
+                    example: 10.0.2.0/24
+                ports:
+                  type: array
+                  description: >-
+                    Destination port.
+                    Multiple ports can be entered comma separated.
+                    Port ranges can be entered dash separated.
+                    Only valid for tcp and udp subtypes.
+                  items:
+                    type: string
+                  example:
+                    - 80
+                    - 443
+                    - 1024-2048
+                types:
+                  type: array
+                  description: ICMP type. Only valid for icmp protocol.
+                  items:
+                    type: string
+                    example: 0-255

@@ -10,6 +10,7 @@ conditions:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Conditions.
@@ -166,42 +167,7 @@ conditions-test:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - expression
-            properties:
-              expression:
-                type: string
-                description: The javascript expression to evaluate.
-                example: "return claims.user.username === 'admin';"
-              userClaims:
-                type: object
-                additionalProperties: true
-                example:
-                  username: admin
-                  groups:
-                    - 'CN=test,OU=unit,DC=company,DC=com'
-                    - 'CN=finance,OU=unit,DC=company,DC=com'
-              deviceClaims:
-                type: object
-                additionalProperties: true
-                example:
-                  os:
-                    name: Microsoft Windows 10 Pro
-                    platform: x64
-                    type: desktop
-                  isUserAdmin: true
-                  language: en-us
-              systemClaims:
-                type: object
-                additionalProperties: true
-                example:
-                  connectTime: '2018-11-16T13:25:15.672Z'
-                  tunIPv4: '15.0.0.24'
-                  clientSrcIp: '192.168.111.184'
-              time:
-                type: string
-                format: date-time
+            $ref: '#/definitions/TestRequest'
 
 requestBodies:
   Condition:
@@ -291,3 +257,40 @@ definitions:
                   x-uuid-ref: MfaProvider
                   description: MFA Provider Id. Required for OtpAuthentication remedy method.
                   example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+  TestRequest:
+    type: object
+    required:
+      - expression
+    properties:
+      expression:
+        type: string
+        description: The javascript expression to evaluate.
+        example: "return claims.user.username === 'admin';"
+      userClaims:
+        type: object
+        additionalProperties: true
+        example:
+          username: admin
+          groups:
+            - 'CN=test,OU=unit,DC=company,DC=com'
+            - 'CN=finance,OU=unit,DC=company,DC=com'
+      deviceClaims:
+        type: object
+        additionalProperties: true
+        example:
+          os:
+            name: Microsoft Windows 10 Pro
+            platform: x64
+            type: desktop
+          isUserAdmin: true
+          language: en-us
+      systemClaims:
+        type: object
+        additionalProperties: true
+        example:
+          connectTime: '2018-11-16T13:25:15.672Z'
+          tunIPv4: '15.0.0.24'
+          clientSrcIp: '192.168.111.184'
+      time:
+        type: string
+        format: date-time

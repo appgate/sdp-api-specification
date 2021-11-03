@@ -10,6 +10,7 @@ entitlements:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Entitlements.
@@ -151,28 +152,25 @@ definitions:
       - type: object
         description: Represents an Entitlement.
         required:
-          - displayName
           - site
           - conditions
           - actions
         properties:
-          displayName:
-            type: string
-            description: >-
-              This field is deprecated as of 5.1 in favor of 'appShortcut.name'.
-              For backwards compatibility, it will set 'appShortcut.name' if it does not exist.
-            deprecated: true
-            example: Accounting Access
           disabled:
             type: boolean
             description: If true, the Entitlement will be disregarded during authorization.
             default: false
           site:
-            x-uuid-ref: Site
             type: string
             format: uuid
-            description: ID of the site for this Entitlement.
+            x-uuid-ref: Site
+            description: ID of the Site for this Entitlement.
             example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          siteName:
+            type: string
+            readOnly: true
+            description: Name of the Site for this Entitlement. For convenience only.
+            example: Default Site
           conditionLogic:
             type: string
             description: Whether all the Conditions must succeed to have access to this Entitlement or just one.
@@ -269,43 +267,60 @@ definitions:
                       type: integer
                       description: Number of seconds the action needs to be unresponsive to mark the action unhealthy.
                       default: 30
-          appShortcut:
-            type: object
-            description: Publishes the configured URL as an app on the client using the display name as the app name.
-            required:
-              - name
-              - url
-            properties:
-              name:
-                type: string
-                description: Name for the App Shortcut which will be visible on the Client UI.
-                example: Accounting
-              url:
-                type: string
-                description: The URL that will be triggered on the OS to be handled. For example, an HTTPS URL will start the browser for the given URL.
-                example: "https://service.company.com"
-              colorCode:
-                type: integer
-                description: |
-                  The code of the published app on the client.
-                  - 1: Light Green
-                  - 2: Green
-                  - 3: Indigo
-                  - 4: Deep Purple
-                  - 5: Yellow
-                  - 6: Lime
-                  - 7: Light Blue
-                  - 8: Blue
-                  - 9: Amber
-                  - 10: Orange
-                  - 11: Cyan
-                  - 12: Teal
-                  - 13: Deep Orange
-                  - 14: Red
-                  - 15: Gray
-                  - 16: Brown
-                  - 17: Pink
-                  - 18: Purple
-                  - 19: Blue Gray
-                  - 20: Near Black
-                default: 1
+          appShortcuts:
+            type: array
+            description: Array of App Shortcuts.
+            items:
+              $ref: '#/definitions/AppShortcut'
+          appShortcutScripts:
+            type: array
+            description: List of Entitlement Script IDs used for creating App Shortcuts dynamically.
+            items:
+              x-uuid-ref: EntitlementScript
+              type: string
+              format: uuid
+              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+  AppShortcut:
+    type: object
+    description: Publishes the configured URL as an app on the client using the display name as the app name.
+    required:
+      - name
+      - url
+    properties:
+      name:
+        type: string
+        description: Name for the App Shortcut which will be visible on the Client UI.
+        example: Accounting Software
+      description:
+        type: string
+        description: Description for the App Shortcut which will be visible on the Client UI.
+        example: This app will get you to the Accounting Software.
+      url:
+        type: string
+        description: The URL that will be triggered on the OS to be handled. For example, an HTTPS URL will start the browser for the given URL.
+        example: "https://service.company.com"
+      colorCode:
+        type: integer
+        description: |
+          The code of the published app on the client.
+          - 1: Light Green
+          - 2: Green
+          - 3: Indigo
+          - 4: Deep Purple
+          - 5: Yellow
+          - 6: Lime
+          - 7: Light Blue
+          - 8: Blue
+          - 9: Amber
+          - 10: Orange
+          - 11: Cyan
+          - 12: Teal
+          - 13: Deep Orange
+          - 14: Red
+          - 15: Gray
+          - 16: Brown
+          - 17: Pink
+          - 18: Purple
+          - 19: Blue Gray
+          - 20: Near Black
+        default: 1

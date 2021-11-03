@@ -181,9 +181,9 @@ stats-appliances:
                       type: number
                       description: The number of active Appliances with the LogForwarder role enabled.
                       example: 0
-                    iotConnectorCount:
+                    connectorCount:
                       type: number
-                      description: The number of active Appliances with the IoT Connector role enabled.
+                      description: The number of active Appliances with the Connector role enabled.
                       example: 6
                     data:
                       type: array
@@ -234,7 +234,7 @@ stats-appliances:
                             $ref: '#/definitions/ApplianceRole'
                           gateway:
                             $ref: '#/definitions/GatewayApplianceRole'
-                          iotConnector:
+                          connector:
                             $ref: '#/definitions/ApplianceRole'
                           appliance:
                             $ref: '#/definitions/ApplianceRole'
@@ -281,6 +281,19 @@ stats-appliances:
                                   The speed of the outbound network activity on the busiest NIC.
                                   The average is taken for the last 10 seconds.
                                 example: 8.53 Kbps
+                              ips:
+                                type: object
+                                description: IPs of the Appliance per NIC.
+                                additionalProperties:
+                                  type: array
+                                  items:
+                                    type: string
+                                example:
+                                  eth0:
+                                    - 10.0.0.1
+                                    - abba::cafe
+                                  eth1:
+                                    - 200.123.123.12
                           upgrade:
                             type: object
                             description: Upgrade Status if there is one going.
@@ -312,6 +325,7 @@ app-discovery:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: Discovered Apps.
@@ -374,6 +388,7 @@ top-entitlements:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: Top Entitlements.
@@ -429,6 +444,7 @@ active-sessions:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: >-

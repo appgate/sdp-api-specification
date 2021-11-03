@@ -197,6 +197,10 @@ definitions:
           - InProgress
           - Ready
           - Failed
+      failureReason:
+        type: string
+        description: The reason of failure.
+        example: 401 Unauthorized
       checksum:
         type: string
         description: SHA256 checksum of the File.

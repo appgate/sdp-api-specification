@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: AppGate SDP Controller REST API
-  version: API version 12
+  version: API version 13
   description: |-
     # About
       This specification documents the REST API calls for the AppGate SDP Controller.
@@ -26,7 +26,7 @@ info:
 
       All requests must have the **Accept** header as:
 
-      **application/vnd.appgate.peer-v12+json**
+      **application/vnd.appgate.peer-v13+json**
     # API Conventions
       API conventions are  important to understand and follow strictly.
 
@@ -55,7 +55,7 @@ info:
           ```
 
       - In case Controller returns an error (non-2xx HTTP status code), response body is JSON.
-        The "message" field contains information abot the error.
+        The "message" field contains information about the error.
         HTTP 422 "Unprocessable Entity" has extra `errors` field to list all the issues with specific fields.
 
       - Empty string ("") is considered a different value than "null" or field being omitted from JSON.
@@ -138,6 +138,10 @@ x-tagGroups:
       - Appliance Backup
       - Appliance Metrics
 
+x-appgate-resolver:
+  - path: /identity-providers
+    entity: IdentityProvider
+
 paths:
   /login:
     $ref: './login.yml#/login'
@@ -199,14 +203,20 @@ paths:
     $ref: './appliance.yml#/appliances-export'
   /appliances/{id}/export/iso:
     $ref: './appliance.yml#/appliances-export-iso'
+  /appliances/{id}/switch-partition:
+    $ref: './appliance.yml#/appliances-switch-partition'
   /appliances/{id}/renew-certificate:
     $ref: './appliance.yml#/appliances-renew-certificate'
+  /appliances/{id}/admin-interface-p12:
+    $ref: './appliance.yml#/appliances-admin-interface-p12'
   /appliances/{id}/deactivate:
     $ref: './appliance.yml#/appliances-deactivate'
   /appliances/{id}/reboot:
     $ref: './appliance.yml#/appliances-reboot'
   /appliances/{id}/test-resolver-name:
     $ref: './appliance.yml#/appliances-test-resolver-name'
+  /appliances/{id}/name-resolution-status:
+    $ref: './appliance.yml#/appliances-name-resolution-status'
   /sites:
     $ref: './site.yml#/sites'
   /sites/{id}:
@@ -271,6 +281,8 @@ paths:
     $ref: './entitlement_script.yml#/entitlement-scripts'
   /entitlement-scripts/{id}:
     $ref: './entitlement_script.yml#/entitlement-scripts-id'
+  /entitlement-scripts/test:
+    $ref: './entitlement_script.yml#/entitlement-scripts-test'
   /appliance-customizations:
     $ref: './appliance_customization.yml#/appliance-customizations'
   /appliance-customizations/{id}:
@@ -347,11 +359,11 @@ paths:
 # workaround for discriminator mappings not working properly when multiple files are involved.
 components:
   schemas:
-    IoTConnectorProvider:
+    ConnectorProvider:
       allOf:
         - $ref: './common.yml#/definitions/BaseEntity'
         - type: object
-          description: Represents a IoT Connector Identity Provider.
+          description: Represents a Connector Identity Provider.
           required:
             - type
           properties:
@@ -359,7 +371,7 @@ components:
               type: string
               description: The type of the Identity Provider.
               enum:
-                - IotConnector
+                - Connector
             ipPoolV4:
               type: string
               format: uuid
@@ -425,6 +437,11 @@ components:
             decryptionKey:
               type: string
               description: The private key to decrypt encrypted assertions if there is any. In PEM format.
+            forceAuthn:
+              type: boolean
+              description: >-
+                Enables ForceAuthn flag in the SAML Request.
+                If the SAML Provider supports this flag, it will require user to enter their credentials every time Client requires SAML authentication.
     RadiusProvider:
       allOf:
         - $ref: './identity_provider.yml#/definitions/IdentityProvider'

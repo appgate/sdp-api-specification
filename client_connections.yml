@@ -148,7 +148,6 @@ definitions:
         default: TCP
         description: SPA mode.
         enum:
-          - Disabled
           - TCP
           - 'UDP-TCP'
       profiles:

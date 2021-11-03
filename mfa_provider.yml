@@ -10,6 +10,7 @@ mfa-providers:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of MFA Providers.
@@ -181,8 +182,6 @@ definitions:
         description: Represents a MFA Provider.
         required:
           - type
-          - hostnames
-          - port
         properties:
           type:
             type: string

@@ -34,7 +34,7 @@ parameters:
   orderBy:
     name: orderBy
     in: query
-    description: The field name to sort the result list. Defaults to certain field depending on the object type.
+    description: The field name to sort the result list. Supported fields vary from object to object. Defaults to certain field depending on the object type.
     schema:
       type: string
       example: name
@@ -45,6 +45,22 @@ parameters:
       Whether the sorting is applied descending or ascending. Defaults to certain field depending on the object type.
     schema:
       type: string
+  filterBy:
+    name: filterBy
+    in: query
+    description: >-
+      Filters the result list by the given field and value. Supported fields vary from object to object.
+      The filters can be combined with each other as well as the generic query field.
+      The given value is checked for inclusion.
+      The representation of the dynamic query parameters is not correct at the moment. See the example for getting a better idea.
+    schema:
+      type: object
+      additionalProperties:
+        type: string
+    style: form
+    explode: true
+    allowEmptyValue: true
+    example: 'name=us-east&tags=aws'
   distinguishedName:
     name: distinguished-name
     in: path
@@ -147,6 +163,22 @@ definitions:
       descending:
         type: boolean
         description: Whether the sorting is applied descending or ascending.
+      filterBy:
+        type: array
+        description: The filters applied to the list.
+        items:
+          $ref: '#/definitions/FilterBy'
+  FilterBy:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The field name the filter is applied to.
+        example: name
+      value:
+        type: string
+        description: The value used for comparison.
+        example: AWS
   DeviceAndUser:
     type: object
     properties:

@@ -10,6 +10,7 @@ local-users:
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Local Users.
@@ -165,8 +166,8 @@ definitions:
             example: Tables
           password:
             type: string
-            writeOnly: true
             format: password
+            writeOnly: true
             description: Password for the user. Omit the field to keep the old password when updating a user.
             example: 'tSW3!QBv(rj{UuLY'
           email:
