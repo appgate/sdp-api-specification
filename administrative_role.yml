@@ -216,6 +216,7 @@ definitions:
           - Backup
           - CheckStatus
           - Reevaluate
+          - Reboot
       target:
         type: string
         description: The target of the Privilege defines the possible target objects for that type.
@@ -232,15 +233,19 @@ definitions:
           - LocalUser
           - Policy
           - Site
-          - DeviceScript
+          - DeviceClaimScript
           - EntitlementScript
           - RingfenceRule
           - ApplianceCustomization
+          - TrustedCertificate
+          - UserClaimScript
           - OtpSeed
+          - Fido2Device
           - TokenRecord
           - Blacklist
+          - License
           - UserLicense
-          - OnBoardedDevice
+          - RegisteredDevice
           - AllocatedIp
           - SessionInfo
           - AuditLog

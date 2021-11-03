@@ -71,4 +71,4 @@ definitions:
         properties:
           verified:
             type: boolean
-            description: Whether the generated Seed successully used by the User at least once or not.
+            description: Whether the generated Seed successfully used by the User at least once or not.

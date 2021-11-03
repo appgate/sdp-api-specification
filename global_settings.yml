@@ -89,13 +89,19 @@ definitions:
         type: number
         description: Number of minutes the VPN certificates is valid for clients.
         example: 525600
+      spaMode:
+        type: string
+        description: SPA mode.
+        enum:
+          - TCP
+          - 'UDP-TCP'
       loginBannerMessage:
         type: string
         description: The configured message will be displayed on the login UI.
         example: Authorized use only.
       messageOfTheDay:
         type: string
-        description: The configured message will be displayed after a successful loging.
+        description: The configured message will be displayed after a successful login.
         example: Welcome to Appgate SDP.
       backupApiEnabled:
         type: boolean
@@ -109,6 +115,7 @@ definitions:
       fips:
         type: boolean
         description: FIPS 140-2 Compliant Tunneling.
+        deprecated: true
         example: false
       geoIpUpdates:
         type: boolean

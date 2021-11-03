@@ -149,7 +149,7 @@ parameters:
   filename:
     name: filename
     in: path
-    description: The filename as it's uploaded to the Controler.
+    description: The filename as it's uploaded to the Controller.
     schema:
       type: string
       example: 'appgate-upgrade.img.zip'
