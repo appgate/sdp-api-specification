@@ -26,8 +26,8 @@ parameters:
     name: range
     in: query
     description: >-
-     'Range string to limit the result list. Format: -. 3-10 means he items between the (including) 3rd and the 10th
-      will be returned. Defaults to all objects.'
+      'Range string to limit the result list. Format: -. 3-10 means he items between the (including) 3rd and the 10th
+       will be returned. Defaults to all objects.'
     schema:
       type: string
       example: 0-10
@@ -213,6 +213,16 @@ definitions:
         type: string
         description: The provider name of the user, same as the one in the user Distinguished Name.
         example: ldap
+  P12:
+    properties:
+      p12:
+        type: string
+        format: byte
+        description: P12 binary in Base64 format.
+      password:
+        type: string
+        description: Password for the p12 file.
+        default: ''
 
 responses:
   ChangeData:

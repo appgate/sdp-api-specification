@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: Appgate SDP Controller REST API
-  version: API version 15
+  version: API version 16.1
   description: |-
     # About
       This specification documents the REST API calls for the Appgate SDP Controller.
@@ -26,7 +26,7 @@ info:
 
       All requests must have the **Accept** header as:
 
-      **application/vnd.appgate.peer-v15+json**
+      **application/vnd.appgate.peer-v16+json**
     # API Conventions
       API conventions are  important to understand and follow strictly.
 
@@ -101,7 +101,7 @@ x-tagGroups:
       - Conditions
       - Entitlements
       - Ringfence Rules
-#      - DNS Rules
+  #      - DNS Rules
   - name: System
     tags:
       - Appliance Change
@@ -136,7 +136,7 @@ x-tagGroups:
       - Client Auto-Update
       - CA
       - License
-#      - DNS Classifications
+  #      - DNS Classifications
   - name: Utilities
     tags:
       - Appliance Upgrade
@@ -224,6 +224,10 @@ paths:
     $ref: './appliance.yml#/appliances-test-resolver-name'
   /appliances/{id}/name-resolution-status:
     $ref: './appliance.yml#/appliances-name-resolution-status'
+  /appliances/{id}/command/ping:
+    $ref: './appliance.yml#/appliances-ping-command'
+  /appliances/{id}/command/tcpdump:
+    $ref: './appliance.yml#/appliances-tcpdump-command'
   /sites:
     $ref: './site.yml#/sites'
   /sites/{id}:
@@ -330,10 +334,20 @@ paths:
     $ref: './ca.yml#/certificate-authority-ca'
   /certificate-authority/ca/pem:
     $ref: './ca.yml#/certificate-authority-ca-pem'
+  /certificate-authority/issued-certificates:
+    $ref: './ca.yml#/issued-certificates'
+  /certificate-authority/issued-certificates/revoked/{certificateId}:
+    $ref: './ca.yml#/issued-certificates-revoked'
+  /certificate-authority/crl:
+    $ref: './ca.yml#/download-crl'
+  /certificate-authority/crl/next:
+    $ref: './ca.yml#/download-next-crl'
   /certificate-authority/ca/next:
     $ref: './ca.yml#/certificate-authority-ca-next'
   /certificate-authority/ca/next/generate:
     $ref: './ca.yml#/certificate-authority-ca-next-generate'
+  /certificate-authority/ca/next/upload:
+    $ref: './ca.yml#/certificate-authority-ca-next-upload'
   /certificate-authority/ca/next/switch:
     $ref: './ca.yml#/certificate-authority-ca-next-switch'
   /license:
@@ -524,6 +538,25 @@ components:
               description: >-
                 By default, Controller contacts the endpoints on the certificate extensions in order to verify revocation status and pull the intermediate CA certificates.
                 Set this flag in order to skip them.
+            certificatePriorities:
+              type: array
+              description: Client will order the available certificates according to the given priority list.
+              items:
+                type: object
+                required:
+                  - value
+                properties:
+                  type:
+                    type: string
+                    description: Which attribute to compare.
+                    enum:
+                      - Template
+                      - Issuer
+                    default: Template
+                  value:
+                    type: string
+                    description: The value to compare to the certificate attribute.
+                    example: 1.3.6.1.4.1.311.21.8.3025710.4393146.2181807.13924342.9568199.8
     LdapProvider:
       allOf:
         - $ref: './identity_provider.yml#/definitions/IdentityProvider'

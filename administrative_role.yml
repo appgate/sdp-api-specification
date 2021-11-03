@@ -254,6 +254,8 @@ definitions:
           - CaCertificate
           - File
           - FailedAuthentication
+          - AutoUpdate
+          - ClientConnection
       scope:
         type: object
         description: >-
