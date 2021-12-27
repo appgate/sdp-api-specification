@@ -307,3 +307,9 @@ responses:
       application/json:
         schema:
           $ref: '#/definitions/Error'
+  ServiceUnavailableError:
+    description: Service unavailable error.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'

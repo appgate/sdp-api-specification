@@ -253,6 +253,10 @@ definitions:
       - imageUrl
     description: Appliance Upgrade request.
     properties:
+      devKeyring:
+        type: boolean
+        example: false
+        description: Disclaimer of Warranty - internal use only. This is not a supported property. Use the development keyring to verify the upgrade image.
       imageUrl:
         type: string
         description: |-
