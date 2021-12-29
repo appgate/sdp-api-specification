@@ -249,10 +249,8 @@ definitions:
         description: The expiration time of the token.
         example: 2021-12-22T17:35:16.000775Z
       revoked:
-        type: string
-        format: date-time
-        description: The time when the token was revoked.
-        example: 2021-12-22T17:35:16.000775Z
+        type: boolean
+        description: Whether or not the token was revoked.
       siteId:
         type: string
         description: The site ID of the token.
@@ -264,7 +262,7 @@ definitions:
         example: Default Site
       revocationTime:
         type: string
-        format: 'date-time'
+        format: date-time
         description: The revocation time of the certificate.
         example: 2021-12-22T17:40:30.904434Z
       deviceId:

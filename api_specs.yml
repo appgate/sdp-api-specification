@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: Appgate SDP Controller REST API
-  version: API version 16.2
+  version: API version 16.3
   description: |-
     # About
       This specification documents the REST API calls for the Appgate SDP Controller.
