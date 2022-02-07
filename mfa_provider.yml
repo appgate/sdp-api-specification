@@ -182,8 +182,6 @@ definitions:
         description: Represents a MFA Provider.
         required:
           - type
-          - hostnames
-          - port
         properties:
           type:
             type: string
@@ -204,7 +202,7 @@ definitions:
           inputType:
             type: string
             description: >
-              The input type used in the client to enter the MFA code. 
+              The input type used in the client to enter the MFA code.
                * "Masked" - The input is masked the same way as a password field.
                * "Numeric" - The input is marked as a numeric input.
                * "Text" - The input is handled as a regular plain text field.
