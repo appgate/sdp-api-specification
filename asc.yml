@@ -1,0 +1,157 @@
+asc:
+  get:
+    summary: View the status of ASC integration.
+    description: View the status of ASC integration.
+    tags:
+      - ASC
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/AscStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Register to ASC.
+    description: Register to ASC.
+    tags:
+      - ASC
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/AscStatus'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/RegistrationToken'
+      description: Token to register to ASC with.
+      required: true
+  delete:
+    summary: Unregister from ASC.
+    description: Unregister from ASC.
+    tags:
+      - ASC
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/AscStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+asc-services-version:
+  get:
+    summary: View the status of ASC version checking service.
+    description: View the status of ASC version checking service.
+    tags:
+      - ASC
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/AscVersionStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Trigger ASC version checking service manually.
+    description: Trigger ASC version checking service manually.
+    tags:
+      - ASC
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/AscVersionStatus'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+responses:
+  AscStatus:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/AscStatus'
+    description: ASC status.
+  AscVersionStatus:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/AscVersionStatus'
+    description: ASC version check status.
+
+definitions:
+  RegistrationToken:
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: Registration token provided by ASC.
+        example: <base64 token>
+  AscStatus:
+    type: object
+    properties:
+      registered:
+        type: boolean
+        description: Whether the collective has registered to ASC or not.
+      serviceNames:
+        type: array
+        description: List of ASC services available to this collective.
+        items:
+          type: string
+  AscVersionStatus:
+    type: object
+    properties:
+      version:
+        type: string
+        description: Latest Appgate SDP Appliance version available.
+        example: 6.0.0-12345
+      releaseNotesUrl:
+        type: string
+        description: The URL to the release notes for the latest Appgate SDP version.
+        example: "https://www.appgate.com/support/software-defined-perimeter-support/sdp-v6-0"
+      upgradableApplianceCount:
+        type: number
+        description: The number of Appliances in the collective that can be upgraded.
