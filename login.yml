@@ -395,6 +395,12 @@ definitions:
       samlResponse:
         type: string
         description: SAMLResponse received from SAML provider. Required if a SAML based Identity Provider is used.
+      idToken:
+        type: string
+        description: ID Token received from OIDC provider. Required if an OIDC based Identity Provider is used.
+      accessToken:
+        type: string
+        description: Access Token received from OIDC provider. Required if an OIDC based Identity Provider is used.
   LoginResponse:
     type: object
     properties:

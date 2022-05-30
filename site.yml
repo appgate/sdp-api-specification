@@ -316,7 +316,7 @@ definitions:
                     queryAAAA:
                       type: boolean
                       description: Perform AAAA lookups.
-                      default: true
+                      default: false
                     defaultTtlSeconds:
                       type: integer
                       description: This will apply whenever Gateway gets a DNS response which has no TTL set.

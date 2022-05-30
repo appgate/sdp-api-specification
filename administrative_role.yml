@@ -270,7 +270,7 @@ definitions:
           - FailedAuthentication
           - AutoUpdate
           - RiskModel
-          - Asc
+          - Ztp
           - ClientProfile
       scope:
         type: object

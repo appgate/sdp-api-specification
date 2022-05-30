@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: Appgate SDP Controller REST API
-  version: API version 17.0
+  version: API version 17.1
   description: |-
     # About
       This specification documents the REST API calls for the Appgate SDP Controller.
@@ -142,7 +142,7 @@ x-tagGroups:
       - Global Settings
       - MFA for Admins
       - License
-      - ASC
+      - ZTP
 
 paths:
   /login:
@@ -397,7 +397,7 @@ paths:
     $ref: './appliance_metric.yml#/appliances-metrics'
   /appliances/{id}/metrics/{name}:
     $ref: './appliance_metric.yml#/appliances-metrics-id'
-  /asc:
-    $ref: './asc.yml#/asc'
-  /asc/services/version:
-    $ref: './asc.yml#/asc-services-version'
+  /ztp:
+    $ref: './ztp.yml#/ztp'
+  /ztp/services/version:
+    $ref: './ztp.yml#/ztp-services-version'

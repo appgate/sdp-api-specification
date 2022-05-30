@@ -213,7 +213,7 @@ definitions:
         type: array
         description: What the evaluation returned as a list.
         items:
-          allOf:
+          anyOf:
             - type: string
               description: Host, port or type.
               example: 10.0.0.1
