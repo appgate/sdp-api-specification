@@ -241,9 +241,7 @@ definitions:
               $ref: '#/definitions/IdentityProvider'
   IdentityProvider:
     allOf:
-      - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
-        description: Represents an Identity Provider.
         discriminator:
           propertyName: type
           mapping:
@@ -256,6 +254,10 @@ definitions:
             Connector: '#/components/schemas/ConnectorProvider'
         required:
           - type
+  BaseIdentityProvider:
+    allOf:
+      - $ref: './common.yml#/definitions/BaseEntity'
+      - type: object
         properties:
           type:
             type: string
@@ -266,6 +268,7 @@ definitions:
               - LdapCertificate
               - Radius
               - Saml
+              - Connector
           displayName:
             type: string
             deprecated: true
@@ -273,12 +276,6 @@ definitions:
               The name displayed to the user. "name" field is used for Distinguished Name generation.
               Deprecated as of 5.1 since the Client does not have the option to choose Identity Provider anymore.
             example: 'Company Active Directory'
-          default:
-            type: boolean
-            description: >-
-              Whether the provider will be chosen by default in the Client UI.
-              If enabled, it will remove the default flag of the current default Identity Provider.
-            default: false
           clientProvider:
             type: boolean
             deprecated: true
@@ -286,6 +283,37 @@ definitions:
               Whether the provider will be listed in the Client UI or not.
               Deprecated as of 5.1 since the Client does not have the option to choose Identity Provider anymore.
             default: false
+          default:
+            type: boolean
+            description: >-
+              Whether the provider will be chosen by default in the Client UI.
+              If enabled, it will remove the default flag of the current default Identity Provider.
+            default: false
+          ipPoolV4:
+            type: string
+            format: uuid
+            x-uuid-ref: IpPool
+            description: >-
+              The IPv4 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
+              the tunnels.
+          ipPoolV6:
+            type: string
+            format: uuid
+            x-uuid-ref: IpPool
+            description: >-
+              The IPv6 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
+              the tunnels.
+          claimMappings:
+            $ref: '#/definitions/ClaimMappings'
+          onDemandClaimMappings:
+            $ref: '#/definitions/OnDemandClaimMappings'
+          userScripts:
+            $ref: '#/definitions/UserScripts'
+  ConfigurableIdentityProvider:
+    allOf:
+      - $ref: './common.yml#/definitions/BaseEntity'
+      - type: object
+        properties:
           adminProvider:
             type: boolean
             description: Whether the provider will be listed in the Admin UI or not.
@@ -320,49 +348,44 @@ definitions:
             type: integer
             description: (Desktop) clients will sign out automatically after the user has been inactive on the device for the configured duration. Set it to 0 to disable.
             default: 0
-          ipPoolV4:
-            type: string
-            format: uuid
-            x-uuid-ref: IpPool
-            description: >-
-              The IPv4 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
-              the tunnels.
-          ipPoolV6:
-            type: string
-            format: uuid
-            x-uuid-ref: IpPool
-            description: >-
-              The IPv6 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
-              the tunnels.
-          dnsServers:
-            type: array
-            description: The DNS servers to be assigned to the Clients of the users in this Identity Provider.
-            items:
-              type: string
-            example:
-              - '172.17.18.19'
-              - '192.100.111.31'
-          dnsSearchDomains:
-            type: array
-            description: The DNS search domains to be assigned to Clients of the users in this Identity Provider.
-            items:
-              type: string
-            example:
-              - 'internal.company.com'
           blockLocalDnsRequests:
             type: boolean
             description: Whether the Windows Client will block local DNS requests or not.
             default: false
-          claimMappings:
-            $ref: '#/definitions/ClaimMappings'
-          onDemandClaimMappings:
-            $ref: '#/definitions/OnDemandClaimMappings'
-          userScripts:
-            type: array
-            description: ID of the User Claim Scripts to run during authorization.
-            items:
-              type: string
-              format: uuid
+  UserScripts:
+    type: array
+    description: ID of the User Claim Scripts to run during authorization.
+    items:
+      type: string
+      format: uuid
+  LocalProviderSettings:
+    type: object
+    properties:
+      userLockoutThreshold:
+        type: integer
+        description: After how many failed authentication attempts will a local user be locked out from authenticating again for 1 minute.
+        default: 5
+      minPasswordLength:
+        type: integer
+        description: Minimum password length requirement for local users.
+        default: 0
+  DnsSettings:
+    type: object
+    dnsServers:
+      type: array
+      description: The DNS servers to be assigned to the Clients of the users in this Identity Provider.
+      items:
+        type: string
+      example:
+        - '172.17.18.19'
+        - '192.100.111.31'
+    dnsSearchDomains:
+      type: array
+      description: The DNS search domains to be assigned to Clients of the users in this Identity Provider.
+      items:
+        type: string
+      example:
+        - 'internal.company.com'
   ClaimMappings:
     type: array
     description: The mapping of Identity Provider attributes to claims.

@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: Appgate SDP Controller REST API
-  version: API version 14.1
+  version: API version 14.3
   description: |-
     # About
       This specification documents the REST API calls for the Appgate SDP Controller.
@@ -371,50 +371,18 @@ components:
   schemas:
     ConnectorProvider:
       allOf:
-        - $ref: './common.yml#/definitions/BaseEntity'
+        - $ref: './identity_provider.yml#/definitions/BaseIdentityProvider'
         - type: object
           description: Represents a Connector Identity Provider.
-          required:
-            - type
-          properties:
-            type:
-              type: string
-              description: The type of the Identity Provider.
-              enum:
-                - Connector
-            ipPoolV4:
-              type: string
-              format: uuid
-              description: >-
-                The IPv4 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
-                the tunnels.
-            ipPoolV6:
-              type: string
-              format: uuid
-              description: >-
-                The IPv6 Pool ID the users in this Identity Provider are going to use to allocate IP addresses for
-                the tunnels.
-            claimMappings:
-              $ref: './identity_provider.yml#/definitions/ClaimMappings'
-            onDemandClaimMappings:
-              $ref: './identity_provider.yml#/definitions/OnDemandClaimMappings'
     LocalDatabaseProvider:
       allOf:
-        - $ref: './identity_provider.yml#/definitions/IdentityProvider'
+        - $ref: './identity_provider.yml#/definitions/BaseIdentityProvider'
+        - $ref: './identity_provider.yml#/definitions/LocalProviderSettings'
         - type: object
           description: Represents a Local Database Identity Provider.
-          properties:
-            userLockoutThreshold:
-              type: integer
-              description: After how many failed authentication attempts will a local user be locked out from authenticating again for 1 minute.
-              default: 5
-            minPasswordLength:
-              type: integer
-              description: Minimum password length requirement for local users.
-              default: 0
     SamlProvider:
       allOf:
-        - $ref: './identity_provider.yml#/definitions/IdentityProvider'
+        - $ref: './identity_provider.yml#/definitions/ConfigurableIdentityProvider'
         - type: object
           description: Represents a SAML Identity Provider.
           required:
@@ -454,7 +422,7 @@ components:
                 If the SAML Provider supports this flag, it will require user to enter their credentials every time Client requires SAML authentication.
     RadiusProvider:
       allOf:
-        - $ref: './identity_provider.yml#/definitions/IdentityProvider'
+        - $ref: './identity_provider.yml#/definitions/ConfigurableIdentityProvider'
         - type: object
           description: Represents a Radius Identity Provider.
           required:
@@ -485,7 +453,7 @@ components:
               default: CHAP
     LdapCertificateProvider:
       allOf:
-        - $ref: '#/components/schemas/LdapProvider'
+        - $ref: './identity_provider.yml#/definitions/ConfigurableIdentityProvider'
         - type: object
           description: Represents an LDAP Certificate Identity Provider.
           required:
@@ -515,7 +483,7 @@ components:
                 Set this flag in order to skip them.
     LdapProvider:
       allOf:
-        - $ref: './identity_provider.yml#/definitions/IdentityProvider'
+        - $ref: './identity_provider.yml#/definitions/ConfigurableIdentityProvider'
         - type: object
           description: Represents an LDAP Identity Provider.
           required:
