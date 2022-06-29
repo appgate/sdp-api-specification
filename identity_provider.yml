@@ -311,7 +311,8 @@ definitions:
             $ref: '#/definitions/UserScripts'
   ConfigurableIdentityProvider:
     allOf:
-      - $ref: './common.yml#/definitions/BaseEntity'
+      - $ref: '#/definitions/BaseIdentityProvider'
+      - $ref: '#/definitions/DnsSettings'
       - type: object
         properties:
           adminProvider:
@@ -371,21 +372,22 @@ definitions:
         default: 0
   DnsSettings:
     type: object
-    dnsServers:
-      type: array
-      description: The DNS servers to be assigned to the Clients of the users in this Identity Provider.
-      items:
-        type: string
-      example:
-        - '172.17.18.19'
-        - '192.100.111.31'
-    dnsSearchDomains:
-      type: array
-      description: The DNS search domains to be assigned to Clients of the users in this Identity Provider.
-      items:
-        type: string
-      example:
-        - 'internal.company.com'
+    properties:
+      dnsServers:
+        type: array
+        description: The DNS servers to be assigned to the Clients of the users in this Identity Provider.
+        items:
+          type: string
+        example:
+          - '172.17.18.19'
+          - '192.100.111.31'
+      dnsSearchDomains:
+        type: array
+        description: The DNS search domains to be assigned to Clients of the users in this Identity Provider.
+        items:
+          type: string
+        example:
+          - 'internal.company.com'
   ClaimMappings:
     type: array
     description: The mapping of Identity Provider attributes to claims.
