@@ -240,20 +240,19 @@ definitions:
             items:
               $ref: '#/definitions/IdentityProvider'
   IdentityProvider:
-    allOf:
-      - type: object
-        discriminator:
-          propertyName: type
-          mapping:
-            # The mapped providers need to be on the root document. https://github.com/Rebilly/ReDoc/issues/556
-            Saml: '#/components/schemas/SamlProvider'
-            Radius: '#/components/schemas/RadiusProvider'
-            Ldap: '#/components/schemas/LdapProvider'
-            LdapCertificate: '#/components/schemas/LdapCertificateProvider'
-            LocalDatabase: '#/components/schemas/LocalDatabaseProvider'
-            Connector: '#/components/schemas/ConnectorProvider'
-        required:
-          - type
+    type: object
+    discriminator:
+      propertyName: type
+      mapping:
+        # The mapped providers need to be on the root document. https://github.com/Rebilly/ReDoc/issues/556
+        Saml: '#/components/schemas/SamlProvider'
+        Radius: '#/components/schemas/RadiusProvider'
+        Ldap: '#/components/schemas/LdapProvider'
+        LdapCertificate: '#/components/schemas/LdapCertificateProvider'
+        LocalDatabase: '#/components/schemas/LocalDatabaseProvider'
+        Connector: '#/components/schemas/ConnectorProvider'
+    required:
+      - type
   BaseIdentityProvider:
     allOf:
       - $ref: './common.yml#/definitions/BaseEntity'
