@@ -220,7 +220,7 @@ definitions:
             description: >-
               Will enable Tamper Proofing on desktop clients which will make sure the routes and ringfence
               configurations are not changed.
-            default: true
+              Will be set to true if it's not provided and the type is "Device".
           overrideSite:
             x-uuid-ref: Site
             type: string

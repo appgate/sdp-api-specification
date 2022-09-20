@@ -55,7 +55,7 @@ local-users:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/LocalUser'
+      $ref: '#/requestBodies/LocalUserCreate'
 local-users-id:
   get:
     summary: Get a specific Local User.
@@ -143,6 +143,16 @@ requestBodies:
           $ref: '#/definitions/LocalUser'
     description: Local User object.
     required: true
+  LocalUserCreate:
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '#/definitions/LocalUser'
+            - required:
+                - password
+    description: Local User object.
+    required: true
 
 definitions:
   LocalUserList:
@@ -164,7 +174,6 @@ definitions:
         required:
           - firstName
           - lastName
-          - password
         properties:
           firstName:
             type: string

@@ -79,7 +79,13 @@ appliances-backup-id-status:
                     - base64
                 output:
                   type: string
-                  description: The output of the command
+                  description: The output of the command. Must be checked if result is failure
+                result:
+                  type: string
+                  description: Only set when status is done.
+                  enum:
+                    - failure
+                    - success
                 status:
                   type: string
                   description: Current status of the Appliance Backup.

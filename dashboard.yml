@@ -26,16 +26,21 @@ admin-messages:
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
     summary: Delete Admin Messages.
-    description: Delete Admin Messages.
+    description: >-
+      Deletes all Admin Messages by default. If **both** `message` and `source` 
+      query parameters are present, deletes only messages matching these parameters.
     tags:
       - Admin Messages
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - name: message
         in: query
-        description: >-
-          Will delete the Admin Messages with the given text. 
-          If not provided, all Admin Messages will be deleted.
+        description: The message text of an Admin Message.
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: Source of the Admin Message.
         schema:
           type: string
     responses:

@@ -55,7 +55,7 @@ service-users:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/ServiceUser'
+      $ref: '#/requestBodies/ServiceUserCreate'
 service-users-id:
   get:
     summary: Get a specific Service User.
@@ -143,6 +143,16 @@ requestBodies:
           $ref: '#/definitions/ServiceUser'
     description: Service User object.
     required: true
+  ServiceUserCreate:
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '#/definitions/ServiceUser'
+            - required:
+                - password
+    description: Service User object.
+    required: true
 
 definitions:
   ServiceUserList:
@@ -161,8 +171,6 @@ definitions:
       - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
         description: Represents a Service User.
-        required:
-          - password
         properties:
           labels:
             type: object
