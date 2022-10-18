@@ -528,6 +528,14 @@ definitions:
                   type: string
                   description: Name of the Site for this Appliance.
                   example: Default Site
+                tags:
+                  type: array
+                  description: Tags of the Appliance.
+                  items:
+                    type: string
+                  example:
+                    - developer
+                    - api-created
                 online:
                   type: boolean
                   description: Whether the Appliance is reachable by the Controller or not. Deprecated as of 5.1. "status" field will be set to "offline" instead.
