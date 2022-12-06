@@ -1,0 +1,237 @@
+ztp:
+  get:
+    summary: View the status of ZTP integration.
+    description: View the status of ZTP integration.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Register to ZTP.
+    description: Register to ZTP.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpStatus'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/RegistrationToken'
+      description: Token to register to ZTP with.
+      required: true
+  delete:
+    summary: Unregister from ZTP.
+    description: Unregister from ZTP.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+ztp-settings:
+  get:
+    summary: View ZTP settings.
+    description: View ZTP settings.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpSettings'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  put:
+    summary: Update ZTP settings.
+    description: Update ZTP settings.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/ZtpSettings'
+      required: true
+    responses:
+      '200':
+        $ref: '#/responses/ZtpSettings'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+ztp-services-version:
+  get:
+    summary: View the status of ZTP version checking service.
+    description: View the status of ZTP version checking service.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpVersionStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Trigger ZTP version checking service manually.
+    description: Trigger ZTP version checking service manually.
+    tags:
+      - ZTP
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        $ref: '#/responses/ZtpVersionStatus'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+responses:
+  ZtpStatus:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ZtpStatus'
+    description: ZTP status.
+  ZtpSettings:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ZtpSettings'
+    description: ZTP settings.
+  ZtpVersionStatus:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ZtpVersionStatus'
+    description: ZTP version check status.
+
+definitions:
+  RegistrationToken:
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: Registration token provided by ZTP.
+        example: <base64 token>
+  ZtpStatus:
+    type: object
+    properties:
+      registered:
+        type: boolean
+        description: Whether the collective has registered to ZTP or not.
+      serviceNames:
+        type: array
+        description: List of ZTP services available to this collective.
+        items:
+          type: string
+  ZtpSettings:
+    type: object
+    properties:
+      riskEngine:
+        type: object
+        description: Settings for Risk Engine integration.
+        properties:
+          enabled:
+            type: boolean
+            description: Whether the Risk Engine integration is enabled or not.
+            default: true
+          fallbackValues:
+            type: object
+            description: Configure fallback risk values when certain scenarios occur.
+            properties:
+              ruleNotWorking:
+                type: number
+                default: 3
+                description: Fallback risk value when the relevant rule or adapter is not working. 1 - LOW, 2 - MEDIUM, 3 - HIGH
+              deviceInfoNotAvailable:
+                type: number
+                default: 3
+                description: Fallback risk value when the Risk Engine cannot find the information for the device. 1 - LOW, 2 - MEDIUM, 3 - HIGH
+              ztpUnreachable:
+                type: number
+                default: 3
+                description: Fallback risk value when Controller cannot reach ZTP services. 1 - LOW, 2 - MEDIUM, 3 - HIGH
+  ZtpVersionStatus:
+    type: object
+    properties:
+      version:
+        type: string
+        description: Latest Appgate SDP Appliance version available.
+        example: 6.0.0-12345
+      releaseNotesUrl:
+        type: string
+        description: The URL to the release notes for the latest Appgate SDP version.
+        example: "https://www.appgate.com/support/software-defined-perimeter-support/sdp-v6-0"
+      upgradableApplianceCount:
+        type: number
+        description: The number of Appliances in the collective that can be upgraded.
