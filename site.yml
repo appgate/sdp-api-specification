@@ -206,7 +206,7 @@ definitions:
                 type:
                   type: string
                   description: Mapping type.
-                  default: Map
+                  default: Translation
                   enum:
                     - Translation
                     - Allocation

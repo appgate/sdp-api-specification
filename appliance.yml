@@ -779,7 +779,7 @@ appliances-force-disable-controllers:
               type: object
               description: The result of the disabling action.
               properties:
-                offlineApplianes:
+                offlineControllers:
                   type: array
                   description: IDs of the Controllers that were offline during the process and as a result, did not receive the update.
                   items:
