@@ -1105,7 +1105,7 @@ definitions:
             type: string
             description: >-
               Hostname of the Appliance.
-              It's used by other Appliances to communicate with and identify this Appliances.            
+              It's used by other Appliances to communicate with and identify this Appliances.
             example: 'appgate.company.com'
           site:
             type: string
@@ -1545,12 +1545,12 @@ definitions:
                 description: AWS Kinesis endpoints to connect and send the audit logs with the given format.
                 items:
                   $ref: '#/definitions/AwsKinesis'
-              sumoLogic:
+              sumoLogicClients:
                 type: array
                 description: SumoLogic endpoints to connect and send the audit logs to.
                 items:
                   $ref: '#/definitions/SumoLogic'
-              splunk:
+              splunkClients:
                 type: array
                 description: Splunk endpoints to connect and send the audit logs to.
                 items:

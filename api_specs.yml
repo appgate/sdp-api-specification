@@ -4,7 +4,7 @@ tags:
   - name: Controller
 info:
   title: Appgate SDP Controller REST API
-  version: API version 18.1
+  version: API version 18.2
   description: |-
     # About
       This specification documents the REST API calls for the Appgate SDP Controller.
@@ -157,10 +157,10 @@ paths:
     $ref: './login.yml#/authentication-otp-initialize'
   /authentication/otp:
     $ref: './login.yml#/authentication-otp'
+  /authentication/logout:
+    $ref: './login.yml#/logout'
   /authorization:
     $ref: './login.yml#/authorization'
-  /logout:
-    $ref: './login.yml#/logout'
   /admin-messages:
     $ref: './dashboard.yml#/admin-messages'
   /admin-messages/summarize:
