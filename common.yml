@@ -51,10 +51,9 @@ parameters:
     name: filterBy
     in: query
     description: >-
-      Filters the result list by the given field and value. Supported fields vary from object to object.
-      The filters can be combined with each other as well as the generic query field.
+      Filters the result list by the given field and value. Supported fields vary from API to API.
+      The filters can be combined with each other as well as the generic query parameter.
       The given value is checked for inclusion.
-      The representation of the dynamic query parameters is not correct at the moment. See the example for getting a better idea.
     schema:
       type: object
       additionalProperties:
@@ -62,7 +61,9 @@ parameters:
     style: form
     explode: true
     allowEmptyValue: true
-    example: 'name=us-east&tags=aws'
+    example:
+      name: us-east
+      tags: aws
   distinguishedName:
     name: distinguished-name
     in: path
