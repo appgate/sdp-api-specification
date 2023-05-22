@@ -1,0 +1,164 @@
+global-settings:
+  get:
+    summary: View various Global Settings.
+    description: View various Global Settings.
+    tags:
+      - Global Settings
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        description: Global Settings.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/GlobalSettings'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  delete:
+    summary: Reset all Global Settings to the default values.
+    description: Reset all Global Settings to the default values.
+    tags:
+      - Global Settings
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '204':
+        description: Global Settings were reset successfully.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  put:
+    summary: Update all Global Settings.
+    description: Update all Global Settings.
+    tags:
+      - Global Settings
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '204':
+        description: Global Settings were updated successfully.
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/GlobalSettings'
+      description: Global settings.
+      required: true
+
+definitions:
+  GlobalSettings:
+    type: object
+    required:
+      - claimsTokenExpiration
+      - entitlementTokenExpiration
+      - administrationTokenExpiration
+      - vpnCertificateExpiration
+      - auditLogPersistenceMode
+    properties:
+      claimsTokenExpiration:
+        type: number
+        description: Number of minutes the Claims Token is valid both for administrators and clients.
+        example: 1440
+      entitlementTokenExpiration:
+        type: number
+        description: Number of minutes the Entitlement Token is valid for clients.
+        example: 180
+      administrationTokenExpiration:
+        type: number
+        description: Number of minutes the administration Token is valid for administrators.
+        example: 720
+      vpnCertificateExpiration:
+        type: number
+        description: Number of minutes the VPN certificates is valid for clients.
+        example: 525600
+      registeredDeviceExpirationDays:
+        type: number
+        description: Number of days registered devices are kept in storage before being deleted.
+        example: 90
+      spaMode:
+        type: string
+        description: SPA mode.
+        enum:
+          - TCP
+          - 'UDP-TCP'
+      spaTimeWindowSeconds:
+        type: number
+        description: Number of seconds the time skew SPA will allow.
+        default: 600
+      loginBannerMessage:
+        type: string
+        description: The configured message will be displayed on the sign-in UI.
+        example: Authorized use only.
+      messageOfTheDay:
+        type: string
+        description: The configured message will be displayed after a successful login.
+        example: Welcome to Appgate SDP.
+      backupApiEnabled:
+        type: boolean
+        description: Whether the backup API is enabled or not.
+      backupPassphrase:
+        format: password
+        type: string
+        writeOnly: true
+        description: The passphrase to encrypt Appliance Backups when backup API is used.
+        example: 'tSW3!QBv(rj{UuLY'
+      fips:
+        type: boolean
+        description: FIPS 140-2 Compliant Tunneling.
+        deprecated: true
+        example: false
+      geoIpUpdates:
+        type: boolean
+        description: Whether the automatic GeoIp updates are enabled or not.
+        example: false
+      auditLogPersistenceMode:
+        type: string
+        description: Audit Log persistence mode.
+        enum:
+          - Default
+          - Guaranteed
+          - Performance
+      appDiscoveryDomains:
+        type: array
+        description: Domains to monitor for the App Discovery feature.
+        items:
+          type: string
+          example: company.com
+      profileHostname:
+        type: string
+        description: The hostname to use for generating profile URLs.
+        example: appgate.company.com
+      collectiveName:
+        type: string
+        description: Friendly name for the Collective.
+        example: Test Collective
+      collectiveId:
+        type: string
+        format: uuid
+        readOnly: true
+        description: A randomly generated ID during first installation to identify the Collective.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
