@@ -1815,7 +1815,7 @@ definitions:
         default: false
       httpsP12:
         $ref: '#/definitions/P12'
-      basicAut:
+      basicAuth:
         type: boolean
         description: Enable basic auth for Prometheus Exporter.
         default: false

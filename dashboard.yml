@@ -1136,6 +1136,13 @@ definitions:
             type: string
             description: Client type.
             example: headless
+          clientSupport:
+            type: string
+            description: The support status of the client.
+            enum:
+              - full
+              - partial
+              - none
   GeolocationQuery:
     type: object
     description: Query parameters for finding active sessions in a given radius in the world.
