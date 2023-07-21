@@ -2001,8 +2001,7 @@ definitions:
   FalconLogScale:
     type: object
     required:
-      - name
-      - host
+      - collectorUrl
     properties:
       collectorUrl:
         type: string

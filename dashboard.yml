@@ -194,6 +194,7 @@ active-sessions:
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
       - $ref: '#/parameters/geolocationQuery'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: >-
@@ -231,6 +232,7 @@ active-sessions-dn:
       - $ref: './common.yml#/parameters/orderBy'
       - $ref: './common.yml#/parameters/descending'
       - $ref: '#/parameters/geolocationQuery'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: >-
@@ -372,7 +374,6 @@ parameters:
       latitude: 59.408
       longitude: 17.8678
       radiusKilometers: 200
-
 definitions:
   BaseStats:
     type: object
@@ -464,56 +465,59 @@ definitions:
               format: date-time
               description: When the Admin Message generated.
   AdminMessagesSummarize:
-    type: array
-    items:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              level:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Randomly generated UUID.
+              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+            level:
+              type: string
+              description: The severity of the Admin Message.
+              enum:
+                - Information
+                - Warning
+                - Error
+                - Critical
+            category:
+              type: string
+              description: Message category.
+              enum:
+                - Configuration
+                - Connectivity
+            message:
+              type: string
+              description: The Admin Message.
+              example: Identity Provider "local" does not have IP Pool assigned.
+            source:
+              type: string
+              deprecated: true
+              description: >-
+                The name of the Appliance(s) that generated this message.
+              example: controller-1, controller-2
+            sources:
+              type: array
+              items:
                 type: string
-                description: The severity of the Admin Message.
-                enum:
-                  - Information
-                  - Warning
-                  - Error
-                  - Critical
-              category:
-                type: string
-                description: Message category.
-                enum:
-                  - Configuration
-                  - Connectivity
-              message:
-                type: string
-                description: The Admin Message.
-                example: Identity Provider "local" does not have IP Pool assigned.
-              source:
-                type: string
-                deprecated: true
-                description: >-
-                  The name of the Appliance(s) that generated this message.
-                example: controller-1, controller-2
-              sources:
-                type: array
-                items:
-                  type: string
-                description: >-
-                  The name of the Appliance(s) that generated this message.
-                example:
-                  - controller-1
-                  - controller-2
-              created:
-                type: string
-                format: date-time
-                description: When the Admin Message generated the last time.
-              count:
-                type: number
-                description: Number of times this Admin Message was generated.
-                example: 152
+              description: >-
+                The name of the Appliance(s) that generated this message.
+              example:
+                - controller-1
+                - controller-2
+            created:
+              type: string
+              format: date-time
+              description: When the Admin Message generated the last time.
+            count:
+              type: number
+              description: Number of times this Admin Message was generated.
+              example: 152
   StatsAppliancesList:
     allOf:
       - $ref: '#/definitions/BaseStats'
@@ -803,22 +807,9 @@ definitions:
   ActiveSessions:
     allOf:
       - $ref: '#/definitions/BaseStats'
-      - $ref: './common.yml#/definitions/ResultListBase'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         properties:
-          queries:
-            type: array
-            description: The queries applied to the list.
-            items:
-              type: string
-          query:
-            type: string
-            deprecated: true
-            description: The first query applied to the list. Deprecated as of 6.2. Use queries instead.
-          totalCount:
-            type: integer
-            description: The total readable count of entities. Not influenced by the query.
-            example: 328
           distinctUserCount:
             type: number
             description: The number of total Distinct Users currently active.
@@ -856,22 +847,9 @@ definitions:
   ActiveSessionsDn:
     allOf:
       - $ref: '#/definitions/BaseStats'
-      - $ref: './common.yml#/definitions/ResultListBase'
+      - $ref: './common.yml#/definitions/ResultList'
       - type: object
         properties:
-          queries:
-            type: array
-            description: The queries applied to the list.
-            items:
-              type: string
-          query:
-            type: string
-            deprecated: true
-            description: The first query applied to the list. Deprecated as of 6.2. Use queries instead.
-          totalCount:
-            type: integer
-            description: The total readable count of entities. Not influenced by the query.
-            example: 328
           data:
             type: array
             items:
