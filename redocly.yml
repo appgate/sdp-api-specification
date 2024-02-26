@@ -1,0 +1,16 @@
+extends:
+  - recommended
+
+apis:
+  sdp-controller:
+    root: ./api_specs.yml
+
+theme:
+  openapi:
+    downloadFileName: appgate_sdp_controller.json
+    htmlTemplate: ./redoc-template.hbs
+
+rules:
+  operation-operationId: off
+  security-defined: off
+  operation-4xx-response: off

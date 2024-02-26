@@ -3,7 +3,7 @@ administrative-roles:
     summary: List all Administrative Roles.
     description: List all Administrative Roles visible to current user.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
@@ -22,13 +22,15 @@ administrative-roles:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
     summary: Create a new Administrative Role.
     description: Create a new Administrative Role.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
@@ -44,6 +46,8 @@ administrative-roles:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -57,7 +61,7 @@ administrative-roles-id:
     summary: Get a specific Administrative Role.
     description: Get a specific Administrative Role.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
@@ -74,13 +78,15 @@ administrative-roles-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
     summary: Update an existing Administrative Role.
     description: Update an existing Administrative Role.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
@@ -99,6 +105,8 @@ administrative-roles-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -109,7 +117,7 @@ administrative-roles-id:
     summary: Delete a specific Administrative Role.
     description: Delete a specific Administrative Role.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
@@ -122,6 +130,8 @@ administrative-roles-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -130,7 +140,7 @@ administrative-roles-type-target-map:
     summary: Get Administrative Privilege type target map. For internal use.
     description: The type target map summarizes what kind of Privileges one can create.
     tags:
-      - Administrative Roles
+      - Admin Roles
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
@@ -150,6 +160,8 @@ administrative-roles-type-target-map:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -217,6 +229,7 @@ definitions:
           - CheckStatus
           - Reevaluate
           - Reboot
+          - AssignFunction
       target:
         type: string
         description: The target of the Privilege defines the possible target objects for that type.
@@ -231,6 +244,7 @@ definitions:
           - MfaProvider
           - IpPool
           - LocalUser
+          - ServiceUser
           - Policy
           - Site
           - DeviceClaimScript
@@ -253,14 +267,16 @@ definitions:
           - GlobalSetting
           - CaCertificate
           - File
-          - FailedAuthentication
           - AutoUpdate
-          - ClientConnection
+          - RiskModel
+          - Ztp
+          - ClientProfile
+          - Secret
       scope:
         type: object
         description: >-
           The scope of the Privilege. Only applicable to certain type-target combinations.
-          Some types depends on the IdP/MFA type, such as GetUserAttributes.
+          Some types depend on the IdP/MFA type, such as GetUserAttributes.
           This field must be omitted if not applicable.
         properties:
           all:
@@ -291,3 +307,12 @@ definitions:
         items:
           type: string
           example: api-created
+      functions:
+        type: array
+        description: >-
+          Privilege for changing Appliance Functions.
+          Only applicable on "AssignFunction" type with Appliance or All target.
+          This field must be omitted if not applicable.
+        items:
+          $ref: './common.yml#/definitions/ApplianceFunction'
+

@@ -22,6 +22,8 @@ entitlements:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -44,6 +46,8 @@ entitlements:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -74,6 +78,8 @@ entitlements-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -99,6 +105,8 @@ entitlements-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -122,6 +130,8 @@ entitlements-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -171,6 +181,15 @@ definitions:
             readOnly: true
             description: Name of the Site for this Entitlement. For convenience only.
             example: Default Site
+          riskSensitivity:
+            type: string
+            description: >-
+              Generate Conditions for the Entitlement based on the Risk Model.
+              Cannot be combined with other Conditions.
+            enum:
+              - Low
+              - Medium
+              - High
           conditionLogic:
             type: string
             description: Whether all the Conditions must succeed to have access to this Entitlement or just one.
@@ -193,13 +212,12 @@ definitions:
               type: object
               description: IP Access action.
               required:
-                - subtype
                 - action
                 - hosts
               properties:
                 subtype:
                   type: string
-                  description: Type of the IP Access action.
+                  description: Type of the IP Access action. Required unless the action is exclude.
                   enum:
                     - icmp_up
                     - icmp_down
@@ -223,6 +241,7 @@ definitions:
                     - allow
                     - block
                     - alert
+                    - exclude
                 hosts:
                   type: array
                   description: Hosts to apply the action to. See admin manual for possible values.
@@ -253,10 +272,32 @@ definitions:
                     type: string
                   example:
                     - 0-255
+                methods:
+                  type: array
+                  description: HTTP method. Only valid for http subtypes. Leave it empty to allow all types.
+                  items:
+                    type: string
+                    enum:
+                      - GET
+                      - HEAD
+                      - POST
+                      - PUT
+                      - DELETE
+                      - CONNECT
+                      - OPTIONS
+                      - TRACE
+                      - PATCH
+                      - MKCOL
+                      - COPY
+                      - MOVE
+                      - PROPFIND
+                      - PROPPATCH
+                      - LOCK
+                      - UNLOCK
                 monitor:
                   type: object
                   description: >-
-                    Only available for tcp_up subtype.
+                    Only available for tcp_up and http_up subtypes.
                     If enabled, Gateways will monitor this action for responsiveness and act accordingly.
                     See admin manual for more details.
                   properties:

@@ -19,7 +19,9 @@ parameters:
   query:
     name: query
     in: query
-    description: Query string to filter the result list. It's used for various fields depending on the object type.
+    description: >-
+      Query string to filter the result list. It's used for various fields depending on the object type. 
+      Send multiple query parameters to make the queries more specific.
     schema:
       type: string
   range:
@@ -49,10 +51,9 @@ parameters:
     name: filterBy
     in: query
     description: >-
-      Filters the result list by the given field and value. Supported fields vary from object to object.
-      The filters can be combined with each other as well as the generic query field.
+      Filters the result list by the given field and value. Supported fields vary from API to API.
+      The filters can be combined with each other as well as the generic query parameter.
       The given value is checked for inclusion.
-      The representation of the dynamic query parameters is not correct at the moment. See the example for getting a better idea.
     schema:
       type: object
       additionalProperties:
@@ -60,7 +61,9 @@ parameters:
     style: form
     explode: true
     allowEmptyValue: true
-    example: 'name=us-east&tags=aws'
+    example:
+      name: us-east
+      tags: aws
   distinguishedName:
     name: distinguished-name
     in: path
@@ -110,7 +113,6 @@ definitions:
   BaseEntity:
     type: object
     required:
-      - id
       - name
     properties:
       id:
@@ -144,17 +146,14 @@ definitions:
         example:
           - developer
           - api-created
-  ResultList:
+  ResultListBase:
     type: object
     properties:
-      query:
-        type: string
-        description: The query applied to the list.
       range:
         type: string
         description: >-
-          'The range applied to the list. Format: -/. 3-5/8 means, out of 8 count (query affects the total), the items
-          between (including) the 3rd and the 5th are returned.'
+          The range applied to the list. Format: -/. 3-5/8 means, out of 8 count (query affects the total), the items
+          between (including) the 3rd and the 5th are returned.
         example: 0-30/54
       orderBy:
         type: string
@@ -163,11 +162,25 @@ definitions:
       descending:
         type: boolean
         description: Whether the sorting is applied descending or ascending.
-      filterBy:
-        type: array
-        description: The filters applied to the list.
-        items:
-          $ref: '#/definitions/FilterBy'
+  ResultList:
+    allOf:
+      - $ref: '#/definitions/ResultListBase'
+      - type: object
+        properties:
+          queries:
+            type: array
+            description: The queries applied to the list.
+            items:
+              type: string
+          totalCount:
+            type: integer
+            description: The total readable count of entities. Not influenced by the query.
+            example: 328
+          filterBy:
+            type: array
+            description: The filters applied to the list.
+            items:
+              $ref: '#/definitions/FilterBy'
   FilterBy:
     type: object
     properties:
@@ -223,6 +236,50 @@ definitions:
         type: string
         description: Password for the p12 file.
         default: ''
+  ApplianceRole:
+    type: object
+    description: Status of the given role for an Appliance.
+    properties:
+      status:
+        type: string
+        description: Status of the role.
+        enum:
+          - healthy
+          - busy
+          - warning
+          - error
+          - n/a
+      details:
+        type: string
+        description: Optional details for extra information like error messages.
+        example: Cannot reach appliance. Please check Controller logs.
+  ApplianceWithSessionsRole:
+    allOf:
+      - $ref: '#/definitions/ApplianceRole'
+      - type: object
+        properties:
+          numberOfSessions:
+            type: integer
+            description: Number of active sessions on the Gateway or Portal.
+            example: 156
+  ControllerRole:
+    allOf:
+      - $ref: '#/definitions/ApplianceRole'
+      - type: object
+        properties:
+          maintenanceMode:
+            type: boolean
+            description: Whether the maintenance mode is active or not on this Controller.
+  ApplianceFunction:
+    type: string
+    enum:
+      - Controller
+      - Gateway
+      - LogServer
+      - LogForwarder
+      - Connector
+      - Portal
+      - MetricsAggregator
 
 responses:
   ChangeData:
@@ -289,6 +346,12 @@ responses:
       application/json:
         schema:
           $ref: '#/definitions/Error'
+  NotAcceptableError:
+    description: Invalid 'Accept' header.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
   ConflictError:
     description: The submitted resource conflicts with another.
     content:
@@ -303,6 +366,24 @@ responses:
           $ref: '#/definitions/ValidationError'
   UnexpectedError:
     description: Unexpected server side error.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
+  ServiceUnavailableError:
+    description: Service unavailable error.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
+  GatewayTimeoutError:
+    description: Gateway timeout error.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
+  ApplianceStateError:
+    description: Appliance is not in the right state for this operation.
     content:
       application/json:
         schema:

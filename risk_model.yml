@@ -1,0 +1,101 @@
+risk-model:
+  get:
+    summary: View the current Risk Model.
+    description: View the current Risk Model.
+    tags:
+      - Risk Model
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        description: Risk Model.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/RiskModel'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  put:
+    summary: Update Risk Model.
+    description: Update Risk Model.
+    tags:
+      - Risk Model
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '204':
+        description: Risk Model was updated successfully.
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/RiskModel'
+      description: Risk Model.
+
+definitions:
+  RiskModel:
+    type: object
+    properties:
+      ztpRuleId:
+        type: string
+        description: ID of the rule in ZTP to use as the source of the risk score.
+      lowSensitivity:
+        $ref: '#/definitions/Sensitivity'
+      mediumSensitivity:
+        $ref: '#/definitions/Sensitivity'
+      highSensitivity:
+        $ref: '#/definitions/Sensitivity'
+  Sensitivity:
+    type: object
+    description: Sensitivity settings.
+    properties:
+      lowRisk:
+        $ref: '#/definitions/Risk'
+      mediumRisk:
+        $ref: '#/definitions/Risk'
+      highRisk:
+        $ref: '#/definitions/Risk'
+  Risk:
+    type: object
+    description: Risk definition.
+    properties:
+      action:
+        type: string
+        description: The action to take for the risk level.
+        enum:
+          - Allow
+          - Deny
+          - AllowWithUserAction
+        default: Allow
+      denyMessage:
+        type: string
+        description: Enter to show a Display Message User Action to the user when the action is Deny.
+      userAction:
+        allOf:
+          - type: object
+            properties:
+              type:
+                type: string
+                description: User Action type. May not be DisplayMessage or Reason for Risk Access.
+                enum:
+                  - OtpAuthentication
+                  - PasswordAuthentication
+          - $ref: './condition.yml#/definitions/RemedyMethod'
