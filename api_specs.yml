@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Appgate SDP Controller REST API
-  version: API version 20.0
+  version: API version 20.1
   license:
     name: Proprietary
     url: https://www.appgate.com
@@ -99,7 +99,6 @@ x-tagGroups:
       - Client Logs
       - User Logins Per Hour
       - Devices On-Boarded Per Hour
-      - Failed Authentications Per Hour
   - name: Access
     tags:
       - Policies

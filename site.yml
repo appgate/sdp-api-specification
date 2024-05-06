@@ -190,6 +190,11 @@ sites-resources:
         required: true
         schema:
           $ref: '#/definitions/ResourceType'
+      - name: value
+        in: query
+        description: Optional parameter to search for values. Used with "...-tag-values" types.
+        schema:
+          type: string
     responses:
       '200':
         description: Query result.
@@ -240,6 +245,7 @@ definitions:
               - healthy
               - warning
               - unhealthy
+              - noActiveGateways
               - n/a
   SiteList:
     allOf:
@@ -733,20 +739,26 @@ definitions:
     enum:
       - instances-security-groups
       - instances-tags
+      - instances-tag-values
       - lbs
       - lbs-security-groups
       - lbs-tags
+      - lbs-tag-values
       - lbsv2
       - lbsv2-security-groups
       - lbvs2-tags
+      - lbvs2-tag-values
       - enis-security-groups
       - enis-security-groups-ids
       - enis-tags
+      - enis-tag-values
       - regions
       - accounts
       - network-security-groups
       - network-security-groups-tags
+      - network-security-groups-tag-values
       - virtual-machines-tags
+      - virtual-machines-tag-values
       - virtual-networks
       - subnets
       - projects-ids
