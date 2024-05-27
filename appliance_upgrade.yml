@@ -14,11 +14,7 @@ appliances-upgrade-prepare:
       - $ref: './common.yml#/parameters/id'
     responses:
       '202':
-        description: Appliance accepted the URL and has started to download the image.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/ApplianceUpgradeInternal'
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -52,11 +48,7 @@ appliances-upgrade-complete:
       - $ref: './common.yml#/parameters/id'
     responses:
       '202':
-        description: Appliance has started to install the downloaded image.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/ApplianceUpgradeInternal'
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -96,11 +88,7 @@ appliances-upgrade-switch-partition:
       - $ref: './common.yml#/parameters/id'
     responses:
       '202':
-        description: Appliance accepted the command and started the process for switching partitions.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/ApplianceUpgradeInternal'
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -130,11 +118,7 @@ appliances-upgrade:
       - $ref: './common.yml#/parameters/id'
     responses:
       '202':
-        description: Appliance Upgrade has begun.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/ApplianceUpgradeInternal'
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -207,7 +191,7 @@ appliances-upgrade:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
-      '204':
+      '202':
         description: Upgrade was canceled successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
@@ -295,13 +279,3 @@ definitions:
           "controller://\<controller-peer-hostname:port\>/{filename}".
           The Appliance will authenticate itself to the Controller and download the file.
         example: 'https://s3.eu-central-1.amazonaws.com/appgate/appgate-appliance.img.zip'
-
-  ApplianceUpgradeInternal:
-    type: object
-    description: Internal Upgrade initiation details.
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: Internal Upgrade ID for the appliance.
-        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc

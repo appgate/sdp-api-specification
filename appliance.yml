@@ -249,8 +249,8 @@ appliances-renew-certificate:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
-      '204':
-        description: Certificate renewal process started successfully.
+      '202':
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -281,8 +281,8 @@ appliances-deactivate:
           type: boolean
           default: true
     responses:
-      '204':
-        description: Appliance was deactivated successfully.
+      '202':
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -307,8 +307,8 @@ appliances-reboot:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
-      '204':
-        description: Appliance received the reboot command successfully.
+      '202':
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -888,7 +888,7 @@ appliances-switch-partition:
       - $ref: './common.yml#/parameters/id'
     responses:
       '202':
-        description: Appliance accepted the command and started the process for switching partitions.
+        $ref: './common.yml#/responses/ChangeId'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -1043,8 +1043,8 @@ appliances-repartition-ip-allocations:
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
-      '204':
-        description: Repartition was successful.
+      '202':
+        $ref: './common.yml#/responses/ChangeId'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':

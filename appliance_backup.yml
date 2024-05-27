@@ -10,7 +10,7 @@ appliances-backup:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
-      '200':
+      '202':
         description: Appliance Backup has begun.
         content:
           application/json:
@@ -164,7 +164,7 @@ appliances-backup-id:
       - $ref: './common.yml#/parameters/id'
       - $ref: '#/parameters/backupId'
     responses:
-      '204':
+      '202':
         description: Backup file was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
