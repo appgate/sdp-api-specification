@@ -307,7 +307,7 @@ definitions:
               publicIps:
                 type: array
                 description: >-
-                  The public IPs of the clients that will be considered local to this Site. 
+                  The public IPs or the CIDRs of the clients that will be considered local to this Site. 
                   Those clients will connect to Gateways with the configured local hostname and local weights in Appliance configuration.
                 items:
                   type: string

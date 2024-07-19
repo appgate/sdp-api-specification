@@ -1113,68 +1113,23 @@ definitions:
       - $ref: './common.yml#/definitions/ResultList'
     properties:
       data:
-        type: object
+        type: array
         description: List of appliances with status.
-        properties:
-          items:
-            $ref: '#/definitions/ApplianceWithStatus'
+        items:
+          $ref: '#/definitions/ApplianceWithStatus'
   ApplianceWithStatus:
     allOf:
       - $ref: '#/definitions/Appliance'
-    properties:
-      state:
-        type: string
-        description: State of the Appliance. For internal use.
-      functions:
-        type: array
-        description: Functions of the Appliance.
-        items:
-          $ref: './common.yml#/definitions/ApplianceFunction'
-      status:
-        type: string
-        description: Appliance Status.
-        enum:
-          - error
-          - warning
-          - busy
-          - offline
-          - n/a
-          - healthy
-      customizationName:
-        type: string
-        description: The name of the customization applied to the Appliance.
-      cpu:
-        type: number
-        description: CPU utilization in percentage.
-      memory:
-        type: number
-        description: Memory utilization in percentage.
-      disk:
-        type: number
-        description: Disk utilization in percentage.
-      numberOfSessions:
-        type: integer
-        description: Number of sessions.
-      applianceVersion:
-        type: string
-        description: The Appliance build version.
-        example: 6.3.0
-      details:
-        type: object
-        description: Appliance status details.
+      - type: object
         properties:
-          version:
+          state:
             type: string
-            description: The Appliance build version.
-            example: 6.3.0
-          cpu:
-            $ref: '#/definitions/SystemInfo'
-          memory:
-            $ref: '#/definitions/SystemInfo'
-          disk:
-            $ref: '#/definitions/SystemInfo'
-          network:
-            $ref: '#/definitions/NetworkInfo'
+            description: State of the Appliance. For internal use.
+          functions:
+            type: array
+            description: Functions of the Appliance.
+            items:
+              $ref: './common.yml#/definitions/ApplianceFunction'
           status:
             type: string
             description: Appliance Status.
@@ -1185,27 +1140,72 @@ definitions:
               - offline
               - n/a
               - healthy
-          roles:
-            $ref: '#/definitions/Roles'
-          state:
+          customizationName:
             type: string
-            description: State of the Appliance. For internal use.
-          volumeNumber:
+            description: The name of the customization applied to the Appliance.
+          cpu:
+            type: number
+            description: CPU utilization in percentage.
+          memory:
+            type: number
+            description: Memory utilization in percentage.
+          disk:
+            type: number
+            description: Disk utilization in percentage.
+          numberOfSessions:
             type: integer
-            description: The volume number in use.
-          upgrade:
+            description: Number of sessions.
+          applianceVersion:
+            type: string
+            description: The Appliance build version.
+            example: 6.3.0
+          details:
             type: object
-            description: Appliance Upgrade.
+            description: Appliance status details.
             properties:
+              version:
+                type: string
+                description: The Appliance build version.
+                example: 6.3.0
+              cpu:
+                $ref: '#/definitions/SystemInfo'
+              memory:
+                $ref: '#/definitions/SystemInfo'
+              disk:
+                $ref: '#/definitions/SystemInfo'
+              network:
+                $ref: '#/definitions/NetworkInfo'
               status:
                 type: string
-                description: Appliance Upgrade Status.
+                description: Appliance Status.
                 enum:
-                  - idle
-                  - upgrading
-              details:
+                  - error
+                  - warning
+                  - busy
+                  - offline
+                  - n/a
+                  - healthy
+              roles:
+                $ref: '#/definitions/Roles'
+              state:
                 type: string
-                description: Appliance Upgrade Details.
+                description: State of the Appliance. For internal use.
+              volumeNumber:
+                type: integer
+                description: The volume number in use.
+              upgrade:
+                type: object
+                description: Appliance Upgrade.
+                properties:
+                  status:
+                    type: string
+                    description: Appliance Upgrade Status.
+                    enum:
+                      - idle
+                      - upgrading
+                  details:
+                    type: string
+                    description: Appliance Upgrade Details.
   SystemInfo:
     type: object
     description: System resource information.
