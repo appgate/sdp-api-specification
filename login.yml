@@ -64,6 +64,7 @@ identity-provider-names:
                         enum:
                           - Credentials
                           - Saml
+                          - Oidc
                           - Certificate
                       redirectUrl:
                         type: string
@@ -74,6 +75,25 @@ identity-provider-names:
                         description: The prioritization of which client certificate to use.
                         items:
                           type: object # won't get into it as it's irrelevant.
+                      authUrl:
+                        type: string
+                        description: Authorization endpoint URL for OIDC login.
+                        example: "https://oidc.company.com/oauth2/auth"
+                      tokenUrl:
+                        type: string
+                        description: Token endpoint URL for OIDC login.
+                        example: "https://oidc.company.com/oauth2/token"
+                      clientId:
+                        type: string
+                        description: Client ID for OIDC login.
+                        example: "b7258f30-6a5e-4846-9f1d-d247d68b2f1f"
+                      scope:
+                        type: string
+                        description: OIDC scope for getting user information.
+                        example: openid profile offline_access
+                      googleClientSecret:
+                        type: string
+                        description: OIDC client secret for Google.
                 bannerMessage:
                   type: string
                   description: Configured banner message to display before login.
@@ -102,6 +122,8 @@ authentication:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: '#/responses/AuthenticationError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -194,6 +216,8 @@ authentication-otp-initialize:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -233,6 +257,8 @@ authentication-otp:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: '#/responses/AuthenticationError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -285,6 +311,8 @@ authorization:
           application/json:
             schema:
               $ref: './common.yml#/definitions/Error'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -302,6 +330,8 @@ logout:
         description: Logout was successful. The tokens are revoked immediately.
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -368,6 +398,12 @@ definitions:
       samlResponse:
         type: string
         description: SAMLResponse received from SAML provider. Required if a SAML based Identity Provider is used.
+      idToken:
+        type: string
+        description: ID Token received from OIDC provider. Required if an OIDC based Identity Provider is used.
+      accessToken:
+        type: string
+        description: Access Token received from OIDC provider. Required if an OIDC based Identity Provider is used.
   LoginResponse:
     type: object
     properties:
@@ -402,3 +438,18 @@ definitions:
         type: string
         description: Message of the day configured by an admin.
         example: Welcome to Appgate SDP.
+      ztpCollectiveType:
+        type: string
+        description: ZTP type of the collective.
+        enum:
+          - hosted
+          - connected
+      ztpAccountType:
+        type: string
+        description: ZTP account type.
+        enum:
+          - standard
+          - demo
+      crlEnabled:
+        type: boolean
+        description: Whether X509 CRL is enabled for the system or not. Issued Certificates is disabled if it's not enabled.

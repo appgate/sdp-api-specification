@@ -17,6 +17,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
@@ -33,6 +35,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -51,6 +55,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':

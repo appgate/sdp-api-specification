@@ -1,9 +1,9 @@
-local-users:
+service-users:
   get:
-    summary: List all Local Users.
-    description: List all Local Users visible to current user.
+    summary: List all Service Users.
+    description: List all Service Users visible to current user.
     tags:
-      - Local Users
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
@@ -13,11 +13,11 @@ local-users:
       - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
-        description: List of Local Users.
+        description: List of Service Users.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LocalUserList'
+              $ref: '#/definitions/ServiceUserList'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -27,19 +27,19 @@ local-users:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
-    summary: Create a new Local User.
-    description: Create a new Local User.
+    summary: Create a new Service User.
+    description: Create a new Service User.
     tags:
-      - Local Users
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
-        description: Created Local User.
+        description: Created Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LocalUser'
+              $ref: '#/definitions/ServiceUser'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -55,23 +55,23 @@ local-users:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/LocalUserCreate'
-local-users-id:
+      $ref: '#/requestBodies/ServiceUserCreate'
+service-users-id:
   get:
-    summary: Get a specific Local User.
-    description: Get a specific Local User.
+    summary: Get a specific Service User.
+    description: Get a specific Service User.
     tags:
-      - Local Users
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Single Local User.
+        description: Single Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LocalUser'
+              $ref: '#/definitions/ServiceUser'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -83,20 +83,20 @@ local-users-id:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
-    summary: Update an existing Local User.
-    description: Update an existing Local User.
+    summary: Update an existing Service User.
+    description: Update an existing Service User.
     tags:
-      - Local Users
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Updated Local User.
+        description: Updated Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LocalUser'
+              $ref: '#/definitions/ServiceUser'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -112,18 +112,18 @@ local-users-id:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/LocalUser'
+      $ref: '#/requestBodies/ServiceUser'
   delete:
-    summary: Delete a specific Local User.
-    description: Delete a specific Local User.
+    summary: Delete a specific Service User.
+    description: Delete a specific Service User.
     tags:
-      - Local Users
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
-        description: Local User was deleted successfully.
+        description: Service User was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -136,67 +136,53 @@ local-users-id:
         $ref: './common.yml#/responses/UnexpectedError'
 
 requestBodies:
-  LocalUser:
+  ServiceUser:
     content:
       application/json:
         schema:
-          $ref: '#/definitions/LocalUser'
-    description: Local User object.
+          $ref: '#/definitions/ServiceUser'
+    description: Service User object.
     required: true
-  LocalUserCreate:
+  ServiceUserCreate:
     content:
       application/json:
         schema:
           allOf:
-            - $ref: '#/definitions/LocalUser'
+            - $ref: '#/definitions/ServiceUser'
             - required:
                 - password
-    description: Local User object.
+    description: Service User object.
     required: true
 
 definitions:
-  LocalUserList:
+  ServiceUserList:
     allOf:
       - $ref: './common.yml#/definitions/ResultList'
       - type: object
-        description: Represents a list of Local Users.
+        description: Represents a list of Service Users.
         properties:
           data:
             type: array
-            description: List of Local Users.
+            description: List of Service Users.
             items:
-              $ref: '#/definitions/LocalUser'
-  LocalUser:
+              $ref: '#/definitions/ServiceUser'
+  ServiceUser:
     allOf:
       - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
-        description: Represents a Local User.
-        required:
-          - firstName
-          - lastName
+        description: Represents a Service User.
         properties:
-          firstName:
-            type: string
-            description: First name of the user. May be used as claim.
-            example: Bobby
-          lastName:
-            type: string
-            description: Last name of the user. May be used as claim.
-            example: Tables
+          labels:
+            type: object
+            description: Labels of the service. Will be used as claim.
+            additionalProperties:
+              type: string
           password:
             type: string
             format: password
             writeOnly: true
             description: Password for the user. Omit the field to keep the old password when updating a user.
             example: 'tSW3!QBv(rj{UuLY'
-          email:
-            type: string
-            description: E-mail address for the user. May be used as claim.
-            example: bobby@tables.com
-          phone:
-            type: string
-            description: Phone number for the user. May be used as claim.
-            example: +1-202-555-0172
           disabled:
             type: boolean
             description: If true, the user will not be able to login.
@@ -209,6 +195,6 @@ definitions:
             format: date-time
             description: >-
               The date time when the user got locked out.
-              A local user is locked out of the system after X amount of consecutive failed login attempts, where X is configurable in the local Identity Provider.
-              The lock is in effect for Y minute(s), where Y is configurable in the local Identity Provider.
+              A service user is locked out of the system after X amount of consecutive failed login attempts, where X is configurable in the service Identity Provider.
+              The lock is in effect for Y minute(s), where Y is configurable in the service Identity Provider.
               When the user logs in successfully, this field becomes null.

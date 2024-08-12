@@ -10,7 +10,7 @@ appliances-backup:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
-      '200':
+      '202':
         description: Appliance Backup has begun.
         content:
           application/json:
@@ -29,8 +29,14 @@ appliances-backup:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        $ref: './common.yml#/responses/ApplianceStateError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
+      '503':
+        $ref: './common.yml#/responses/ServiceUnavailableError'
     requestBody:
       description: Appliance Backup parameters.
       content:
@@ -75,7 +81,16 @@ appliances-backup-id-status:
                     - base64
                 output:
                   type: string
-                  description: The output of the command
+                  description: The output of the command. Must be checked if result is failure
+                result:
+                  type: string
+                  description: Only set when status is done.
+                  enum:
+                    - failure
+                    - success
+                message:
+                  type: string
+                  description: A free text field that shows what internally the backup is doing.
                 status:
                   type: string
                   description: Current status of the Appliance Backup.
@@ -88,6 +103,10 @@ appliances-backup-id-status:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        $ref: './common.yml#/responses/ApplianceStateError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 appliances-backup-id:
@@ -95,7 +114,7 @@ appliances-backup-id:
     summary: Download an Appliance Backup.
     description: >-
       Download a completed Appliance Backup with the given ID of an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v16+gpg** as it returns a GPG
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v21+gpg** as it returns a GPG
       file as blob instead of JSON.
     tags:
       - Appliance Backup
@@ -103,6 +122,13 @@ appliances-backup-id:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
       - $ref: '#/parameters/backupId'
+      - in: header
+        name: range
+        description: HTTP Range support for downloading partial backups.
+        schema:
+          type: string
+        required: true
+        example: bytes=0-1023
     responses:
       '200':
         description: Backup file is being streamed.
@@ -118,13 +144,19 @@ appliances-backup-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '410':
         description: Backup creation failed.
+      '412':
+        $ref: './common.yml#/responses/ApplianceStateError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
     summary: Delete an Appliance Backup.
-    description: Delete an Appliance Backup file from an Appliance.
+    description: >-
+      Delete an Appliance Backup file from an Appliance.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v21+gpg**.
     tags:
       - Appliance Backup
     parameters:
@@ -132,7 +164,7 @@ appliances-backup-id:
       - $ref: './common.yml#/parameters/id'
       - $ref: '#/parameters/backupId'
     responses:
-      '204':
+      '202':
         description: Backup file was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
@@ -140,6 +172,10 @@ appliances-backup-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        $ref: './common.yml#/responses/ApplianceStateError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 

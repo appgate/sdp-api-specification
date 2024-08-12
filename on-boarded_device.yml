@@ -1,9 +1,9 @@
 on-boarded-devices:
   get:
-    summary: List all On-Boarded Devices.
-    description: List all On-Boarded Devices.
+    summary: List all Registered Devices.
+    description: List all Registered Devices.
     tags:
-      - On-boarded Devices
+      - Registered Devices
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
@@ -13,7 +13,7 @@ on-boarded-devices:
       - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
-        description: List of On-Boarded Devices.
+        description: List of Registered Devices.
         content:
           application/json:
             schema:
@@ -22,39 +22,116 @@ on-boarded-devices:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 on-boarded-devices-distinguished-name:
   delete:
-    summary: Remove an On-Boarded Device for the given Distinguished Name.
-    description: Remove an On-Boarded Device for the given Distinguished Name. The device will need to on-board again.
+    summary: Remove a Registered Device for the given Distinguished Name.
+    description: -> 
+      Remove a Registered Device for the given Distinguished Name. 
+      The device's all tokens will be revoked and it will need to register again.
     tags:
-      - On-boarded Devices
+      - Registered Devices
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/distinguishedName'
     responses:
       '204':
-        description: On-Boarded Device was removed successfully.
+        description: Registered Device was removed successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
+on-boarded-devices-revoke-tokens:
+  post:
+    summary: Revoke tokens for devices.
+    description: >-
+      Revoke tokens for devices according to the request parameters.
+    tags:
+      - Active Devices
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+    responses:
+      '200':
+        description: Device tokens were revoked successfully. Returns the list of devices affected.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/OnBoardedDeviceList'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      $ref: '#/requestBodies/DeviceRevocationRequest'
+on-boarded-devices-reevaluate:
+  post:
+    summary: Reevaluate all sessions with given Distinguished Name substring.
+    description:  >-
+      Reevaluate all sessions belongs to the user&devices ending with the given Distinguished Name substring.
+    tags:
+      - Active Devices
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/distinguishedName'
+    responses:
+      '200':
+        description: List of reevaluated devices' Distinguished Names.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reevaluatedDistinguishedNames:
+                  type: array
+                  description: List of reevaluated devices' Distinguished Names.
+                  items:
+                    type: string
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+requestBodies:
+  DeviceRevocationRequest:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/DeviceRevocationRequest'
+    description: Device revocation parameters.
 
 definitions:
   OnBoardedDeviceList:
     allOf:
       - $ref: './common.yml#/definitions/ResultList'
       - type: object
-        description: Represents a list of On-Boarded Devices.
+        description: Represents a list of Registered Devices.
         properties:
           data:
             type: array
-            description: List of On-Boarded Devices.
+            description: List of Registered Devices.
             items:
               $ref: '#/definitions/OnBoardedDevice'
   OnBoardedDevice:
@@ -62,15 +139,73 @@ definitions:
       - $ref: './common.yml#/definitions/DeviceAndUser'
       - type: object
         properties:
+          device_type:
+            type: string
+            description: Type of the registered device.
+            enum:
+              - Client
+              - Admin
+              - Client/Admin
           hostname:
             type: string
-            description: Hostname of the Device at the time of On-Boarding, sent by the Device.
+            description: Hostname of the Device at the time of registration, sent by the Device.
             example: user.ad.company.com
           onBoardedAt:
             type: string
             format: date-time
-            description: On-boarding time.
+            description: Registration time.
           lastSeenAt:
             type: string
             format: date-time
             description: The time when the device last signed in. 'null' if it has signed in last on a Controller that was older than 5.4 at the time.
+  DeviceRevocationRequest:
+    type: object
+    description: Details for token revocation request.
+    required:
+      - distinguishedNameFilter
+    properties:
+      distinguishedNameFilter:
+        type: string
+        description: >-
+          The filter to find devices by their distinguished names.
+          It is used with "starts with" logic.
+          If a full distinguished name is passed, then a single device will be affected.
+          If "OU=ldap" is passed, then all devices for "ldap" identity provider will be affected.
+          If left as empty string "", then all active devices past 24 hours will be affected.
+          Cannot be null.
+        example: 'CN=4c07bc6757ea42ddb702c2d6c45419fc,CN=user,OU=ldap'
+      specificDistinguishedNames:
+        type: array
+        description: >-
+          Specific distinguished names can be defined to renew tokens in bulk for a specific list of devices.
+          "distinguishedNameFilter" field should be empty string for this to work.
+        items:
+          type: string
+          example: 'CN=4c07bc6757ea42ddb702c2d6c45419fc,CN=user,OU=ldap'
+      siteId:
+        type: string
+        format: uuid
+        description: Optional parameter to revoke only devices that connected to the given Site ID.
+      tokenType:
+        type: string
+        enum:
+          - Claims
+          - AdminClaims
+          - Entitlement
+          - Administration
+        description: Optional parameter to revoke only certain types of tokens.
+      revocationReason:
+        type: string
+        description: Optional reason text for the revocation. The value is stored and logged.
+        example: Pushing the policy changes.
+      delayMinutes:
+        type: integer
+        description: >-
+          The delay time for client token revocation in minutes. Client will renew the token(s) at
+          least 5 minutes before the revocation time, without losing connection.
+        default: 5
+      devicesPerSecond:
+        type: number
+        description: >-
+          In order to spread the workload on the Controllers, tokens are revoked in batches according to this value.
+        default: 2

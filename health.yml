@@ -1,0 +1,117 @@
+app-connectivity:
+  get:
+    summary: Get App Connectivity report.
+    description: >-
+      Get a list of all unhealthy apps reported by gateways.
+      Requires a license.
+    tags:
+      - Health
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: List of unhealthy apps.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/UnhealthyAppList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+definitions:
+  UnhealthyAppList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of unhealthy apps.
+        properties:
+          data:
+            type: array
+            description: List of unhealthy apps.
+            items:
+              $ref: '#/definitions/UnhealthyApp'
+  UnhealthyApp:
+    type: object
+    description: Represents an unhealthy app on a specific Gateway.
+    properties:
+      entitlement:
+        type: string
+        format: uuid
+        description: ID of the Entitlement.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      entitlementName:
+        type: string
+        description: Name of the Entitlement.
+      reportCount:
+        type: integer
+        description: Total report count for the Entitlement.
+      site:
+        type: string
+        format: uuid
+        description: ID of the Site.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      siteName:
+        type: string
+        description: Name of the Site.
+      appliance:
+        type: string
+        format: uuid
+        description: ID of the reporting Gateway Appliance.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      gatewayName:
+        type: string
+        description: Name of the Gateway Appliance.
+      gatewaysReportingCount:
+        type: integer
+        description: The total amount of Gateways reporting this Entitlement as unhealthy.
+      gatewayCountInSite:
+        type: integer
+        description: The total amount of active Gateways in the Site.
+      ports:
+        type: array
+        description: All the ports being reported as unhealthy.
+        items:
+          type: string
+      lastReported:
+        type: string
+        format: date-time
+        description: Timestamp of the last time the Entitlement was reported unhealthy.
+      actions:
+        type: array
+        description: Specific actions being reported unhealthy and its details.
+        items:
+          type: object
+          properties:
+            ip:
+              type: string
+              description: IP of the resource.
+              example: 10.0.0.52
+            index:
+              type: integer
+              description: Action index of the Entitlement.
+            reportCount:
+              type: integer
+              description: Report count of the unhealthy action.
+            portRange:
+              type: string
+              description: Port range affected on the unhealthy action.
+              example: 1-4000
+            reason:
+              type: string
+              description: The reason for the unhealth.
+              example: rst-received
+            lastReported:
+              type: string
+              format: date-time
+              description: Timestamp of the last time the action was reported unhealthy.

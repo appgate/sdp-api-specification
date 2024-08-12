@@ -19,10 +19,10 @@ claim-names:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
-
-
 
 definitions:
   ClaimNamesList:
@@ -36,8 +36,18 @@ definitions:
         $ref: '#/definitions/ClaimNames'
       onDemand:
         $ref: '#/definitions/ClaimNames'
-
-
+      ztpRiskRules:
+        type: array
+        description: Risk Rules available via ZTP integration.
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID of the rule.
+            name:
+              type: string
+              description: Name of the rule
   ClaimNames:
     type: array
     items:
@@ -57,6 +67,7 @@ definitions:
             - number
             - date
             - list
+            - dictionary
         availableForPolicy:
           type: boolean
           description: >-

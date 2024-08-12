@@ -1,0 +1,21 @@
+version:
+  get:
+    tags:
+      - Version
+    summary: Get the current and lowest accepted version of the peer API.
+    responses:
+      200:
+        description: The accepted versions of the APIs
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                peerVersion:
+                  type: integer
+                  description: The current peer version.
+                  example: 20
+                lowestPeerVersionSupported:
+                  type: integer
+                  description: The lowest accepted peer version.
+                  example: 16

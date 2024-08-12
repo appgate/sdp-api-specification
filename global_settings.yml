@@ -17,6 +17,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
@@ -33,6 +35,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -51,6 +55,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -89,15 +95,23 @@ definitions:
         type: number
         description: Number of minutes the VPN certificates is valid for clients.
         example: 525600
+      registeredDeviceExpirationDays:
+        type: number
+        description: Number of days registered devices are kept in storage before being deleted.
+        example: 90
       spaMode:
         type: string
         description: SPA mode.
         enum:
           - TCP
           - 'UDP-TCP'
+      spaTimeWindowSeconds:
+        type: number
+        description: Number of seconds the time skew SPA will allow.
+        default: 600
       loginBannerMessage:
         type: string
-        description: The configured message will be displayed on the login UI.
+        description: The configured message will be displayed on the sign-in UI.
         example: Authorized use only.
       messageOfTheDay:
         type: string
@@ -112,11 +126,6 @@ definitions:
         writeOnly: true
         description: The passphrase to encrypt Appliance Backups when backup API is used.
         example: 'tSW3!QBv(rj{UuLY'
-      fips:
-        type: boolean
-        description: FIPS 140-2 Compliant Tunneling.
-        deprecated: true
-        example: false
       geoIpUpdates:
         type: boolean
         description: Whether the automatic GeoIp updates are enabled or not.
@@ -130,28 +139,21 @@ definitions:
           - Performance
       appDiscoveryDomains:
         type: array
-        description: Domains to monitor for for App Discovery feature.
+        description: >-
+          Deprecated as of 6.4. Functionality will be replaced with another feature.
+          Domains to monitor for the App Discovery feature.
+        deprecated: true
         items:
           type: string
           example: company.com
-      # Not fully implemented yet
-      #      dnsRedirectionHosts:
-      #        type: array
-      #        description: Redirection hosts to use in DNS Rules.
-      #        items:
-      #          type: object
-      #          required:
-      #            - host
-      #          properties:
-      #            id:
-      #              type: string
-      #              format: uuid
-      #              description: ID for the host.
-      #              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
-      #            host:
-      #              type: string
-      #              description: Host to redirect.
-      #              example: dns-redirect.company.com
+      profileHostname:
+        type: string
+        description: The hostname to use for generating profile URLs.
+        example: appgate.company.com
+      collectiveName:
+        type: string
+        description: Friendly name for the Collective.
+        example: Test Collective
       collectiveId:
         type: string
         format: uuid

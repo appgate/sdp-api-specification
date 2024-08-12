@@ -13,6 +13,8 @@ license:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -31,6 +33,8 @@ license:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -52,6 +56,8 @@ license:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 license-id:
@@ -72,6 +78,8 @@ license-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 license-next:
@@ -91,6 +99,8 @@ license-next:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,6 +121,8 @@ license-next:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -131,6 +143,8 @@ license-next:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -178,25 +192,113 @@ definitions:
         properties:
           users:
             type: number
-            description: The amount of licensed users in the system currently.
+            description: The amount of licensed users in the system at present.
             example: 152
           portalUsers:
             type: number
-            description: The amount of licensed portal users in the system currently.
+            description: The amount of licensed portal users in the system at present.
             example: 24
+          serviceUsers:
+            type: number
+            description: The amount of licensed service users in the system at present.
+            example: 2
           sites:
             type: number
-            description: The amount of Sites in the system currently.
+            description: The amount of Sites in the system at present.
             example: 3
           connectorGroups:
             type: number
-            description: The amount of grouped Connector clients in the system currently.
+            description: The amount of grouped Connector clients in the system at present.
             example: 4
-      error:
-        type: string
-        deprecated: true
-        description: Error message if there is a problem with one or more License.
-        example: License has expired.
+          multiUserClients:
+            type: number
+            description: The amount of licensed multi-user clients in the system at present.
+            example: 10
+          mfaProviders:
+            type: number
+            description: The amount of non-built-in MFA Providers in the system at present.
+            example: 1
+          deviceScripts:
+            type: number
+            description: The amount of non-built-in Device Claim Scripts in the system at present.
+            example: 3
+          criteriaScripts:
+            type: number
+            description: The amount of non-built-in Criteria Scripts in the system at present.
+            example: 3
+          entitlementScripts:
+            type: number
+            description: The amount of non-built-in EntitlementScripts in the system at present.
+            example: 3
+          userScripts:
+            type: number
+            description: The amount of non-built-in User Claim Scripts in the system at present.
+            example: 3
+          fallbackSites:
+            type: number
+            description: The amount of fallback Sites in the system at present.
+            example: 1
+          nearestSites:
+            type: number
+            description: The amount of nearest Sites in the system at present.
+            example: 1
+          localSites:
+            type: number
+            description: The amount of local Sites in the system at present.
+            example: 1
+          profileGroups:
+            type: number
+            description: The amount of Profile Groups in the system at present.
+            example: 2
+          applianceCustomizations:
+            type: number
+            description: The amount of Appliance Customizations in the system at present.
+            example: 2
+          ringfenceRules:
+            type: number
+            description: The amount of non-built-in Ringfence Rules in the system at present.
+            example: 2
+          otpSeeds:
+            type: number
+            description: The amount of Time-based OTP Seeds in the system at present.
+            example: 2
+          fido2Devices:
+            type: number
+            description: The amount of FIDO2 devices in the system at present.
+            example: 2
+          identityProviders:
+            type: object
+            description: The amount of non-built-in Identity Providers in the system at present broken out by type.
+            properties:
+              ldap:
+                type: number
+              ldapCertificate:
+                type: number
+              radius:
+                type: number
+              saml:
+                type: number
+              oidc:
+                type: number
+          policies:
+            type: object
+            description: The amount of Policies in the system at present broken out by type.
+            properties:
+              access:
+                type: number
+              stop:
+                type: number
+              device:
+                type: number
+              dns:
+                type: number
+              admin:
+                type: number
+              mixed:
+                type: number
+          riskModel:
+            type: boolean
+            description: Whether the risk model is utilized or not.
   LicenseEntitlement:
     type: object
     description: License entitlement details.
@@ -209,6 +311,10 @@ definitions:
         type: number
         description: The maximum Portal users allowed by the license.
         example: 200
+      maxServiceUsers:
+        type: number
+        description: The maximum Service users allowed by the license.
+        example: 200
       usersLeaseTimeHours:
         type: number
         description: >-
@@ -219,16 +325,30 @@ definitions:
         description: >-
           Number of hours User Licenses will be reserved for Portal users before they are reclaimable by others.
         example: 720
+      serviceUsersLeaseTimeHours:
+        type: number
+        description: >-
+          Number of hours User Licenses will be reserved for Service users before they are reclaimable by others.
+        example: 720
       maxSites:
         type: number
         description: >-
           The maximum sites allowed by the license.
-          If it's the usage details, then it's the amount of sites in the system currently.
+          If it's the usage details, then it's the amount of sites in the system at present.
         example: 5
       maxConnectorGroups:
         type: number
         description: The maximum Connector groups allowed by the license.
         example: 150
+      riskEngine:
+        type: boolean
+        description: Whether the Risk Engine feature is enabled.
+      learningMode:
+        type: boolean
+        description: Whether the Learning Mode feature is enabled.
+      userExperienceMonitoring:
+        type: boolean
+        description: Whether the User Experience Monitoring feature is enabled.
   License:
     allOf:
       - $ref: '#/definitions/LicenseEntitlement'
@@ -246,7 +366,8 @@ definitions:
             example: 2
           type:
             type: number
-            description: 'Type of the license. 1: production, 2: installation, 3: test, 4: built-in, 5: aws built-in'
+            description: 'Type of the license. 1: production, 2: installation, 3: test, 4: built-in, 5: aws
+             built-in, 6: metered'
             example: 2
           request:
             type: string
