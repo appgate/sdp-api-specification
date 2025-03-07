@@ -343,12 +343,12 @@ definitions:
       riskEngine:
         type: boolean
         description: Whether the Risk Engine feature is enabled.
-      learningMode:
+      applicationDiscovery:
         type: boolean
-        description: Whether the Learning Mode feature is enabled.
-      userExperienceMonitoring:
+        description: Whether the Application Discovery feature is enabled.
+      digitalExperienceMonitoring:
         type: boolean
-        description: Whether the User Experience Monitoring feature is enabled.
+        description: Whether the Digital Experience Monitoring feature is enabled.
   License:
     allOf:
       - $ref: '#/definitions/LicenseEntitlement'

@@ -1,0 +1,267 @@
+discovered-apps:
+  get:
+    summary: Get a list of discovered apps from the Advisor.
+    description: >-
+      Get a list of discovered apps from the Advisor.
+      Requires a license.
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: List of discovered apps.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/AppList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+discovered-app-id:
+  get:
+    summary: Get the details of a discovered app.
+    description: Get the details of a discovered app.
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: App details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/AppDetails'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+discovered-app-id-access:
+  post:
+    summary: Create access to a discovered app.
+    description: Create access to a discovered app.
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: Access is created.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/AppDetails'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            description: Access details.
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                description: Alias to assign to the app access. An Entitlement and Policy will be created with this name.
+                example: Service
+              group:
+                type: string
+                description: The group to assign the app to. The Policy created will use this group in its criteria.
+                example: Accounting
+              provider:
+                type: string
+                format: uuid
+                description: The Identity Provider ID to assign the app to. The Policy created will use this provider in its criteria.
+              action:
+                type: string
+                description: Applied action to the app.
+                default: allow
+                enum:
+                  - allow
+                  - block
+                  - alert
+                  - exclude
+      required: true
+discovered-app-id-reset:
+  post:
+    summary: Reset discovered app
+    description: Resets a discovered app
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: Data reset
+      '400':
+        $ref: './common.yml#/responses/BadRequestError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+definitions:
+  AppList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of discovered apps.
+        properties:
+          data:
+            type: array
+            description: List of discovered apps.
+            items:
+              $ref: '#/definitions/App'
+  App:
+    type: object
+    description: Represents a discovered app.
+    properties:
+      id:
+        type: string
+        description: ID of the app.
+        example: 181ff4c94fdce2a5
+      host:
+        type: string
+        description: Host of the app.
+        example: service.company.com
+      port:
+        type: integer
+        description: Port of the app.
+        example: 443
+      usersCount:
+        type: integer
+        description: Total user count for the app.
+        example: 1200
+      lastAccessedAt:
+        type: string
+        format: date-time
+        description: Timestamp of the last time the app was accessed by a user.
+      status:
+        type: string
+        description: Status of the discovered app.
+        enum:
+          - NoActionTaken
+          - ActionTaken
+      alias:
+        type: string
+        description: The alias of the app if access is granted.
+        example: Service
+      lastModified:
+        type: string
+        format: date-time
+        description: Timestamp of the last time an action is taken on this discovered app.
+  AppDetails:
+    allOf:
+      - $ref: '#/definitions/App'
+      - type: object
+        properties:
+          rule:
+            type: string
+            description: The rule applied.
+            example: allow
+          protocol:
+            type: string
+            description: The protocol used.
+            example: TCP
+          direction:
+            type: string
+            description: The direction of the access.
+            example: up
+          users:
+            type: array
+            description: Users accessed this app.
+            items:
+              allOf:
+                - $ref: './common.yml#/definitions/User'
+                - type: object
+                  properties:
+                    lastAppAccessAt:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the last time the app was accessed by this user.
+          commonGroups:
+            type: array
+            description: Common groups of the users which have accessed this app.
+            items:
+              allOf:
+                - $ref: './common.yml#/definitions/CommonGroup'
+                - type: object
+          hitChartData:
+            type: array
+            description: Data for hit count chart per day.
+            items:
+              type: object
+              additionalProperties:
+                type: number
+                description: Number of hits for this day.
+              example:
+                2024-08-22: 256
+          lastResetAt:
+            type: string
+            format: date-time
+            description: Timestamp of the last time the app was reset.
+          lastAnalysisAt:
+            type: string
+            format: date-time
+            description: Timestamp of the last time the analysis is done for all apps.
+          policyId:
+            type: string
+            format: uuid
+            description: The ID of the Policy generated when access is granted to this app.
+          entitlementId:
+            type: string
+            format: uuid
+            description: The ID of the Entitlement generated when access is granted to this app.
+          history:
+            type: array
+            description: History of the actions taken on this app.
+            items:
+              allOf:
+                - type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                    event:
+                      type: string
+                      enum:
+                        - AccessGranted
+                - $ref: './common.yml#/definitions/AppliedBy'

@@ -491,6 +491,9 @@ definitions:
                       items:
                         type: string
                         example: company.com
+                    autoClientDns:
+                      type: boolean
+                      description: This will configure Client machines' DNS according to this resolver if the Client connects to this Site.
               awsResolvers:
                 type: array
                 description: Resolvers to resolve Amazon machines by querying Amazon Web Services.
@@ -709,7 +712,8 @@ definitions:
                     $ref: './appliance.yml#/definitions/AllowResources'
                   defaultTtlSeconds:
                     type: integer
-                    description: This will apply whenever Gateway gets a DNS response which has no TTL set.
+                    deprecated: true
+                    description: Deprecated as of 6.4. This will apply whenever Gateway gets a DNS response which has no TTL set.
                     default: 300
   ResolverResources:
     allOf:

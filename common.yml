@@ -212,6 +212,38 @@ definitions:
         type: string
         description: The provider name of the user, same as the one in the Distinguished Name.
         example: ldap
+  AppliedBy:
+    type: object
+    properties:
+      appliedBy:
+        type: string
+        description: The distinguished name of who updated the message metadata.
+        example: CN=4c07bc6757ea42ddb702c2d6c45419fc,CN=admin,OU=local
+      appliedByUsername:
+        type: string
+        description: The username of the user who updated the message metadata.
+        example: admin
+      appliedByProviderName:
+        type: string
+        description: The provider name of the user who updated the message metadata.
+        example: local
+      appliedByDeviceId:
+        type: string
+        format: uuid
+        description: The device ID of the user who updated the message metadata.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+  CommonGroup:
+    properties:
+      name:
+        type: string
+        description: The name of the group.
+        example: group
+      providerNames:
+        type: array
+        items:
+          type: string
+          description: The name of identity provider that the group originates from.
+          example: ldap
   User:
     properties:
       userDistinguishedName:
@@ -395,6 +427,12 @@ responses:
           $ref: '#/definitions/Error'
   ApplianceStateError:
     description: Appliance is not in the right state for this operation.
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Error'
+  BadRequestError:
+    description: Invalid or malformed data in request.
     content:
       application/json:
         schema:

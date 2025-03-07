@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Appgate SDP Controller REST API
-  version: API version 21.0
+  version: API version 21.1
   license:
     name: Proprietary
     url: https://www.appgate.com
@@ -136,6 +136,8 @@ x-tagGroups:
     tags:
       - Active Sessions
       - Client Logs
+      - Discovered Apps
+      - Health
       - Registered Devices
       - Blacklisted Users
       - Licensed Users
@@ -143,7 +145,6 @@ x-tagGroups:
       - FIDO2 Devices
       - Issued Certificates
       - Active Devices
-      - Health
   - name: Settings
     tags:
       - Global Settings
@@ -441,3 +442,11 @@ paths:
     $ref: './secrets.yml#/secrets-id'
   /health/app-connectivity:
     $ref: './health.yml#/app-connectivity'
+  /discovered-apps:
+    $ref: './discovered_apps.yml#/discovered-apps'
+  /discovered-apps/{id}:
+    $ref: './discovered_apps.yml#/discovered-app-id'
+  /discovered-apps/{id}/access:
+    $ref: './discovered_apps.yml#/discovered-app-id-access'
+  /discovered-apps/{id}/reset:
+    $ref: './discovered_apps.yml#/discovered-app-id-reset'

@@ -56,6 +56,9 @@ definitions:
       reportCount:
         type: integer
         description: Total report count for the Entitlement.
+      userCount:
+        type: integer
+        description: Total user count affected by the unhealthy app.
       site:
         type: string
         format: uuid
@@ -78,11 +81,6 @@ definitions:
       gatewayCountInSite:
         type: integer
         description: The total amount of active Gateways in the Site.
-      ports:
-        type: array
-        description: All the ports being reported as unhealthy.
-        items:
-          type: string
       lastReported:
         type: string
         format: date-time
@@ -103,6 +101,9 @@ definitions:
             reportCount:
               type: integer
               description: Report count of the unhealthy action.
+            userCount:
+              type: integer
+              description: User count of the unhealthy action.
             portRange:
               type: string
               description: Port range affected on the unhealthy action.

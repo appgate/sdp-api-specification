@@ -272,6 +272,7 @@ definitions:
           - Ztp
           - ClientProfile
           - Secret
+          - DiscoveredApp
       scope:
         type: object
         description: >-

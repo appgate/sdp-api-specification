@@ -570,49 +570,34 @@ definitions:
             metadata:
               $ref: '#/definitions/AdminMessageMetadata'
   AdminMessageMetadata:
-    type: object
-    description: Additional metadata for the message.
-    required:
-      - message
-      - status
-    properties:
-      id:
-        type: string
-        description: The uuid of the message metadata.
-        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
-      message:
-        type: string
-        description: The message text.
-        example: Identity Provider "local" does not have IP Pool assigned.
-      status:
-        type: string
-        description: The status of the message.
-        enum:
-          - Unresolved
-          - Resolved
-          - Muted
-      appliedAt:
-        type: string
-        format: date-time
-        description: When the message metadata was updated.
-        example: 2020-01-01T12:00:00Z
-      appliedBy:
-        type: string
-        description: The distinguished name of who updated the message metadata.
-        example: CN=4c07bc6757ea42ddb702c2d6c45419fc,CN=admin,OU=local
-      appliedByUsername:
-        type: string
-        description: The username of the user who updated the message metadata.
-        example: admin
-      appliedByProviderName:
-        type: string
-        description: The provider name of the user who updated the message metadata.
-        example: local
-      appliedByDeviceId:
-        type: string
-        format: uuid
-        description: The device ID of the user who updated the message metadata.
-        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+    allOf:
+      - type: object
+        description: Additional metadata for the message.
+        required:
+          - message
+          - status
+        properties:
+          id:
+            type: string
+            description: The uuid of the message metadata.
+            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          message:
+            type: string
+            description: The message text.
+            example: Identity Provider "local" does not have IP Pool assigned.
+          status:
+            type: string
+            description: The status of the message.
+            enum:
+              - Unresolved
+              - Resolved
+              - Muted
+          appliedAt:
+            type: string
+            format: date-time
+            description: When the message metadata was updated.
+            example: 2020-01-01T12:00:00Z
+      - $ref: './common.yml#/definitions/AppliedBy'
   StatsAppliancesList:
     allOf:
       - $ref: '#/definitions/BaseStats'
@@ -1132,6 +1117,13 @@ definitions:
                     items:
                       type: string
                       example: Finance
+                  primarySite:
+                    type: string
+                    description: The name of the primary Site if this entitlements is currently active as part of backup Site feature.
+                    example: AWS Site
+                  domainEntitlement:
+                    type: boolean
+                    description: Whether the Entitlement has only domain:// type actions. When that is the case, the firewallRules being empty is a normal scenario.
             discoveredApps:
               type: array
               description: >-

@@ -56,7 +56,7 @@ on-boarded-devices-revoke-tokens:
     description: >-
       Revoke tokens for devices according to the request parameters.
     tags:
-      - Active Devices
+      - Registered Devices
     parameters:
       - $ref: './common.yml#/parameters/authorization'
     responses:
@@ -86,7 +86,7 @@ on-boarded-devices-reevaluate:
     description:  >-
       Reevaluate all sessions belongs to the user&devices ending with the given Distinguished Name substring.
     tags:
-      - Active Devices
+      - Registered Devices
     parameters:
       - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/distinguishedName'
