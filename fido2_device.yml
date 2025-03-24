@@ -5,7 +5,6 @@ fido2-devices:
     tags:
       - FIDO2 Devices
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ fido2-devices:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 fido2-devices-distinguished-name:
@@ -31,7 +32,6 @@ fido2-devices-distinguished-name:
     tags:
       - FIDO2 Devices
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - name: distinguished-name
         in: path
         description: >-
@@ -49,6 +49,8 @@ fido2-devices-distinguished-name:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -77,3 +79,7 @@ definitions:
             type: string
             description: The device name reported by the FIDO2 device during registration. May be empty.
             example: 'YubiKey NEO/NEO-n'
+          registered:
+            type: string
+            format: date-time
+            description: The registration date of the FIDO2 device.

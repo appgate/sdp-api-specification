@@ -1,0 +1,77 @@
+colors:
+  get:
+    summary: List all color codes.
+    description: Get a list of all supported color codes.
+    tags:
+      - Colors
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: List of Colors.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ColorList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+colors-id:
+  get:
+    summary: Get a specific Color.
+    description: Get a specific color code by ID.
+    tags:
+      - Colors
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: Single Color Code.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ColorCode'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+definitions:
+  ColorList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of Color Codes.
+        properties:
+          data:
+            type: array
+            description: List of Color Codes.
+            items:
+              $ref: '#/definitions/ColorCode'
+  ColorCode:
+    type: object
+    description: Represents a Color Code.
+    properties:
+      id:
+        type: number
+        description: ID of the color code.
+        example: 8
+      colorName:
+        type: string
+        description: Display name of the color.
+        example: Blue

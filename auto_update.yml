@@ -4,8 +4,6 @@ auto-update-settings:
     description: View Client Auto-Update settings.
     tags:
       - Client Auto-Update
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Client Auto-Update settings.
@@ -17,6 +15,8 @@ auto-update-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -24,8 +24,6 @@ auto-update-settings:
     description: Update Client Auto-Update settings.
     tags:
       - Client Auto-Update
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: Client Auto-Update settings were updated successfully.
@@ -35,6 +33,8 @@ auto-update-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -70,10 +70,6 @@ definitions:
         $ref: '#/definitions/Client'
       redHat8:
         $ref: '#/definitions/Client'
-      redHat7:
-        allOf:
-          - $ref: '#/definitions/Client'
-          - deprecated: true
   Client:
     type: object
     description: Client Auto-Update settings for the specified platform.

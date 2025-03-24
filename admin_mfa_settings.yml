@@ -4,8 +4,6 @@ admin-mfa-settings:
     description: View Admin MFA settings.
     tags:
       - MFA for Admins
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Admin MFA settings.
@@ -17,6 +15,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
@@ -24,8 +24,6 @@ admin-mfa-settings:
     description: Reset Admin MFA settings to disabled.
     tags:
       - MFA for Admins
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: Admin MFA settings were reset successfully.
@@ -33,6 +31,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -40,8 +40,6 @@ admin-mfa-settings:
     description: Update Admin MFA settings.
     tags:
       - MFA for Admins
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: Admin MFA settings were updated successfully.
@@ -51,6 +49,8 @@ admin-mfa-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':

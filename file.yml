@@ -5,7 +5,6 @@ files:
     tags:
       - Appliance Upgrade
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: '#/parameters/checksum'
     responses:
       '200':
@@ -18,6 +17,8 @@ files:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -27,8 +28,6 @@ files:
       Note that the File is downloaded and stored only on the current Controller, not synced between Controllers.
     tags:
       - Appliance Upgrade
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '202':
         description: >-
@@ -40,6 +39,8 @@ files:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -70,8 +71,6 @@ files:
       Note that the File is stored only on the current Controller, not synced between Controllers.
     tags:
       - Appliance Upgrade
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: The File was uploaded successfully.
@@ -79,6 +78,8 @@ files:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -102,7 +103,6 @@ files-filename:
     tags:
       - Appliance Upgrade
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: '#/parameters/filename'
       - $ref: '#/parameters/checksum'
     responses:
@@ -118,6 +118,8 @@ files-filename:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: '#/responses/FilenameError'
       '500':
@@ -128,7 +130,6 @@ files-filename:
     tags:
       - Appliance Upgrade
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: '#/parameters/filename'
       - $ref: '#/parameters/checksum'
     responses:
@@ -140,6 +141,8 @@ files-filename:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: '#/responses/FilenameError'
       '500':

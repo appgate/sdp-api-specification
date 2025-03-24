@@ -5,7 +5,6 @@ policies:
     tags:
       - Policies
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ policies:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ policies:
     description: Create a new Policy.
     tags:
       - Policies
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Policy.
@@ -44,6 +43,8 @@ policies:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -59,7 +60,6 @@ policies-id:
     tags:
       - Policies
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ policies-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ policies-id:
     tags:
       - Policies
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ policies-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ policies-id:
     tags:
       - Policies
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,6 +124,8 @@ policies-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -169,13 +173,14 @@ definitions:
               return result;
           type:
             type: string
-            description: Type of the Policy. It is informational and not enforced.
+            description: Type of the Policy. The assigned type will be enforced by not allowing enabling other types of features on the Policy.
             enum:
               - Access
               - Device
               - Dns
               - Admin
               - Mixed
+              - Stop
             default: Mixed
           entitlements:
             type: array
@@ -205,26 +210,12 @@ definitions:
             items:
               type: string
               example: developer
-          # Not fully implemented yet
-          #          dnsRules:
-          #            type: array
-          #            description: List of DNS Rule IDs in this Policy.
-          #            items:
-          #              type: string
-          #              format: uuid
-          #              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
-          #          dnsRuleLinks:
-          #            type: array
-          #            description: List of DNS Rule tags in this Policy.
-          #            items:
-          #              type: string
-          #              example: developer
           tamperProofing:
             type: boolean
             description: >-
               Will enable Tamper Proofing on desktop clients which will make sure the routes and ringfence
               configurations are not changed.
-            default: true
+              Will be set to true if it's not provided and the type is "Device".
           overrideSite:
             x-uuid-ref: Site
             type: string
@@ -239,6 +230,12 @@ definitions:
             description: >-
               The path of a claim that contains the UUID of an override site. It should be defined as "claims.xxx.xxx" or "claims.xxx.xxx.xxx".
             example: claims.user.overrideSite
+          overrideNearestSite:
+            type: boolean
+            description: Overrides the Entitlements Site according to location of the client and Sites where this feature is enabled.
+          applyFallbackSite:
+            type: boolean
+            description: The Entitlements in this Policy will be available in the fallback Sites if the corresponding Sites are configured accordingly.
           proxyAutoConfig:
             type: object
             description: Client configures PAC URL on the client OS.
@@ -283,6 +280,9 @@ definitions:
                     type: string
                     description: The DNS servers to use for the domain.
                     example: 192.168.1.22
+                registerTunIpsToActiveDirectory:
+                  type: boolean
+                  description: Enables a Windows feature to register Appgate TUN IPs to the Active Directory for this domain.
           clientSettings:
             type: object
             description: Settings that admins can apply to the Client.
@@ -350,6 +350,38 @@ definitions:
                 enum:
                   - Show
                   - Hide
+              newUserOnboarding:
+                type: string
+                description: >-
+                  Show or hide the tooltips for new users on Client UI as well as the arrival messages on Portal.
+                  As of 6.4, Client has no longer tooltips so this setting only affects the arrival messages on Portal.            
+                enum:
+                  - Show
+                  - Hide
+          clientProfileSettings:
+            type: object
+            description: Profiles that admins can apply to the Client.
+            properties:
+              enabled:
+                type: boolean
+                description: Enable Client Profile Settings for this Policy.
+              profiles:
+                type: array
+                description: List of profiles.
+                items:
+                  type: string
+                  format: uuid
+                  example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+              force:
+                type: boolean
+                description: >-
+                  Makes the client skip the user prompt and apply the profiles immediately.
+                  Required to be true to apply the settings when authorization fails, such as in case of Stop Policies.
+                default: false
+          customClientHelpUrl:
+            type: string
+            description: Set custom help URL on Client UI.
+            example: https://sdphelp.appgate.com/userguide/vx.x/
           administrativeRoles:
             type: array
             description: List of Administrative Role IDs in this Policy.
