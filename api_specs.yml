@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Appgate SDP Controller REST API
-  version: API version 22.0
+  version: API version 22.1
   license:
     name: Proprietary
     url: https://www.appgate.com

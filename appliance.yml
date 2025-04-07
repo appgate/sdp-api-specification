@@ -1169,12 +1169,15 @@ definitions:
     properties:
       total:
         type: integer
+        format: int64
         description: Total.
       used:
         type: integer
+        format: int64
         description: Used.
       free:
         type: integer
+        format: int64
         description: Free.
       percent:
         type: number
@@ -1451,8 +1454,8 @@ definitions:
                 default: false
               hostname:
                 type: string
-                description: >- 
-                  Hostname to connect by the Clients. 
+                description: >-
+                  Hostname to connect by the Clients.
                   It will be used to validate the Appliance Certificate.
                   Set it to "automatic.hostname.assignment" for cloud appliances in order for it to automatically configure the hostname on activation.
                 example: 'appgate.company.com'
@@ -1486,7 +1489,7 @@ definitions:
               hostname:
                 type: string
                 description: >-
-                  Hostname to connect to the admin interface. 
+                  Hostname to connect to the admin interface.
                   This hostname will be used to validate the appliance certificate.
                   Set it to "automatic.hostname.assignment" for cloud appliances in order for it to automatically configure the hostname on activation.
                 example: "appgate.company.com"
