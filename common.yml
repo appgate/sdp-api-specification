@@ -314,7 +314,7 @@ definitions:
       - LogForwarder
       - Connector
       - Portal
-      - MetricsAggregator
+      - Metrics Aggregator
 
 responses:
   ChangeData:
