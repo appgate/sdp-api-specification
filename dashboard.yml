@@ -114,6 +114,39 @@ admin-messages-summarize:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
+stats-appliances:
+  get:
+    deprecated: true
+    summary: Get Appliance Stats.
+    description: >-
+      Get Stats and status of the active appliances.
+      This API makes the controller to query every active appliance for status.
+      The operation may take long if one or more appliances take long to respond.
+
+
+      **Note:** if identical filter keys are chained with '&', the first filter is applied
+      and the rest are ignored.
+
+
+      Deprecated as of 6.3. Use `/appliances/status` instead.
+    tags:
+      - Appliance Stats (deprecated)
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: Active Appliances stats.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/StatsAppliancesList'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+
 top-entitlements:
   get:
     summary: Get Top Entitlements.
@@ -469,6 +502,216 @@ definitions:
             description: When the message metadata was updated.
             example: 2020-01-01T12:00:00Z
       - $ref: './common.yml#/definitions/AppliedBy'
+  StatsAppliancesList:
+    allOf:
+      - $ref: '#/definitions/BaseStats'
+      - $ref: './common.yml#/definitions/ResultListBase'
+      - type: object
+        properties:
+          queries:
+            type: array
+            description: The queries applied to the list.
+            items:
+              type: string
+          filterBy:
+            type: array
+            description: The filters applied to the list.
+            items:
+              $ref: './common.yml#/definitions/FilterBy'
+          controllerCount:
+            type: number
+            description: The number of active Appliances with the Controller role enabled.
+            example: 2
+          gatewayCount:
+            type: number
+            description: The number of active Appliances with the Gateway role enabled.
+            example: 12
+          applianceCount:
+            type: number
+            description: The number of active Appliances in total.
+            example: 14
+          logServerCount:
+            type: number
+            description: The number of active Appliances with the LogServer role enabled.
+            example: 1
+          logForwarderCount:
+            type: number
+            description: The number of active Appliances with the LogForwarder role enabled.
+            example: 0
+          connectorCount:
+            type: number
+            description: The number of active Appliances with the Connector role enabled.
+            example: 6
+          portalCount:
+            type: number
+            description: The number of active Appliances with the Portal role enabled.
+            example: 6
+          data:
+            type: array
+            items:
+              type: object
+              description: An active Appliance status details.
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: ID of the Appliance.
+                  example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+                name:
+                  type: string
+                  description: Name of the Appliance.
+                  example: Controller1
+                siteName:
+                  type: string
+                  description: Name of the Site for this Appliance.
+                  example: Default Site
+                tags:
+                  type: array
+                  description: Tags of the Appliance.
+                  items:
+                    type: string
+                  example:
+                    - developer
+                    - api-created
+                online:
+                  type: boolean
+                  description: Whether the Appliance is reachable by the Controller or not. Deprecated as of 5.1. "status" field will be set to "offline" instead.
+                  deprecated: true
+                version:
+                  type: string
+                  description: The Appliance build version.
+                  example: 4.2.0-12161-release
+                state:
+                  type: string
+                  description: State of the Appliance. For internal use.
+                  example: controller_ready
+                volumeNumber:
+                  type: number
+                  description: The volume number in use.
+                  example: 1
+                status:
+                  type: string
+                  description: Aggregated status of the Appliance.
+                  enum:
+                    - healthy
+                    - busy
+                    - warning
+                    - error
+                    - n/a
+                    - offline
+                function:
+                  type: string
+                  description: Comma-separated list of functions enabled on this Appliance in short format.
+                  example: CTR, GW, LS
+                controller:
+                  $ref: 'common.yml#/definitions/ControllerRole'
+                logServer:
+                  $ref: 'common.yml#/definitions/ApplianceRole'
+                logForwarder:
+                  $ref: 'common.yml#/definitions/ApplianceRole'
+                gateway:
+                  $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
+                connector:
+                  $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
+                portal:
+                  $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
+                appliance:
+                  $ref: 'common.yml#/definitions/ApplianceBaseRole'
+                numberOfSessions:
+                  type: integer
+                  description: Number of sessions on Gateway, Portal or Connector.
+                  example: 241
+                cpu:
+                  type: number
+                  format: float
+                  description: Current CPU utilization % on the Appliance.
+                  example: 1.2
+                memory:
+                  type: number
+                  format: float
+                  description: Current memory reserved % on the Appliance.
+                  example: 21.5
+                disk:
+                  type: number
+                  format: float
+                  description: Current disk usage % on the Appliance.
+                  example: 1.2
+                diskInfo:
+                  type: object
+                  description: Disk usage information.
+                  properties:
+                    total:
+                      type: number
+                      format: long
+                      description: Total disk space in bytes.
+                      example: 20735209472
+                    used:
+                      type: number
+                      format: long
+                      description: Used disk space in bytes.
+                      example: 120324096
+                    free:
+                      type: number
+                      format: long
+                      description: Free disk space in bytes.
+                      example: 19537997824
+                network:
+                  type: object
+                  description: Current network utilization on the Appliance.
+                  properties:
+                    busiestNic:
+                      type: string
+                      description: The name of the NIC that's most used.
+                      example: eth1
+                    dropin:
+                      type: number
+                      description: Number of inbound packets dropped for the whole uptime.
+                      example: 2563
+                    dropout:
+                      type: number
+                      description: Number of outbound packets dropped for the whole uptime.
+                      example: 120
+                    rxSpeed:
+                      type: string
+                      description: >-
+                        The speed of the inbound network activity on the busiest NIC.
+                        The average is taken for the last 10 seconds.
+                      example: 5.77 Kbps
+                    txSpeed:
+                      type: string
+                      description: >-
+                        The speed of the outbound network activity on the busiest NIC.
+                        The average is taken for the last 10 seconds.
+                      example: 8.53 Kbps
+                    ips:
+                      type: object
+                      description: IPs of the Appliance per NIC.
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                      example:
+                        eth0:
+                          - 10.0.0.1
+                          - abba::cafe
+                        eth1:
+                          - 200.123.123.12
+                upgrade:
+                  type: object
+                  description: Upgrade Status if there is one going.
+                  properties:
+                    status:
+                      type: string
+                      description: The Upgrade status
+                      example: installing
+                    details:
+                      type: string
+                      description: Optional details for the current Upgrade Status.
+                      example: a reboot is required for the upgrade to go into effect
+                customizationName:
+                  type: string
+                  description: The name of the Appliance Customization if one is assigned to this Appliance.
+                  example: MyAgent
   TopEntitlements:
     allOf:
       - $ref: '#/definitions/BaseStats'
