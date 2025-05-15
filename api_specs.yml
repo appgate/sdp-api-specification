@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Appgate SDP Controller REST API
-  version: API version 22.3
+  version: API version 22.4
   license:
     name: Proprietary
     url: https://www.appgate.com
@@ -185,6 +185,8 @@ paths:
     $ref: './dashboard.yml#/admin-messages-summarize'
   /admin-messages/{id}:
     $ref: './dashboard.yml#/admin-messages-metadata'
+  /stats/appliances:
+    $ref: './dashboard.yml#/stats-appliances'
   /stats/top-entitlements:
     $ref: './dashboard.yml#/top-entitlements'
   /stats/active-sessions/dn:
