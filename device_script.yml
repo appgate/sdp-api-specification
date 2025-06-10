@@ -5,7 +5,6 @@ device-scripts:
     tags:
       - Device Claim Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ device-scripts:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ device-scripts:
     description: Create a new Device Claim Script.
     tags:
       - Device Claim Scripts
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Device Claim Script.
@@ -44,6 +43,8 @@ device-scripts:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -59,7 +60,6 @@ device-scripts-id:
     tags:
       - Device Claim Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ device-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ device-scripts-id:
     tags:
       - Device Claim Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ device-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ device-scripts-id:
     tags:
       - Device Claim Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,6 +124,8 @@ device-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 device-scripts-download-id:
@@ -131,7 +135,6 @@ device-scripts-download-id:
     tags:
       - Device Claim Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -158,6 +161,8 @@ device-scripts-download-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -199,14 +204,6 @@ definitions:
             format: byte
             writeOnly: true
             description: The Device Claim Script binary in Base64 format.
-          checksum:
-            type: string
-            readOnly: true
-            deprecated: true
-            description: >-
-              MD5 checksum of the file. It's used by the Client to decide whether to download the script again or not.
-              Deprecated as of 5.0. Use checksumSha256 field.
-            example: 9a913c1e1eccf35e6e78542b2152f7a7
           checksumSha256:
             format: checksum
             x-checksum-source: file

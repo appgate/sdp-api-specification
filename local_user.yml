@@ -5,7 +5,6 @@ local-users:
     tags:
       - Local Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ local-users:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ local-users:
     description: Create a new Local User.
     tags:
       - Local Users
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Local User.
@@ -44,6 +43,8 @@ local-users:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -51,7 +52,7 @@ local-users:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/LocalUser'
+      $ref: '#/requestBodies/LocalUserCreate'
 local-users-id:
   get:
     summary: Get a specific Local User.
@@ -59,7 +60,6 @@ local-users-id:
     tags:
       - Local Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ local-users-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ local-users-id:
     tags:
       - Local Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ local-users-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ local-users-id:
     tags:
       - Local Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,6 +124,8 @@ local-users-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -131,6 +135,16 @@ requestBodies:
       application/json:
         schema:
           $ref: '#/definitions/LocalUser'
+    description: Local User object.
+    required: true
+  LocalUserCreate:
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '#/definitions/LocalUser'
+            - required:
+                - password
     description: Local User object.
     required: true
 
@@ -154,7 +168,6 @@ definitions:
         required:
           - firstName
           - lastName
-          - password
         properties:
           firstName:
             type: string
@@ -178,6 +191,9 @@ definitions:
             type: string
             description: Phone number for the user. May be used as claim.
             example: +1-202-555-0172
+          disabled:
+            type: boolean
+            description: If true, the user will not be able to login.
           failedLoginAttempts:
             type: number
             description: Number of wrong password login attempts since last successiful login.
@@ -187,6 +203,6 @@ definitions:
             format: date-time
             description: >-
               The date time when the user got locked out.
-              A local user is locked out of the system after 5 consecutive failed login attempts.
-              The lock is in effect for 1 minute.
+              A local user is locked out of the system after X amount of consecutive failed login attempts, where X is configurable in the local Identity Provider.
+              The lock is in effect for Y minute(s), where Y is configurable in the local Identity Provider.
               When the user logs in successfully, this field becomes null.

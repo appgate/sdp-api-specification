@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 sites:
   get:
     summary: List all Sites.
@@ -5,7 +6,6 @@ sites:
     tags:
       - Sites
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +22,8 @@ sites:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +31,6 @@ sites:
     description: Create a new Site.
     tags:
       - Sites
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Site.
@@ -46,6 +46,8 @@ sites:
         $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -61,7 +63,6 @@ sites-id:
     tags:
       - Sites
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -76,6 +77,8 @@ sites-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -84,7 +87,6 @@ sites-id:
     tags:
       - Sites
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -101,6 +103,8 @@ sites-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -113,7 +117,6 @@ sites-id:
     tags:
       - Sites
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -124,6 +127,79 @@ sites-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+sites-status:
+  get:
+    summary: List all Sites with their health status.
+    description: List all Sites with their health status visible to current user. This API is significantly slower than the regular sites API.
+    tags:
+      - Sites
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: List of Sites with their health status.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/SiteWithStatusList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+sites-resources:
+  get:
+    summary: Query the resolvers on this Site for available resources.
+    description: >-
+      Query the resolvers on this Site for available resources. 
+      Controller will make a query to a random Gateway which will query the resolver providers in turn for the given parameters.
+    tags:
+      - Sites
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - name: resolver
+        in: query
+        description: Resolver type to query.
+        required: true
+        schema:
+          $ref: '#/definitions/ResolverType'
+      - name: type
+        in: query
+        description: Resource type to query.
+        required: true
+        schema:
+          $ref: '#/definitions/ResourceType'
+      - name: value
+        in: query
+        description: Optional parameter to search for values. Used with "...-tag-values" types.
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Query result.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ResolverResources'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -137,6 +213,32 @@ requestBodies:
     required: true
 
 definitions:
+  SiteWithStatusList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of Sites with their health status.
+        properties:
+          data:
+            type: array
+            description: List of Sites with their health status.
+            items:
+              $ref: '#/definitions/SiteWithStatus'
+  SiteWithStatus:
+    allOf:
+      - $ref: '#/definitions/Site'
+      - type: object
+        description: Represents a Site with its health status.
+        properties:
+          status:
+            type: string
+            description: Health status of the Site. Depends on the status of the Appliances in this Site.
+            enum:
+              - healthy
+              - warning
+              - unhealthy
+              - noActiveGateways
+              - n/a
   SiteList:
     allOf:
       - $ref: './common.yml#/definitions/ResultList'
@@ -155,21 +257,60 @@ definitions:
         description: Represents a Site.
         properties:
           shortName:
+            deprecated: true
             type: string
-            description: A short 4 letter name for the Site to be displayed on the Client.
+            description: >-
+              A short 4 letter name for the Site to be displayed on the Client.
+              Deprecated as of 6.4 since 6.4 Client does not display this anymore.
             example: AZU1
           description:
             type: string
             description: Description of the Site to be displayed on the Client.
             example: Gives access to Azure endpoints.
+          geolocation:
+            type: object
+            description: Geolocation of the Site.
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
           networkSubnets:
             type: array
             description: >-
               Network subnets in CIDR format to define the Site's boundaries.
               They are added as routes by the Client.
+              Comments are supported with "#" delimiter.
             items:
               type: string
-              example: 10.0.0.0/16
+              example: 10.0.0.0/16#comment
+          fallbackSite:
+            type: string
+            format: uuid
+            x-uuid-ref: Site
+            description: >-
+              When the Client fails to connect to the Site for a certain period of time,
+              configured Entitlements (see Policy) will be moved to this "Fallback" Site.
+            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          localSiteDetection:
+            type: object
+            description: Local Site Detection feature settings.
+            properties:
+              enabled:
+                type: boolean
+                description: Enables the Local Site Detection feature.
+                default: false
+              publicIps:
+                type: array
+                description: >-
+                  The public IPs or the CIDRs of the clients that will be considered local to this Site. 
+                  Those clients will connect to Gateways with the configured local hostname and local weights in Appliance configuration.
+                items:
+                  type: string
+                  example: 200.200.200.200
+          useForNearestSiteSelection:
+            type: boolean
+            description: If enabled, this Site will be included in the nearest Site override selection in Policies.
           ipPoolMappings:
             type: array
             description: >-
@@ -193,6 +334,13 @@ definitions:
                   x-uuid-ref: IpPool
                   description: IP Pool ID to map to.
                   example: 8c07bc67-5711-42dd-b702-c2d6c45419f8
+                type:
+                  type: string
+                  description: Mapping type.
+                  default: Translation
+                  enum:
+                    - Translation
+                    - Allocation
           defaultGateway:
             type: object
             description: Default Gateway configuration.
@@ -210,9 +358,10 @@ definitions:
                 description: >-
                   Network subnets to exclude when Default Gateway is enabled.
                   The traffic for these subnets will not go through the Gateway in this Site.
+                  Comments are supported with "#" delimiter.
                 items:
                   type: string
-                  example: 10.0.10.0/24
+                  example: 10.0.10.0/24#comment
           entitlementBasedRouting:
             type: boolean
             description: >-
@@ -223,10 +372,6 @@ definitions:
             type: object
             description: VPN configuration for this Site.
             properties:
-              stateSharing:
-                type: boolean
-                description: Configuration for keeping track of states.
-                default: false
               snat:
                 type: boolean
                 description: Source NAT.
@@ -238,6 +383,14 @@ definitions:
                   enabled:
                     type: boolean
                     default: true
+                  version:
+                    type: string
+                    description: TLS version.
+                    default: TLSv23
+                    enum:
+                      - TLSv1.2
+                      - TLSv1.3
+                      - TLSv23
               dtls:
                 type: object
                 description: VPN over DTLS protocol configuration.
@@ -276,6 +429,10 @@ definitions:
                 type: number
                 description: Frequency configuration for generating IP Access audit logs for a connection.
                 default: 120
+              logNatIpAndNatPort:
+                type: boolean
+                description: Whether to log NAT traffic or not.
+                default: false
           nameResolution:
             type: object
             description: Settings for asset name resolution.
@@ -286,12 +443,13 @@ definitions:
                 default: false
               dnsResolvers:
                 type: array
-                description: Resolver to resolve hostnames using DNS servers.
+                description: >-
+                  Resolver to resolve hostnames using DNS servers.
+                  If there are no DNS Resolvers with empty match domains, one will be added automatically.
                 items:
                   type: object
                   required:
                     - name
-                    - servers
                   properties:
                     name:
                       type: string
@@ -301,25 +459,34 @@ definitions:
                       type: integer
                       description: How often will the resolver poll the server. In seconds.
                       default: 60
+                    queryAAAA:
+                      type: boolean
+                      description: Perform AAAA lookups.
+                      default: false
+                    zonesTransfers:
+                      type: boolean
+                      description: Perform zones transfer.
+                      default: false
+                    defaultTtlSeconds:
+                      type: integer
+                      deprecated: true
+                      description: Deprecated as of 6.4. This will apply whenever Gateway gets a DNS response which has no TTL set.
+                      default: 300
                     servers:
                       type: array
-                      description: DNS Server addresses that will be used to resolve hostnames within the Site.
+                      description: DNS Server addresses that will be used to resolve hostnames within the Site. Leave it empty to use the Gateways' own DNS configuration.
                       items:
                         type: string
                         example: 10.0.0.2
-                    searchDomains:
-                      type: array
-                      description: DNS search domains that will be used to resolve hostnames within the Site.
-                      deprecated: true
-                      items:
-                        type: string
-                        example: company.com
                     matchDomains:
                       type: array
                       description: The DNS resolver will only attempt to resolve names matching the match domains. If match domains are not specified the DNS resolver will attempt to resolve all hostnames.
                       items:
                         type: string
                         example: company.com
+                    autoClientDns:
+                      type: boolean
+                      description: This will configure Client machines' DNS according to this resolver if the Client connects to this Site.
               awsResolvers:
                 type: array
                 description: Resolvers to resolve Amazon machines by querying Amazon Web Services.
@@ -364,10 +531,30 @@ definitions:
                       type: string
                       description: >-
                         Proxy address to use while communicating with AWS.
-                        format: username:password@ip/hostname:port
+                        format: https://username:password@ip/hostname:port
                     resolveWithMasterCredentials:
                       type: boolean
                       description: Use master credentials to resolve names in addition to any assumed roles.
+                    partition:
+                      type: string
+                      description: What AWS partition to use such as 'aws-cn' or 'aws-us-gov'
+                      default: aws
+                    ec2:
+                      type: boolean
+                      description: Resolve EC2 resources.
+                      default: true
+                    apiGateway:
+                      type: boolean
+                      description: Resolve API Gateway resources.
+                      default: false
+                    eks:
+                      type: boolean
+                      description: Resolve EKS resources.
+                      default: false
+                    rds:
+                      type: boolean
+                      description: Resolve RDS resources.
+                      default: false
                     assumedRoles:
                       type: array
                       description: Roles to be assumed to perform AWS name resolution.
@@ -407,9 +594,6 @@ definitions:
                       type: boolean
                       description: Uses the built-in Managed Identities in Azure instances to authenticate against the API.
                       default: false
-                    subscriptionId:
-                      type: string
-                      description: Azure subscription id, visible with the azure cli command `azure account show`.
                     tenantId:
                       type: string
                       description: Azure tenant id, visible with the azure cli command `azure account show`.
@@ -424,6 +608,14 @@ definitions:
                         Azure client secret. For Azure AD Apps this is done by
                         creating a key for the app.
                       writeOnly: true
+                    subscriptionIds:
+                      type: array
+                      description: Subscription IDs to resolve names for.
+                      items:
+                        type: string
+                    subscriptionIdAutoDiscovery:
+                      type: boolean
+                      description: Use subscription auto discovery.
               esxResolvers:
                 type: array
                 description: Resolvers to resolve VMware vSphere machines by querying the vCenter.
@@ -472,11 +664,48 @@ definitions:
                     instanceFilter:
                       type: string
                       description: GCP instance filter.
+                    forwardingRulesFilter:
+                      type: string
+                      description: GCP forwarding rules filter.
+              illumioResolvers:
+                type: array
+                description: Resolvers to resolve names by querying Appgate Illumio Resolver.
+                items:
+                  type: object
+                  required:
+                    - name
+                    - orgId
+                    - hostname
+                    - port
+                    - username
+                  properties:
+                    name:
+                      type: string
+                      description: Identifier name. Has no functional effect.
+                    updateInterval:
+                      type: integer
+                      description: How often will the resolver poll the server. In seconds.
+                      default: 60
+                    orgId:
+                      type: string
+                      description: Organization ID of the Illumio Resolver.
+                    hostname:
+                      type: string
+                      description: Hostname of the Illumio Resolver.
+                    port:
+                      type: integer
+                      description: Port number of the Illumio Resolver.
+                    username:
+                      type: string
+                      description: Username with access to the Illumio Resolver.
+                    password:
+                      type: string
+                      description: Password for the username.
+                      writeOnly: true
               dnsForwarding:
                 type: object
-                description: Enable DNS Forwarding feature.
+                description: DNS Forwarding feature. Always enabled and will be filled if there is no object is passed.
                 required:
-                  - dnsServers
                   - allowDestinations
                 properties:
                   siteIpv4:
@@ -489,7 +718,7 @@ definitions:
                     example: '2001:db8:0:0:0:ff00:42:8329'
                   dnsServers:
                     type: array
-                    description: DNS Servers to use for resolving endpoints.
+                    description: DNS Servers to use for resolving endpoints. Leave it empty to use the Gateways' own DNS configuration.
                     items:
                       type: string
                     example:
@@ -497,3 +726,98 @@ definitions:
                       - '192.100.111.31'
                   allowDestinations:
                     $ref: './appliance.yml#/definitions/AllowResources'
+                  defaultTtlSeconds:
+                    type: integer
+                    deprecated: true
+                    description: Deprecated as of 6.4. This will apply whenever Gateway gets a DNS response which has no TTL set.
+                    default: 300
+                  matchDomains:
+                    type: array
+                    description: The match domains to use for automatic Client DNS configuration.
+                    items:
+                      type: string
+                      example: company.com
+                  autoClientDns:
+                    type: boolean
+                    description: This will configure Client machines' DNS according to this forwarder if the Client connects to this Site.
+  ResolverResources:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Resource query result.
+        properties:
+          data:
+            type: array
+            description: List of queries resources.
+            items:
+              type: string
+              example: test-web-server
+          resolver:
+            $ref: '#/definitions/ResolverType'
+          type:
+            $ref: '#/definitions/ResourceType'
+          gatewayName:
+            type: string
+            description: The name of the Gateway which returned the result.
+  ResolverType:
+    type: string
+    description: Resolver type.
+    enum:
+      - aws
+      - azure
+      - gcp
+      - illumio
+      - esx
+      - dns
+  ResourceType:
+    type: string
+    description: Resource type.
+    enum:
+      - instances-security-groups
+      - instances-tags
+      - instances-tag-values
+      - lbs
+      - lbs-security-groups
+      - lbs-tags
+      - lbs-tag-values
+      - lbsv2
+      - lbsv2-security-groups
+      - lbvs2-tags
+      - lbvs2-tag-values
+      - enis-security-groups
+      - enis-security-groups-ids
+      - enis-tags
+      - enis-tag-values
+      - regions
+      - accounts
+      - network-security-groups
+      - network-security-groups-tags
+      - network-security-groups-tag-values
+      - virtual-machines-tags
+      - virtual-machines-tag-values
+      - virtual-networks
+      - subnets
+      - projects-ids
+      - forwarding-rules
+      - instances
+      - instances-network-tags
+      - service-account-emails
+      - labels
+      - virtual-machines
+      - folders
+      - resources-pools
+      - tags
+      - zones
+      - zone-values
+      - api-gateways
+      - api-gateways-tags
+      - api-gateways-tag-values
+      - api-gateways-v2
+      - api-gateways-v2-tags
+      - api-gateways-v2-tag-values
+      - eks-clusters
+      - eks-cluster-tags
+      - eks-cluster-tag-values
+      - rds-db-instances
+      - rds-db-instance-tags
+      - rds-db-instance-tag-values
