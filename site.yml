@@ -778,8 +778,8 @@ definitions:
       - lbs-tag-values
       - lbsv2
       - lbsv2-security-groups
-      - lbvs2-tags
-      - lbvs2-tag-values
+      - lbsv2-tags
+      - lbsv2-tag-values
       - enis-security-groups
       - enis-security-groups-ids
       - enis-tags
@@ -806,8 +806,8 @@ definitions:
       - zones
       - zone-values
       - eks-clusters
-      - eks-cluster-tags
-      - eks-cluster-tag-values
+      - eks-clusters-tags
+      - eks-clusters-tag-values
       - rds-db-instances
-      - rds-db-instance-tags
-      - rds-db-instance-tag-values
+      - rds-db-instances-tags
+      - rds-db-instances-tag-values
