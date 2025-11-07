@@ -1,0 +1,238 @@
+tags:
+  get:
+    summary: List all tags.
+    description: List all Tags.
+    tags:
+      - Tags
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: List of Tags.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/TagList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Create a new Tag.
+    description: Create a new Tag.
+    tags:
+      - Tags
+    responses:
+      '200':
+        description: Created Tag.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tag'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '409':
+        $ref: './common.yml#/responses/ConflictError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      $ref: '#/requestBodies/Tag'
+tags-id:
+  get:
+    summary: Get a specific Tag.
+    description: Get a specific Tag.
+    tags:
+      - Tags
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: Single Tag.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/TagDetails'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  put:
+    summary: Update an existing Tag.
+    description: Update an existing Tag.
+    tags:
+      - Tags
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '200':
+        description: Updated Tag.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Tag'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      $ref: '#/requestBodies/Tag'
+  delete:
+    summary: Delete a specific Tag.
+    description: Delete a specific Tag.
+    tags:
+      - Tags
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    responses:
+      '204':
+        description: Tag was deleted successfully.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+requestBodies:
+  Tag:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Tag'
+    description: Tag object.
+    required: true
+
+definitions:
+  TagList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of Tags.
+        properties:
+          data:
+            type: array
+            description: List of Tags.
+            items:
+              $ref: '#/definitions/Tag'
+  TagDetails:
+    allOf:
+      - $ref: './tag.yml#/definitions/Tag'
+      - type: object
+        description: Represents a Tag with details.
+        properties:
+          taggedOccurrencesByEntityType:
+            additionalProperties: true
+            description: The number of entities tagged with this Tag grouped by entity type.
+            readOnly: true
+            example:
+              administrativeRole: 3
+              appliance: 1
+              applianceCustomization: 57
+          linkedOccurrencesByEntityType:
+            additionalProperties: true
+            description: The number of utilizing this Tag as a link group by entity link type.
+            readOnly: true
+            example:
+              administrativeRolePrivilegeLink: 4
+              entitlementConditionLink: 2
+              policyRingfenceRuleLink: 1
+
+  Tag:
+    type: object
+    description: Represents a Tag.
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: ID of the object.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      name:
+        type: string
+        description: Name of the object.
+        example: object
+      notes:
+        type: string
+        description: Notes for the object. Used for documentation purposes.
+        example: This object has been created for test purposes.
+      colorCode:
+        type: integer
+        description: |
+          The color code of the tag. Default will be random color.
+          - 1: Light Green
+          - 2: Green
+          - 3: Indigo
+          - 4: Deep Purple
+          - 5: Yellow
+          - 6: Lime
+          - 7: Light Blue
+          - 8: Blue
+          - 9: Amber
+          - 10: Orange
+          - 11: Cyan
+          - 12: Teal
+          - 13: Deep Orange
+          - 14: Red
+          - 15: Gray
+          - 16: Brown
+          - 17: Pink
+          - 18: Purple
+          - 19: Blue Gray
+          - 20: Near Black
+      colorName:
+        type: string
+        description: The name associated with the color code.
+        readOnly: true
+      created:
+        type: string
+        format: date-time
+        description: Create date.
+        readOnly: true
+      updated:
+        type: string
+        format: date-time
+        description: Last update date.
+        readOnly: true
+      taggedOccurrences:
+        type: integer
+        description: The number of entities tagged with this Tag.
+        readOnly: true
+      linkedOccurrences:
+        type: integer
+        description: The number of entities linked via this Tag.
+        readOnly: true

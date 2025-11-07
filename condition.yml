@@ -5,7 +5,6 @@ conditions:
     tags:
       - Conditions
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ conditions:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ conditions:
     description: Create a new Condition.
     tags:
       - Conditions
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Condition.
@@ -44,6 +43,8 @@ conditions:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -59,7 +60,6 @@ conditions-id:
     tags:
       - Conditions
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ conditions-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ conditions-id:
     tags:
       - Conditions
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ conditions-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ conditions-id:
     tags:
       - Conditions
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,6 +124,8 @@ conditions-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 conditions-test:
@@ -130,8 +134,6 @@ conditions-test:
     description: Simulate a given expression for a Condition, Policy or Criteria Script.
     tags:
       - Conditions
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Evaluation result.
@@ -161,6 +163,8 @@ conditions-test:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -239,35 +243,40 @@ definitions:
             description: The remedy methods that will be triggered if the evaluation fails.
             type: array
             items:
-              type: object
-              required:
-                - type
-                - message
-              properties:
-                type:
-                  type: string
-                  description: remedy method type.
-                  enum:
-                    - DisplayMessage
-                    - OtpAuthentication
-                    - PasswordAuthentication
-                    - Reason
-                message:
-                  type: string
-                  description: Message to be shown to the user. Required for all remedy method.
-                  example: This resource requires you to enter your password again
-                claimSuffix:
-                  type: string
-                  description: >-
-                    Suffix to be added to the claim.
-                    Required for OtpAuthentication, PasswordAuthentication and Reason remedy methods.
-                  example: test
-                providerId:
-                  type: string
-                  format: uuid
-                  x-uuid-ref: MfaProvider
-                  description: MFA Provider Id. Required for OtpAuthentication remedy method.
-                  example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+              $ref: '#/definitions/RemedyMethod'
+  RemedyMethod:
+    type: object
+    required:
+      - type
+      - message
+    properties:
+      type:
+        type: string
+        description: User Action type.
+        enum:
+          - DisplayMessage
+          - OtpAuthentication
+          - PasswordAuthentication
+          - Reason
+        example: PasswordAuthentication
+      message:
+        type: string
+        description: Message to be shown to the user. Required for all remedy method.
+        example: This resource requires you to enter your password again
+      claimSuffix:
+        type: string
+        description: >-
+          Suffix to be added to the claim.
+          Required for OtpAuthentication, PasswordAuthentication and Reason remedy methods.
+        example: test
+      providerId:
+        type: string
+        format: uuid
+        x-uuid-ref:
+          - MfaProvider
+          - IdentityProvider
+        description: MFA Provider Id or Identity Provider Id. Required for some remedy method.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
   TestRequest:
     type: object
     required:
@@ -301,7 +310,7 @@ definitions:
         example:
           connectTime: '2018-11-16T13:25:15.672Z'
           tunIPv4: '15.0.0.24'
-          clientSrcIp: '192.168.111.184'
+          clientSrcIP: '192.168.111.184'
       time:
         type: string
         format: date-time

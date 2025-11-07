@@ -5,7 +5,6 @@ license-users:
     tags:
       - Licensed Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ license-users:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -48,6 +49,12 @@ definitions:
             enum:
               - Normal
               - Portal
+              - Service
+              - MultiUser
+          profileName:
+            type: string
+            description: The name of the Client Profile used by the Client.
+            example: Company Employee
           created:
             type: string
             format: date-time

@@ -5,7 +5,6 @@ entitlement-scripts:
     tags:
       - Entitlement Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ entitlement-scripts:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ entitlement-scripts:
     description: Create a new Entitlement Script.
     tags:
       - Entitlement Scripts
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created Entitlement Script.
@@ -44,6 +43,8 @@ entitlement-scripts:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -59,7 +60,6 @@ entitlement-scripts-id:
     tags:
       - Entitlement Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ entitlement-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ entitlement-scripts-id:
     tags:
       - Entitlement Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ entitlement-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ entitlement-scripts-id:
     tags:
       - Entitlement Scripts
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,6 +124,8 @@ entitlement-scripts-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 entitlement-scripts-test:
@@ -130,8 +134,6 @@ entitlement-scripts-test:
     description: Simulate a given expression for an Entitlement Script.
     tags:
       - Entitlement Scripts
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Evaluation result.
@@ -145,6 +147,8 @@ entitlement-scripts-test:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -201,7 +205,7 @@ definitions:
         type: array
         description: What the evaluation returned as a list.
         items:
-          allOf:
+          anyOf:
             - type: string
               description: Host, port or type.
               example: 10.0.0.1

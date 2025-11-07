@@ -5,7 +5,6 @@ blacklist:
     tags:
       - Blacklisted Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ blacklist:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ blacklist:
     description: Blacklists a User.
     tags:
       - Blacklisted Users
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: User was blacklisted successfully.
@@ -44,6 +43,8 @@ blacklist:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -62,7 +63,6 @@ blacklist-distinguished-name:
     tags:
       - Blacklisted Users
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - name: distinguished-name
         in: path
         description: 'Distinguished name of the user whose blacklist is to be removed. Format: "CN=,OU="'
@@ -79,6 +79,8 @@ blacklist-distinguished-name:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 

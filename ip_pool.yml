@@ -5,7 +5,6 @@ ip-pools:
     tags:
       - IP Pools
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
       - $ref: './common.yml#/parameters/orderBy'
@@ -22,6 +21,8 @@ ip-pools:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
@@ -29,8 +30,6 @@ ip-pools:
     description: Create a new IP Pool.
     tags:
       - IP Pools
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Created IP Pool.
@@ -44,6 +43,8 @@ ip-pools:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '409':
         $ref: './common.yml#/responses/ConflictError'
       '422':
@@ -59,7 +60,6 @@ ip-pools-id:
     tags:
       - IP Pools
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -74,6 +74,8 @@ ip-pools-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -82,7 +84,6 @@ ip-pools-id:
     tags:
       - IP Pools
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
@@ -99,6 +100,8 @@ ip-pools-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -111,7 +114,6 @@ ip-pools-id:
     tags:
       - IP Pools
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
@@ -122,28 +124,8 @@ ip-pools-id:
         $ref: './common.yml#/responses/PermissionError'
       '404':
         $ref: './common.yml#/responses/NotFoundError'
-      '500':
-        $ref: './common.yml#/responses/UnexpectedError'
-allocated-ips-by-dn:
-  get:
-    summary: List all Allocated IPs by Distinguished Name.
-    description: List all Allocated IPs by Distinguished Name.
-    tags:
-      - IP Pools
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
-      - $ref: './common.yml#/parameters/distinguishedName'
-    responses:
-      '200':
-        description: List of Allocated IPs.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/AllocatedIpList'
-      '401':
-        $ref: './common.yml#/responses/TokenError'
-      '403':
-        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 allocated-ips:
@@ -153,7 +135,11 @@ allocated-ips:
     tags:
       - IP Pools
     parameters:
-      - $ref: './common.yml#/parameters/authorization'
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
         description: List of Allocated IPs.
@@ -165,6 +151,8 @@ allocated-ips:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -200,25 +188,13 @@ definitions:
             description: Whether the IP pool is for v4 or v6.
             default: false
           ranges:
-            type: array
-            description: List of (non-conflicting) IP address ranges to allocate IPs in order.
-            items:
-              type: object
-              description: Represents an IP range. Either "cidr" or "first-last" format can be used.
-              properties:
-                cidr:
-                  type: string
-                  description: IP subnet in CIDR format.
-                  writeOnly: true
-                  example: '10.0.0.0/24'
-                first:
-                  type: string
-                  description: The beginning of the IP range.
-                  example: '10.0.0.1'
-                last:
-                  type: string
-                  description: The end of the IP range.
-                  example: '10.0.0.254'
+            allOf:
+              - $ref: '#/definitions/IpPoolRange'
+              - description: List of (non-conflicting) IP address ranges to allocate IPs in order.
+          excludedRanges:
+            allOf:
+              - $ref: '#/definitions/IpPoolRange'
+              - description: List of IP address ranges to exclude from the IP pool.
           leaseTimeDays:
             type: integer
             description: >-
@@ -245,39 +221,58 @@ definitions:
               "leaseTimeDays" setting.
             example: 32
   AllocatedIpList:
-    type: object
-    description: Represents a list of Allocated IPs.
-    properties:
-      data:
-        type: array
-        description: List of Allocated IPs.
-        items:
-          $ref: '#/definitions/AllocatedIp'
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        description: Represents a list of Allocated IPs.
+        properties:
+          data:
+            type: array
+            description: List of Allocated IPs.
+            items:
+              $ref: '#/definitions/AllocatedIp'
   AllocatedIp:
-    type: object
-    properties:
-      poolId:
-        type: string
-        format: uuid
-        x-uuid-ref: IpPool
-        description: ID of the IP Pool that has allocated this address.
-        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
-      distinguishedName:
-        type: string
-        description: 'Distinguished name of a device. Format: "CN=,CN=,OU="'
-        example: 'CN=4c07bc6757ea42ddb702c2d6c45419fc,CN=user,OU=ldap'
-      ipAddress:
-        type: string
-        description: IP address either version 4 or 6 assigned to the tunnel.
-        example: 10.0.0.52
-      allocationTime:
-        type: string
-        format: date-time
-        description: When the IP was allocated.
-      expirationTime:
-        type: string
-        format: date-time
-        description: >-
-          When the IP allocation will be expired.
-          It's equal to the last Entitlement Token's expiration date.
-          Note that the allocation will still be reserved for the device & user according to the IP Pool settings.
+    allOf:
+      - $ref: './common.yml#/definitions/DeviceAndUser'
+      - type: object
+        properties:
+          poolId:
+            type: string
+            format: uuid
+            x-uuid-ref: IpPool
+            description: ID of the IP Pool that has allocated this address.
+            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          ipAddress:
+            type: string
+            description: IP address either version 4 or 6 assigned to the tunnel.
+            example: 10.0.0.52
+          allocationTime:
+            type: string
+            format: date-time
+            description: When the IP was allocated.
+          expirationTime:
+            type: string
+            format: date-time
+            description: >-
+              When the IP allocation will be expired.
+              It's equal to the last Entitlement Token's expiration date.
+              Note that the allocation will still be reserved for the device & user according to the IP Pool settings.
+  IpPoolRange:
+    type: array
+    items:
+      type: object
+      description: Represents an IP range. Either "cidr" or "first-last" format can be used.
+      properties:
+        cidr:
+          type: string
+          description: IP subnet in CIDR format.
+          writeOnly: true
+          example: '10.0.0.0/24'
+        first:
+          type: string
+          description: The beginning of the IP range.
+          example: '10.0.0.1'
+        last:
+          type: string
+          description: The end of the IP range.
+          example: '10.0.0.254'

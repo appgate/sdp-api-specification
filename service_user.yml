@@ -1,9 +1,9 @@
-appliance-customizations:
+service-users:
   get:
-    summary: List all Appliance Customizations.
-    description: List all Appliance Customizations visible to current user.
+    summary: List all Service Users.
+    description: List all Service Users visible to current user.
     tags:
-      - Appliance Customizations
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/query'
       - $ref: './common.yml#/parameters/range'
@@ -12,11 +12,11 @@ appliance-customizations:
       - $ref: './common.yml#/parameters/filterBy'
     responses:
       '200':
-        description: List of Appliance Customizations.
+        description: List of Service Users.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/ApplianceCustomizationList'
+              $ref: '#/definitions/ServiceUserList'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -26,17 +26,17 @@ appliance-customizations:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   post:
-    summary: Create a new Appliance Customization.
-    description: Create a new Appliance Customization.
+    summary: Create a new Service User.
+    description: Create a new Service User.
     tags:
-      - Appliance Customizations
+      - Service Users
     responses:
       '200':
-        description: Created Appliance Customization.
+        description: Created Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/ApplianceCustomization'
+              $ref: '#/definitions/ServiceUser'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -52,22 +52,22 @@ appliance-customizations:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/ApplianceCustomization'
-appliance-customizations-id:
+      $ref: '#/requestBodies/ServiceUserCreate'
+service-users-id:
   get:
-    summary: Get a specific Appliance Customization.
-    description: Get a specific Appliance Customization.
+    summary: Get a specific Service User.
+    description: Get a specific Service User.
     tags:
-      - Appliance Customizations
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Single Appliance Customization.
+        description: Single Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/ApplianceCustomization'
+              $ref: '#/definitions/ServiceUser'
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -79,19 +79,19 @@ appliance-customizations-id:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
-    summary: Update an existing Appliance Customization.
-    description: Update an existing Appliance Customization.
+    summary: Update an existing Service User.
+    description: Update an existing Service User.
     tags:
-      - Appliance Customizations
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/id'
     responses:
       '200':
-        description: Updated Appliance Customization.
+        description: Updated Service User.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/ApplianceCustomization'
+              $ref: '#/definitions/ServiceUser'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -107,17 +107,17 @@ appliance-customizations-id:
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
-      $ref: '#/requestBodies/ApplianceCustomization'
+      $ref: '#/requestBodies/ServiceUser'
   delete:
-    summary: Delete a specific Appliance Customization.
-    description: Delete a specific Appliance Customization.
+    summary: Delete a specific Service User.
+    description: Delete a specific Service User.
     tags:
-      - Appliance Customizations
+      - Service Users
     parameters:
       - $ref: './common.yml#/parameters/id'
     responses:
       '204':
-        description: Appliance Customization was deleted successfully.
+        description: Service User was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
       '403':
@@ -130,48 +130,65 @@ appliance-customizations-id:
         $ref: './common.yml#/responses/UnexpectedError'
 
 requestBodies:
-  ApplianceCustomization:
+  ServiceUser:
     content:
       application/json:
         schema:
-          $ref: '#/definitions/ApplianceCustomization'
-    description: Appliance Customization object.
+          $ref: '#/definitions/ServiceUser'
+    description: Service User object.
+    required: true
+  ServiceUserCreate:
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '#/definitions/ServiceUser'
+            - required:
+                - password
+    description: Service User object.
     required: true
 
 definitions:
-  ApplianceCustomizationList:
+  ServiceUserList:
     allOf:
       - $ref: './common.yml#/definitions/ResultList'
       - type: object
-        description: Represents a list of Appliance Customizations.
+        description: Represents a list of Service Users.
         properties:
           data:
             type: array
-            description: List of Appliance Customizations.
+            description: List of Service Users.
             items:
-              $ref: '#/definitions/ApplianceCustomization'
-  ApplianceCustomization:
+              $ref: '#/definitions/ServiceUser'
+  ServiceUser:
     allOf:
       - $ref: './common.yml#/definitions/BaseEntity'
       - type: object
-        description: Represents an Appliance Customization.
+        description: Represents a Service User.
         properties:
-          file:
+          labels:
+            type: object
+            description: Labels of the service. Will be used as claim.
+            additionalProperties:
+              type: string
+          password:
             type: string
-            format: byte
+            format: password
             writeOnly: true
-            description: The Appliance Customization binary in Base64 format.
-          checksum:
-            type: string
-            readOnly: true
-            format: checksum
-            x-checksum-source: file
-            description: SHA256 checksum of the file.
-            example: a0041669f6f7031d32bc27305955327abe54aeb03670c4ae1b2a48e5d29e8e33
-          size:
+            description: Password for the user. Omit the field to keep the old password when updating a user.
+            example: 'tSW3!QBv(rj{UuLY'
+          disabled:
+            type: boolean
+            description: If true, the user will not be able to login.
+          failedLoginAttempts:
             type: number
-            format: size
-            x-size-source: file
-            readOnly: true
-            description: Binary file's size in bytes.
-            example: 854325
+            description: Number of wrong password login attempts since last successiful login.
+            example: 0
+          lockStart:
+            type: string
+            format: date-time
+            description: >-
+              The date time when the user got locked out.
+              A service user is locked out of the system after X amount of consecutive failed login attempts, where X is configurable in the service Identity Provider.
+              The lock is in effect for Y minute(s), where Y is configurable in the service Identity Provider.
+              When the user logs in successfully, this field becomes null.
