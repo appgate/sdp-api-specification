@@ -12,7 +12,7 @@ parameters:
     name: query
     in: query
     description: >-
-      Query string to filter the result list. It's used for various fields depending on the object type. 
+      Query string to filter the result list. It's used for various fields depending on the object type.
       Send multiple query parameters to make the queries more specific.
     schema:
       type: string
@@ -324,6 +324,7 @@ definitions:
       - Connector
       - Portal
       - Metrics Aggregator
+      - Connection Broker
 
 responses:
   ChangeData:
