@@ -55,7 +55,7 @@ discovered-app-id:
   delete:
     summary: Delete a discovered app.
     description: >-
-      Delete a discovered app. 
+      Delete a discovered app.
       All data of that discovered data will be removed and it will not be listed anymore
       until it's discovered again.
     tags:
@@ -109,12 +109,12 @@ discovered-app-id-entitlement-access:
           schema:
             oneOf:
               - $ref: '#/components/schemas/ExistingEntitlement'
-              - $ref: '#/components/schemas/NewEntitlement'
+              - $ref: '#/components/schemas/NewAppEntitlement'
             discriminator:
               propertyName: action
               mapping:
                 AddToExisting: '#/components/schemas/ExistingEntitlement'
-                CreateNew: '#/components/schemas/NewEntitlement'
+                CreateNew: '#/components/schemas/NewAppEntitlement'
 
 discovered-app-id-policy-access:
   post:
@@ -165,6 +165,65 @@ discovered-app-id-policy-access:
                     mapping:
                       AddToExisting: '#/components/schemas/ExistingPolicy'
                       CreateNew: '#/components/schemas/NewDiscoveredPolicy'
+
+discovered-app-id-top-groups:
+  get:
+    summary: Get top user groups accessing discovered apps
+    description: Get top user groups accessing discovered apps from the Advisor.
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    responses:
+    '200':
+      description: List of top user groups
+      content:
+      application/json:
+        schema:
+          $ref: '#/definitions/TopGroups'
+    '401':
+      $ref: './common.yml#/responses/TokenError'
+    '403':
+      $ref: './common.yml#/responses/PermissionError'
+    '406':
+      $ref: './common.yml#/responses/NotAcceptableError'
+    '500':
+      $ref: './common.yml#/responses/UnexpectedError'
+discovered-app-id-common-groups-count:
+  post:
+    summary: Get count of common user groups across discovered apps
+    description: Get count of common user groups across discovered apps from the Advisor.
+    tags:
+      - Discovered Apps
+    parameters:
+      - $ref: './common.yml#/parameters/id'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/CommonGroupsCountRequest'
+    responses:
+    '200':
+      description: Count of common user groups
+      content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of common user groups across discovered apps
+              example: 25
+    '401':
+      $ref: './common.yml#/responses/TokenError'
+    '403':
+      $ref: './common.yml#/responses/PermissionError'
+    '406':
+      $ref: './common.yml#/responses/NotAcceptableError'
+    '500':
+      $ref: './common.yml#/responses/UnexpectedError'
+
 discovered-app-id-reset:
   post:
     summary: Reset discovered app
@@ -321,6 +380,10 @@ definitions:
         items:
           type: string
         example: [ "80", "20300-20400" ]
+      portType:
+        type: string
+        description: Port type of the app.
+        example: "HTTP"
       usersCount:
         type: integer
         description: Total user count for the app.
@@ -464,6 +527,38 @@ definitions:
                   - "group1"
                   - "group2"
                   - "group3"
+  CommonGroupsCountRequest:
+    type: object
+    description: Request body for getting count of common user groups across discovered apps.
+    properties:
+      groupNames:
+        type: array
+        description: List of user group names to check for commonality across discovered apps.
+        items:
+          type: string
+        example: [ "engineering", "support", "power_user" ]
+  TopGroups:
+    type: object
+    description: Represents a top user groups accessing discovered app for ID.
+    properties:
+      appId:
+        type: string
+        description: ID of the app.
+        example: 181ff4c94fdce2a5
+      topGroupMembershipCounts:
+        type: array
+        description: List of top user groups with their membership counts.
+        items:
+          type: object
+          properties:
+            groupName:
+              type: string
+              description: Name of the user group.
+              example: engineering
+            memberCount:
+              type: integer
+              description: Number of users in this group accessing the app.
+              example: 55
   DiscoveredAppsConfiguration:
     type: object
     description: Configuration for Application Discovery.
@@ -576,7 +671,7 @@ components:
               format: uuid
               x-uuid-ref: Entitlement
               description: Entitlement ID.
-    NewEntitlement:
+    NewAppEntitlement:
       allOf:
         - $ref: '#/components/schemas/BaseEntitlementAccess'
         - type: object

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf8" />
+    <title>{{title}}</title>
+    <!-- needed for adaptive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iOTkuNSIgaGVpZ2h0PSI5OS41IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA5OS41IDk5LjUiPjxwYXRoIGQ9Ik00OS43NyA4LjMzQTQxLjQ0IDQxLjQ0IDAgMSAxIDguMzMgNDkuNzcgNDEuNDggNDEuNDggMCAwIDEgNDkuNzcgOC4zM20wLTguMzNhNDkuNzcgNDkuNzcgMCAxIDAgNDkuNzYgNDkuNzdBNDkuNzcgNDkuNzcgMCAwIDAgNDkuNzcgMCIgLz48cGF0aCBkPSJNNjMuNTUgNTcuODhsLTE5LjI4LTIzIDYuNTctNS41MSAxNi43MiAxOS45NGgxNS41YTMzLjMgMzMuMyAwIDAgMC02Ni41OSAwSDMzbDcuMTkgOC41N0gxNy40OGEzMy4yOCAzMy4yOCAwIDAgMCA2NC41NyAwaC0xOC41IiAvPjwvc3ZnPgo=">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    {{{redocHead}}}
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+                // svg without height & width doesn't work on Firefox
+                // the most stable way to get the logo image. class keeps changing every release.
+                var b = document.querySelectorAll('[alt="logo"]')[0];
+                if (b) {
+                    var width = b.parentElement.parentElement.offsetWidth;
+                    var height = width * 0.415;
+                    b.style.width = width + "px";
+                    b.style.height = height + "px";
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+{{{redocHTML}}}
+</body>
+
+</html>

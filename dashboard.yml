@@ -48,39 +48,39 @@ admin-messages:
         $ref: './common.yml#/responses/UnexpectedError'
 
 admin-messages-metadata:
-    put:
-      summary: Update Admin Message Metadata.
-      description: Update the metadata of an Admin Message.
-      tags:
-        - Admin Messages
-      parameters:
-        - name: id
-          in: path
-          description: The UUID of the Admin Message Metadata.
-          schema:
-            type: string
-            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+  put:
+    summary: Update Admin Message Metadata.
+    description: Update the metadata of an Admin Message.
+    tags:
+      - Admin Messages
+    parameters:
+      - name: id
+        in: path
+        description: The UUID of the Admin Message Metadata.
+        schema:
+          type: string
+          example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
 
-      responses:
-        '200':
-          description: The updated Admin Message Metadata.
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/AdminMessageMetadata'
-        '401':
-          $ref: './common.yml#/responses/TokenError'
-        '403':
-          $ref: './common.yml#/responses/PermissionError'
-        '406':
-          $ref: './common.yml#/responses/NotAcceptableError'
-        '500':
-          $ref: './common.yml#/responses/UnexpectedError'
-      requestBody:
+    responses:
+      '200':
+        description: The updated Admin Message Metadata.
         content:
           application/json:
             schema:
               $ref: '#/definitions/AdminMessageMetadata'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/AdminMessageMetadata'
 
 admin-messages-summarize:
   get:
@@ -712,7 +712,8 @@ definitions:
                   properties:
                     gateways:
                       type: array
-                      description: The names of gateways reporting active client sessions of the user
+                      deprecated: true
+                      description: The names of gateways reporting active client sessions of the user. Deprecated as of 6.6. Use Session Details API instead.
                       items:
                         type: string
                         example: aws-gateway-1

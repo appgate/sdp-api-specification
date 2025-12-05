@@ -297,6 +297,15 @@ definitions:
           databaseSize:
             type: string
             description: Database size.
+  ConnectionBrokerRole:
+    allOf:
+      - $ref: '#/definitions/ApplianceWithSessionsRole'
+      - type: object
+        properties:
+          relayedThroughput:
+            type: string
+            description: Current throughput on the Connection Broker.
+            example: 1024Mbps
   ApplianceBaseRole:
     allOf:
       - $ref: '#/definitions/ApplianceRole'

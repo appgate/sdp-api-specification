@@ -1,0 +1,15 @@
+{
+  "name": "sdp_controller_api_spec_bundler",
+  "description": "It bundles API specs.",
+  "version": "6.3.0",
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "2.25.2",
+    "@redocly/cli": "2.11.1"
+  },
+  "scripts": {
+    "openapi-lint": "openapi-generator-cli validate -i api_specs.yml",
+    "redocly-lint": "redocly lint api_specs.yml --config ./redocly_lint_rules.yaml",
+    "bundle": "redocly build-docs ./api_specs.yml -t ./redoc-template.hbs  --theme.openapi.downloadFileName \"appgate_sdp_controller.json\" --config ./redocly.yaml -o ../build-artifacts/api_specs.html",
+    "localize-redoc": "node localize_redoc_script.js ../build-artifacts/api_specs.html"
+  }
+}

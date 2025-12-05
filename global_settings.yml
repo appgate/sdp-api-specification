@@ -157,33 +157,45 @@ definitions:
           - Disabled
           - Default
           - Maxmind
-          - IpInfo
+          - IPInfo
           - Custom
         example: Default
-      accountId:
-        type: integer
-        minimum: 1
-        description: MaxMind account ID. Required if provider is Maxmind.
-        example: 123456
-      licenseKey:
-        type: string
-        format: password
-        writeOnly: true
-        description: MaxMind license key. Required if provider is Maxmind. Not returned by GET.
-        example: mm-license-key
-      databaseId:
-        type: string
-        description: |
-          Can be one of the predefined values: "ipinfo_lite", "ipinfo_core", "ipinfo_plus", "ipinfo_location", "location_extended_v2",
-          or a custom database name for future IPinfo additions.
-        example: ipinfo_lite
-      token:
-        type: string
-        format: password
-        writeOnly: true
-        description: Ipinfo token. Required if provider is IpInfo. Not returned by GET.
-        example: ipinfo-token
-      url:
-        type: string
-        description: Custom provider base URL. Required if provider is Custom.
-        example: https://geoip.example.com
+      maxmind:
+        type: object
+        description: MaxMind provider configuration. Required if provider is Maxmind.
+        properties:
+          accountId:
+            type: integer
+            minimum: 1
+            description: MaxMind account ID.
+            example: 123456
+          licenseKey:
+            type: string
+            format: password
+            writeOnly: true
+            description: MaxMind license key. Not returned by GET.
+            example: mm-license-key
+      ipInfo:
+        type: object
+        description: IPInfo provider configuration. Required if provider is IPInfo.
+        properties:
+          databaseId:
+            type: string
+            description: |
+              Can be one of the predefined values: "ipinfo_lite", "ipinfo_core", "ipinfo_plus", "ipinfo_location", "location_extended_v2",
+              or a custom database name for future IPinfo additions.
+            example: ipinfo_lite
+          token:
+            type: string
+            format: password
+            writeOnly: true
+            description: IPInfo token. Not returned by GET.
+            example: ipinfo-token
+      custom:
+        type: object
+        description: Custom provider configuration. Required if provider is Custom.
+        properties:
+          url:
+            type: string
+            description: Custom provider base URL.
+            example: https://geoip.example.com

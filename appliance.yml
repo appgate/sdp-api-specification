@@ -1282,7 +1282,7 @@ definitions:
       metricsAggregator:
         $ref: 'common.yml#/definitions/ApplianceRole'
       connectionBroker:
-        $ref: 'common.yml#/definitions/ApplianceRole'
+        $ref: 'common.yml#/definitions/ConnectionBrokerRole'
       gateway:
         $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
       connector:
@@ -1477,10 +1477,7 @@ definitions:
             type: string
             format: uuid
             x-uuid-ref: Site
-            description: >-
-              Site served by the Appliance.
-              Entitlements on this Site will be included in the Entitlement Token for this Appliance.
-              Not useful if Gateway role is not enabled.
+            description: Site assigned to the Appliance.
             example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
           siteName:
             type: string
@@ -1979,6 +1976,17 @@ definitions:
                 type: boolean
                 description: Whether the Connection Broker is enabled on this appliance or not.
                 default: false
+              sites:
+                type: array
+                description: The sites to broker connections for.
+                items:
+                  type: string
+                  format: uuid
+                  x-uuid-ref: Site
+                  description: >
+                    UUID of a site.
+                    Use '6f6fa9d9-17b2-4157-9f68-e97662acccdf' to broker connections for all the appliances.
+                    Use '6263435b-c9f6-4b7f-99f8-37e2e6b006a9' to broker connections for appliances without a site.
           connector:
             type: object
             description: Connector settings.
