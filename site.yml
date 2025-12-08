@@ -379,7 +379,7 @@ definitions:
                   version:
                     type: string
                     description: TLS version.
-                    default: TLSv23
+                    default: TLSv1.3
                     enum:
                       - TLSv1.2
                       - TLSv1.3
