@@ -14,21 +14,6 @@
         }
     </style>
     {{{redocHead}}}
-    <script>
-        document.addEventListener("DOMContentLoaded", (event) => {
-            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-                // svg without height & width doesn't work on Firefox
-                // the most stable way to get the logo image. class keeps changing every release.
-                var b = document.querySelectorAll('[alt="logo"]')[0];
-                if (b) {
-                    var width = b.parentElement.parentElement.offsetWidth;
-                    var height = width * 0.415;
-                    b.style.width = width + "px";
-                    b.style.height = height + "px";
-                }
-            }
-        });
-    </script>
 </head>
 
 <body>

@@ -330,6 +330,16 @@ definitions:
           riskModel:
             type: boolean
             description: Whether the risk model is utilized or not.
+          geoLocationUpdates:
+            type: string
+            description: GeoIP provider in use.
+            enum:
+              - Disabled
+              - Default
+              - Maxmind
+              - IPInfo
+              - Custom
+            example: Default
   LicenseEntitlement:
     type: object
     description: License entitlement details.

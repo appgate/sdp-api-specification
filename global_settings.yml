@@ -153,6 +153,7 @@ definitions:
       updates:
         type: string
         description: Selected GeoIP provider when enabled.
+        default: Disabled
         enum:
           - Disabled
           - Default

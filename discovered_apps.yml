@@ -175,20 +175,32 @@ discovered-app-id-top-groups:
     parameters:
       - $ref: './common.yml#/parameters/id'
     responses:
-    '200':
-      description: List of top user groups
-      content:
-      application/json:
-        schema:
-          $ref: '#/definitions/TopGroups'
-    '401':
-      $ref: './common.yml#/responses/TokenError'
-    '403':
-      $ref: './common.yml#/responses/PermissionError'
-    '406':
-      $ref: './common.yml#/responses/NotAcceptableError'
-    '500':
-      $ref: './common.yml#/responses/UnexpectedError'
+      '200':
+        description: List of top user groups
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/TopGroups'
+            example:
+              appId: 28022a690c1837fc
+              topGroupMembershipCounts:
+                - groupName: App_Corp_Absorb_User
+                  memberCount: 11
+                  providerName: Appgate Azure AD OIDC
+                - groupName: App_Corp_AutopilotDefault_User
+                  memberCount: 8
+                  providerName: Appgate Azure AD OIDC
+                - groupName: admin
+                  memberCount: 2
+                  providerName: Okta
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 discovered-app-id-common-groups-count:
   post:
     summary: Get count of common user groups across discovered apps
@@ -204,25 +216,20 @@ discovered-app-id-common-groups-count:
           schema:
             $ref: '#/definitions/CommonGroupsCountRequest'
     responses:
-    '200':
-      description: Count of common user groups
-      content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            count:
-              type: integer
-              description: Number of common user groups across discovered apps
-              example: 25
-    '401':
-      $ref: './common.yml#/responses/TokenError'
-    '403':
-      $ref: './common.yml#/responses/PermissionError'
-    '406':
-      $ref: './common.yml#/responses/NotAcceptableError'
-    '500':
-      $ref: './common.yml#/responses/UnexpectedError'
+      '200':
+        description: Count of common user groups
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/CommonGroupsCountResponse'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 discovered-app-id-reset:
   post:
@@ -530,13 +537,41 @@ definitions:
   CommonGroupsCountRequest:
     type: object
     description: Request body for getting count of common user groups across discovered apps.
+    required:
+      - providerGroups
     properties:
-      groupNames:
+      providerGroups:
         type: array
-        description: List of user group names to check for commonality across discovered apps.
+        description: List of group/IDP pairs to check for commonality across discovered apps.
         items:
-          type: string
-        example: [ "engineering", "support", "power_user" ]
+          type: object
+          required:
+            - groupName
+            - providerName
+          properties:
+            groupName:
+              type: string
+              description: Name of the group.
+              example: Engineering
+            providerName:
+              type: string
+              description: Identity provider that owns the group.
+              example: Appgate Azure AD OIDC
+        example:
+          - groupName: devops
+            providerName: Appgate Azure AD OIDC
+          - groupName: admins
+            providerName: Okta
+  CommonGroupsCountResponse:
+    type: object
+    description: Response body for common user groups count across the groups.
+    properties:
+      count:
+        type: integer
+        description: Number of common user groups.
+        example: 25
+    example:
+      count: 30
   TopGroups:
     type: object
     description: Represents a top user groups accessing discovered app for ID.
@@ -559,6 +594,22 @@ definitions:
               type: integer
               description: Number of users in this group accessing the app.
               example: 55
+            providerName:
+              type: string
+              description: Identity provider associated with the group.
+              example: Appgate Azure AD OIDC
+    example:
+      appId: 28022a690c1837fc
+      topGroupMembershipCounts:
+        - groupName: App_Corp_Absorb_User
+          memberCount: 11
+          providerName: Appgate Azure AD OIDC
+        - groupName: App_Corp_AutopilotDefault_User
+          memberCount: 8
+          providerName: Appgate Azure AD OIDC
+        - groupName: admin
+          memberCount: 2
+          providerName: Okta
   DiscoveredAppsConfiguration:
     type: object
     description: Configuration for Application Discovery.
@@ -728,3 +779,4 @@ components:
         provider:
           type: string
           description: The Identity Provider name to assign the app to. The Policy created will use this provider in its criteria.
+          example: Okta

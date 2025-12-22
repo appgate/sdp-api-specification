@@ -155,34 +155,33 @@ cloud-migrations:
   post:
     summary: Migrate Entitlement host cloud resources in deprecated format to current format.
     description: Migrates Entitlement Action's hosts referencing cloud resources in deprecated format to current format.
-  tags:
-    - Entitlements
-  parameters:
-    dryRun:
-      name: dryRun
-      in: query
-      description: When true, migration items are detected, but not migrated. Defaults to true.
-      schema:
-        type: boolean
-        example: false
-      required: false
-  responses:
-    '200':
-      description: List of hosts containing formats that have been changed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/definitions/EntitlementMigrationInfoList'
-    '204':
-      description: No hosts requiring migrations were found.
-    '401':
-      $ref: './common.yml#/responses/TokenError'
-    '403':
-      $ref: './common.yml#/responses/PermissionError'
-    '406':
-      $ref: './common.yml#/responses/NotAcceptableError'
-    '500':
-      $ref: './common.yml#/responses/UnexpectedError'
+    tags:
+      - Entitlements
+    parameters:
+      - name: dryRun
+        in: query
+        description: When true, migration items are detected, but not migrated. Defaults to true.
+        schema:
+          type: boolean
+          example: false
+        required: false
+    responses:
+      '200':
+        description: List of hosts containing formats that have been changed.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/EntitlementMigrationInfoList'
+      '204':
+        description: No hosts requiring migrations were found.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 requestBodies:
   Entitlement:
