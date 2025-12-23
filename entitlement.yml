@@ -476,4 +476,6 @@ definitions:
         description: Represents a list of migrated Entitlement Actions.
         properties:
           data:
-            $ref: '#/definitions/EntitlementMigrationInfo'
+            type: array
+            items:
+              $ref: '#/definitions/EntitlementMigrationInfo'
