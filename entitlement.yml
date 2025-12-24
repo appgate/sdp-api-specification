@@ -158,7 +158,7 @@ cloud-migrations:
     tags:
       - Entitlements
     parameters:
-      - name: dryRun
+      - name: dry-run
         in: query
         description: When true, migration items are detected, but not migrated. Defaults to true.
         schema:
