@@ -53,6 +53,43 @@ criteria-scripts:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/CriteriaScript'
+criteria-scripts-bulk-upsert:
+  post:
+    summary: Bulk upsert Criteria Scripts.
+    description: Create or update multiple criteria scripts in a single request.
+    tags:
+      - Criteria Scripts
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/CriteriaScript'
 criteria-scripts-id:
   get:
     summary: Get a specific Criteria Script.
@@ -162,3 +199,8 @@ definitions:
             type: string
             description: A JavaScript expression that returns boolean.
             example: return claims.user.username === 'admin';
+
+components:
+  schemas:
+    CriteriaScript:
+      $ref: '#/definitions/CriteriaScript'

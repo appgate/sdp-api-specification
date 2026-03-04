@@ -53,6 +53,43 @@ entitlement-scripts:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/EntitlementScript'
+entitlement-scripts-bulk-upsert:
+  post:
+    summary: Bulk upsert Entitlement Scripts.
+    description: Create or update multiple entitlement scripts in a single request.
+    tags:
+      - Entitlement Scripts
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/EntitlementScript'
 entitlement-scripts-id:
   get:
     summary: Get a specific Entitlement Script.
@@ -246,3 +283,8 @@ definitions:
               var httpResponse = httpGet('https://ips.company.com/my-resource');
               var data = JSON.parse(httpResponse.data);
               return data.ips;
+
+components:
+  schemas:
+    EntitlementScript:
+      $ref: '#/definitions/EntitlementScript'

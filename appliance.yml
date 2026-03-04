@@ -55,6 +55,43 @@ appliances:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/Appliance'
+appliances-bulk-upsert:
+  post:
+    summary: Bulk upsert Appliances.
+    description: Create or update multiple appliances in a single request.
+    tags:
+      - Appliances
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Appliance'
 appliances-id:
   get:
     summary: Get a specific Appliance.
@@ -367,7 +404,7 @@ appliances-ping-command:
     summary: Runs ICMP ping command on an Appliance.
     description: >-
       Runs ICMP ping command on an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v23+text** as it returns plain text instead of JSON.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+text** as it returns plain text instead of JSON.
     tags:
       - Appliances
     parameters:
@@ -419,7 +456,7 @@ appliances-tcpdump-command:
     summary: Runs tcpdump command on an Appliance.
     description: >-
       Runs tcpdump command on an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v23+text** as it returns plain text instead of JSON.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+text** as it returns plain text instead of JSON.
     tags:
       - Appliances
     parameters:
@@ -1284,7 +1321,7 @@ definitions:
       connectionBroker:
         $ref: 'common.yml#/definitions/ConnectionBrokerRole'
       gateway:
-        $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
+        $ref: 'common.yml#/definitions/GatewayRole'
       connector:
         $ref: 'common.yml#/definitions/ApplianceWithSessionsRole'
       portal:
@@ -1373,6 +1410,14 @@ definitions:
         default: false
       httpsP12:
         $ref: '#/definitions/P12'
+      httpsCiphers:
+        type: array
+        description: 'The type of TLS ciphers to allow. See: https://www.openssl.org/docs/man1.0.2/apps/ciphers.html for all supported ciphers.'
+        items:
+          type: string
+        default:
+          - "TLS13-AES256-GCM-SHA384"
+          - "ECDHE-RSA-AES256-GCM-SHA384"
       httpRedirect:
         type: boolean
         description: "Automatic 80->443 redirection for Portal."
@@ -1400,6 +1445,12 @@ definitions:
         description: Profiles from other Collectives to use in the Portal.
         items:
           $ref: './client_profile.yml#/definitions/ExternalProfile'
+          properties:
+            url:
+              type: string
+              writeOnly: true
+              description: Appgate URL exported from Client Profiles.
+              example: appgate://appgate.company.com/eyJjYUZpbmdlcnByaW50IjoiMmM4ZTBiNTM5YTM4NjRkYmVkYzhiOWRkMTcwYzM0NGFhMjZjZTVhNjA4MmY3YTI0YzRkZTU4ZGQ3NWRjNWZhMCIsImlkZW50aXR5UHJvdmlkZXJOYW1lIjoibG9jYWwifQ==
       signInCustomization:
         type: object
         description: Visual customizations to make on the Portal sign-in page.
@@ -1557,7 +1608,6 @@ definitions:
                 default:
                   - "TLS13-AES256-GCM-SHA384"
                   - "ECDHE-RSA-AES256-GCM-SHA384"
-                  - "ECDHE-RSA-AES128-GCM-SHA256"
               allowSources:
                 $ref: '#/definitions/AllowSources'
               httpsP12:
@@ -1747,12 +1797,7 @@ definitions:
                       type: string
                       description: Type of key to use for secure NTP communication.
                       enum:
-                        - MD5
-                        - SHA
-                        - SHA1
-                        - SHA256
                         - SHA512
-                        - RMD160
                     keyNo:
                       type: integer
                       description: Identifier number for the key.
@@ -1822,6 +1867,14 @@ definitions:
             properties:
               allowSources:
                 $ref: '#/definitions/AllowSources'
+          collectiveReplication:
+            type: object
+            description: Collective Replication settings.
+            properties:
+              enabled:
+                type: boolean
+                description: Whether the Collective Replication Service is enabled on this Appliance or not. It's managed by registering and unregistering Replication Source.
+                readOnly: true
           logServer:
             type: object
             description: Log Server settings. Log Server collects audit logs from all the appliances and stores them.
@@ -2439,3 +2492,8 @@ definitions:
         type: string
         readOnly: true
         description: Subject name of the certificate in the file.
+
+components:
+  schemas:
+    Appliance:
+      $ref: '#/definitions/Appliance'

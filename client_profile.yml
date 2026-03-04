@@ -53,6 +53,43 @@ client-profiles:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/ClientProfile'
+client-profiles-bulk-upsert:
+  post:
+    summary: Bulk upsert Client Profiles.
+    description: Create or update multiple client profiles in a single request.
+    tags:
+      - Client Profiles
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ClientProfileDiscriminator'
 client-profiles-id:
   get:
     summary: Get a specific Client Profile.
@@ -294,6 +331,10 @@ definitions:
           type: integer
           description: Load balancing weight of the profile in this group.
           default: 100
+        url:
+          type: string
+          description: Appgate URL exported from Client Profiles.
+          example: appgate://appgate.company.com/eyJjYUZpbmdlcnByaW50IjoiMmM4ZTBiNTM5YTM4NjRkYmVkYzhiOWRkMTcwYzM0NGFhMjZjZTVhNjA4MmY3YTI0YzRkZTU4ZGQ3NWRjNWZhMCIsImlkZW50aXR5UHJvdmlkZXJOYW1lIjoibG9jYWwifQ==
   ExternalProfile:
     type: object
     properties:
@@ -301,11 +342,6 @@ definitions:
         type: string
         format: uuid
         description: Identifier to track the object on update since all the other fields are write-only. A random one will be assigned if left empty.
-      url:
-        type: string
-        writeOnly: true
-        description: Appgate URL exported from Client Profiles.
-        example: appgate://appgate.company.com/eyJjYUZpbmdlcnByaW50IjoiMmM4ZTBiNTM5YTM4NjRkYmVkYzhiOWRkMTcwYzM0NGFhMjZjZTVhNjA4MmY3YTI0YzRkZTU4ZGQ3NWRjNWZhMCIsImlkZW50aXR5UHJvdmlkZXJOYW1lIjoibG9jYWwifQ==
       hostname:
         type: string
         readOnly: true
@@ -316,3 +352,8 @@ definitions:
         readOnly: true
         description: Profile name parsed from the given URL.
         example: Main Profile
+
+components:
+  schemas:
+    ClientProfileDiscriminator:
+      $ref: '#/definitions/ClientProfileDiscriminator'

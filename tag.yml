@@ -152,7 +152,7 @@ definitions:
               $ref: '#/definitions/Tag'
   TagDetails:
     allOf:
-      - $ref: './tag.yml#/definitions/Tag'
+      - $ref: '#/definitions/Tag'
       - type: object
         description: Represents a Tag with details.
         properties:
@@ -170,7 +170,7 @@ definitions:
             readOnly: true
             example:
               administrativeRolePrivilegeLink: 4
-              entitlementConditionLink: 2
+              policyEntitlementLink: 2
               policyRingfenceRuleLink: 1
 
   Tag:
@@ -227,6 +227,11 @@ definitions:
         type: string
         format: date-time
         description: Last update date.
+        readOnly: true
+      readOnly:
+        type: boolean
+        description: Whether the tag is protected from manual updates and deletes.
+        example: false
         readOnly: true
       taggedOccurrences:
         type: integer

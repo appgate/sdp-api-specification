@@ -7,7 +7,7 @@ login:
       Multi-Factor Authentication is not supported by Login call, API user must be exempt from Admin MFA requirement.
       It is important to restrict API user's permissions strictly as-needed basis and restrict IP access to API port to
       trusted networks.
-    security: []
+    security: [ ]
     tags:
       - Login
     responses:
@@ -38,7 +38,7 @@ identity-provider-names:
   get:
     summary: Get the list of identity providers available for admin login.
     description: Get the list of identity providers available for admin login.
-    security: []
+    security: [ ]
     tags:
       - Login
     responses:
@@ -111,7 +111,7 @@ authentication:
       First step for logging in is sending the credentials and retrieving partial AuthToken.
       If the response has the "needTwoFactorAuth:true", then either API user must be extempt from Admin MFA or two-step
       MFA process must be completed before Authorization.
-    security: []
+    security: [ ]
     tags:
       - Login
     responses:
@@ -448,3 +448,6 @@ definitions:
       crlEnabled:
         type: boolean
         description: Whether X509 CRL is enabled for the system or not. Issued Certificates is disabled if it's not enabled.
+      ppModeEnabled:
+        type: boolean
+        description: Whether Protection Profile mode is enabled or not. Limits certain functionalities.

@@ -1,24 +1,24 @@
 openapi: 3.0.0
 info:
-  title: Appgate SDP Controller REST API
-  version: API version 23.0
+  title: AppGate SDP Controller REST API
+  version: API version 24.0
   license:
     name: Proprietary
     url: https://www.appgate.com
   description: |-
     # About
-      This specification documents the REST API calls for the Appgate SDP Controller.
+      This specification documents the REST API calls for the AppGate SDP Controller.
 
-      Please refer to the REST API chapter in the manual or contact Appgate support with any questions about
+      Please refer to the REST API chapter in the manual or contact AppGate support with any questions about
       this functionality.
     # Getting Started
       Requirements for API scripting:
       - Access to the Admin/API TLS Connection (default port 8443) of a Controller appliance.
-        (https://sdphelp.appgate.com/adminguide/appliance-function-configure.html?anchor=admin-api)
+        (https://support.appgate.com/docs/adminapi-tls-connection-v6-6)
       - An API user with relevant permissions.
-        (https://sdphelp.appgate.com/adminguide/administrative-roles-configure.html)
+        (https://support.appgate.com/docs/configure-admin-roles-v6-6)
       - In order to use the simple login API, Admin MFA must be disabled or the API user must be excluded.
-        (https://sdphelp.appgate.com/adminguide/mfa-for-admins.html)
+        (https://support.appgate.com/docs/mfa-for-admins-v6-6)
     # Base path
       HTTPS requests must be sent to the Admin Interface hostname and port, with **/admin** path.
 
@@ -26,7 +26,7 @@ info:
 
       All requests must have the **Accept** header as:
 
-      **application/vnd.appgate.peer-v23+json**
+      **application/vnd.appgate.peer-v24+json**
 
       An exception is made for the **/admin/version** endpoint which instead expects an **application/json** Accept header.
     # API Conventions
@@ -76,8 +76,8 @@ info:
     url: data:image/png;base64,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
     href: '#'
   contact:
-    name: Appgate SDP Support
-    url: https://sdphelp.appgate.com/adminguide/help-support.html
+    name: AppGate SDP Support
+    url: https://support.appgate.com/docs
     email: appgatesdp.support@appgate.com
 
 servers:
@@ -128,6 +128,7 @@ x-tagGroups:
   - name: System
     tags:
       - Appliances
+      - Replication Targets
       - Sites
       - Tags
       - Appliance Customizations
@@ -157,6 +158,7 @@ x-tagGroups:
       - MFA for Admins
       - License
       - ZTP
+      - Replication Source
   - name: Other
     tags:
       - Admin Preferences
@@ -200,10 +202,14 @@ paths:
     $ref: './dashboard.yml#/on-boarded-devices'
   /policies:
     $ref: './policy.yml#/policies'
+  /policies/bulk-upsert:
+    $ref: './policy.yml#/policies-bulk-upsert'
   /policies/{id}:
     $ref: './policy.yml#/policies-id'
   /conditions:
     $ref: './condition.yml#/conditions'
+  /conditions/bulk-upsert:
+    $ref: './condition.yml#/conditions-bulk-upsert'
   /conditions/{id}:
     $ref: './condition.yml#/conditions-id'
   /conditions/test:
@@ -212,6 +218,8 @@ paths:
     $ref: './claim_names.yml#/claim-names'
   /entitlements:
     $ref: './entitlement.yml#/entitlements'
+  /entitlements/bulk-upsert:
+    $ref: './entitlement.yml#/entitlements-bulk-upsert'
   /entitlements/{id}:
     $ref: './entitlement.yml#/entitlements-id'
   /entitlements/app-shortcuts/groups:
@@ -220,14 +228,30 @@ paths:
     $ref: './entitlement.yml#/cloud-migrations'
   /ringfence-rules:
     $ref: './ringfence_rule.yml#/ringfence-rules'
+  /ringfence-rules/bulk-upsert:
+    $ref: './ringfence_rule.yml#/ringfence-rules-bulk-upsert'
   /ringfence-rules/{id}:
     $ref: './ringfence_rule.yml#/ringfence-rules-id'
   /appliances:
     $ref: './appliance.yml#/appliances'
+  /appliances/bulk-upsert:
+    $ref: './appliance.yml#/appliances-bulk-upsert'
   /appliances/{id}:
     $ref: './appliance.yml#/appliances-id'
   /appliances/{id}/export:
     $ref: './appliance.yml#/appliances-export'
+  /replication-targets:
+    $ref: './replication_target.yml#/replication-targets'
+  /replication-targets/bulk-upsert:
+    $ref: './replication_target.yml#/replication-targets-bulk-upsert'
+  /replication-targets/{id}:
+    $ref: './replication_target.yml#/replication-targets-id'
+  /replication-targets/{id}/export:
+    $ref: './replication_target.yml#/replication-targets-id-export'
+  /replication-targets/register:
+    $ref: './replication_target.yml#/replication-targets-register'
+  /replication-targets/status:
+    $ref: './replication_target.yml#/replication-targets-status'
   /appliances/{id}/export/iso:
     $ref: './appliance.yml#/appliances-export-iso'
   /appliances/{id}/switch-partition:
@@ -268,6 +292,8 @@ paths:
     $ref: './appliance.yml#/appliances-status'
   /sites:
     $ref: './site.yml#/sites'
+  /sites/bulk-upsert:
+    $ref: './site.yml#/sites-bulk-upsert'
   /sites/{id}:
     $ref: './site.yml#/sites-id'
   /sites/status:
@@ -276,12 +302,16 @@ paths:
     $ref: './site.yml#/sites-resources'
   /ip-pools:
     $ref: './ip_pool.yml#/ip-pools'
+  /ip-pools/bulk-upsert:
+    $ref: './ip_pool.yml#/ip-pools-bulk-upsert'
   /ip-pools/{id}:
     $ref: './ip_pool.yml#/ip-pools-id'
   /ip-pools/allocated-ips:
     $ref: './ip_pool.yml#/allocated-ips'
   /identity-providers:
     $ref: './identity_provider.yml#/identity-providers'
+  /identity-providers/bulk-upsert:
+    $ref: './identity_provider.yml#/identity-providers-bulk-upsert'
   /identity-providers/{id}:
     $ref: './identity_provider.yml#/identity-providers-id'
   /identity-providers/test:
@@ -290,20 +320,28 @@ paths:
     $ref: './identity_provider.yml#/identity-providers-id-attributes'
   /local-users:
     $ref: './local_user.yml#/local-users'
+  /local-users/bulk-upsert:
+    $ref: './local_user.yml#/local-users-bulk-upsert'
   /local-users/{id}:
     $ref: './local_user.yml#/local-users-id'
   /service-users:
     $ref: './service_user.yml#/service-users'
+  /service-users/bulk-upsert:
+    $ref: './service_user.yml#/service-users-bulk-upsert'
   /service-users/{id}:
     $ref: './service_user.yml#/service-users-id'
   /administrative-roles:
     $ref: './administrative_role.yml#/administrative-roles'
+  /administrative-roles/bulk-upsert:
+    $ref: './administrative_role.yml#/administrative-roles-bulk-upsert'
   /administrative-roles/{id}:
     $ref: './administrative_role.yml#/administrative-roles-id'
   /administrative-roles/type-target-map:
     $ref: './administrative_role.yml#/administrative-roles-type-target-map'
   /mfa-providers:
     $ref: './mfa_provider.yml#/mfa-providers'
+  /mfa-providers/bulk-upsert:
+    $ref: './mfa_provider.yml#/mfa-providers-bulk-upsert'
   /mfa-providers/{id}:
     $ref: './mfa_provider.yml#/mfa-providers-id'
   /mfa-providers/test:
@@ -320,30 +358,42 @@ paths:
     $ref: './admin_mfa_settings.yml#/admin-mfa-settings'
   /trusted-certificates:
     $ref: './trusted_certificate.yml#/trusted-certificates'
+  /trusted-certificates/bulk-upsert:
+    $ref: './trusted_certificate.yml#/trusted-certificates-bulk-upsert'
   /trusted-certificates/{id}:
     $ref: './trusted_certificate.yml#/trusted-certificates-id'
   /criteria-scripts:
     $ref: './criteria_script.yml#/criteria-scripts'
+  /criteria-scripts/bulk-upsert:
+    $ref: './criteria_script.yml#/criteria-scripts-bulk-upsert'
   /criteria-scripts/{id}:
     $ref: './criteria_script.yml#/criteria-scripts-id'
   /user-scripts:
     $ref: './user_script.yml#/user-scripts'
+  /user-scripts/bulk-upsert:
+    $ref: './user_script.yml#/user-scripts-bulk-upsert'
   /user-scripts/{id}:
     $ref: './user_script.yml#/user-scripts-id'
   /device-scripts:
     $ref: './device_script.yml#/device-scripts'
+  /device-scripts/bulk-upsert:
+    $ref: './device_script.yml#/device-scripts-bulk-upsert'
   /device-scripts/{id}:
     $ref: './device_script.yml#/device-scripts-id'
   /device-scripts/download/{id}:
     $ref: './device_script.yml#/device-scripts-download-id'
   /entitlement-scripts:
     $ref: './entitlement_script.yml#/entitlement-scripts'
+  /entitlement-scripts/bulk-upsert:
+    $ref: './entitlement_script.yml#/entitlement-scripts-bulk-upsert'
   /entitlement-scripts/{id}:
     $ref: './entitlement_script.yml#/entitlement-scripts-id'
   /entitlement-scripts/test:
     $ref: './entitlement_script.yml#/entitlement-scripts-test'
   /appliance-customizations:
     $ref: './appliance_customization.yml#/appliance-customizations'
+  /appliance-customizations/bulk-upsert:
+    $ref: './appliance_customization.yml#/appliance-customizations-bulk-upsert'
   /appliance-customizations/{id}:
     $ref: './appliance_customization.yml#/appliance-customizations-id'
   /blacklist:
@@ -366,6 +416,8 @@ paths:
     $ref: './my_preferences.yml#/my-preferences'
   /client-profiles:
     $ref: './client_profile.yml#/client-profiles'
+  /client-profiles/bulk-upsert:
+    $ref: './client_profile.yml#/client-profiles-bulk-upsert'
   /client-profiles/{id}:
     $ref: './client_profile.yml#/client-profiles-id'
   /client-profiles/{id}/url:
@@ -436,8 +488,14 @@ paths:
     $ref: './ztp.yml#/ztp-settings'
   /ztp/services/version:
     $ref: './ztp.yml#/ztp-services-version'
+  /replication-source:
+    $ref: './replication_source.yml#/replication-source'
+  /replication-source/status:
+    $ref: './replication_source.yml#/replication-source-status'
   /secrets:
     $ref: './secrets.yml#/secrets'
+  /secrets/bulk-upsert:
+    $ref: './secrets.yml#/secrets-bulk-upsert'
   /secrets/{id}:
     $ref: './secrets.yml#/secrets-id'
   /health/app-connectivity:

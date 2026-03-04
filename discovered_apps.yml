@@ -62,6 +62,12 @@ discovered-app-id:
       - Discovered Apps
     parameters:
       - $ref: './common.yml#/parameters/id'
+      - in: query
+        name: ports
+        required: true
+        description: Comma-separated list of ports and/or ranges (for example `1,203-205,5550`).
+        schema:
+          type: string
     responses:
       '204':
         description: Discovered app was deleted successfully.
@@ -239,8 +245,14 @@ discovered-app-id-reset:
       - Discovered Apps
     parameters:
       - $ref: './common.yml#/parameters/id'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/ResetAppRequest'
     responses:
-      '200':
+      '204':
         description: Data reset
       '400':
         $ref: './common.yml#/responses/BadRequestError'
@@ -381,6 +393,12 @@ definitions:
         type: string
         description: Type of the app.
         example: MyApp
+      appTypePorts:
+        type: array
+        description: List of ports configured for the app type.
+        items:
+          type: string
+        example: [ "80", "443", "20300-20400" ]
       ports:
         type: array
         description: List of ports associated with this app type.
@@ -471,10 +489,6 @@ definitions:
                 description: Number of hits for this day.
               example:
                 2024-08-22: 256
-          lastResetAt:
-            type: string
-            format: date-time
-            description: Timestamp of the last time the app was reset.
           lastAnalysisAt:
             type: string
             format: date-time
@@ -572,6 +586,22 @@ definitions:
         example: 25
     example:
       count: 30
+  ResetAppRequest:
+    type: object
+    description: Request body for resetting a discovered app.
+    required:
+      - ports
+    properties:
+      ports:
+        type: array
+        minItems: 1
+        description: List of ports to reset; each entry can be a single port or a range.
+        items:
+          type: string
+        example:
+          - "1"
+          - "203-205"
+          - "5550"
   TopGroups:
     type: object
     description: Represents a top user groups accessing discovered app for ID.

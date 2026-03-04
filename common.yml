@@ -20,7 +20,7 @@ parameters:
     name: range
     in: query
     description: >-
-      'Range string to limit the result list. Format: -. 3-10 means he items between the (including) 3rd and the 10th
+      'Range string to limit the result list. Format: -. 3-10 means the items between the (including) 3rd and the 10th
        will be returned. Defaults to all objects.'
     schema:
       type: string
@@ -130,6 +130,11 @@ definitions:
         format: date-time
         description: Last update date.
         readOnly: true
+      readOnly:
+        type: boolean
+        description: Whether the entity is protected from manual updates and deletes.
+        example: false
+        readOnly: true
       tags:
         type: array
         description: Array of tags.
@@ -204,6 +209,57 @@ definitions:
         type: string
         description: The provider name of the user, same as the one in the Distinguished Name.
         example: ldap
+
+  BulkUpsertEntityRef:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: ID of the entity.
+      name:
+        type: string
+        description: Name of the entity.
+  BulkUpsertFailure:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        nullable: true
+        description: ID from the request item, if available.
+      name:
+        type: string
+        nullable: true
+        description: Name from the request item, if available.
+      error:
+        oneOf:
+          - $ref: '#/definitions/Error'
+          - $ref: '#/definitions/ValidationError'
+  BulkUpsertReport:
+    type: object
+    properties:
+      created:
+        type: array
+        items:
+          $ref: '#/definitions/BulkUpsertEntityRef'
+      updated:
+        type: array
+        items:
+          $ref: '#/definitions/BulkUpsertEntityRef'
+      unchanged:
+        type: array
+        items:
+          $ref: '#/definitions/BulkUpsertEntityRef'
+      failures:
+        type: array
+        items:
+          $ref: '#/definitions/BulkUpsertFailure'
+      deleted:
+        type: array
+        description: List of deleted entities. It's an internal field to be used by the local replication service.
+        items:
+          $ref: '#/definitions/BulkUpsertEntityRef'
   AppliedBy:
     type: object
     properties:
@@ -299,13 +355,28 @@ definitions:
             description: Database size.
   ConnectionBrokerRole:
     allOf:
+      - $ref: '#/definitions/ApplianceRole'
+      - type: object
+        properties:
+          relayed:
+              type: object
+              properties:
+                sessions:
+                  type: integer
+                  description: Number of active sessions relayed by the Connection Broker.
+                  example: 42
+                dataThroughputBitsPerSecond:
+                  type: number
+                  format: float
+                  description: Current throughput on the Connection Broker in bits per second.
+                  example: 156.34
+  GatewayRole:
+    allOf:
       - $ref: '#/definitions/ApplianceWithSessionsRole'
       - type: object
         properties:
-          relayedThroughput:
-            type: string
-            description: Current throughput on the Connection Broker.
-            example: 1024Mbps
+          sessionCounts:
+            $ref: '#/definitions/SessionCounts'
   ApplianceBaseRole:
     allOf:
       - $ref: '#/definitions/ApplianceRole'
@@ -325,6 +396,22 @@ definitions:
       - Portal
       - Metrics Aggregator
       - Connection Broker
+  SessionCounts:
+    type: object
+    description: Session counts by connection type.
+    properties:
+      direct:
+        type: integer
+        description: Number of direct sessions.
+        example: 100
+      directViaNatt:
+        type: integer
+        description: Number of direct sessions via NAT-T.
+        example: 20
+      relayed:
+        type: integer
+        description: Number of relayed sessions.
+        example: 50
 
 responses:
   ChangeData:

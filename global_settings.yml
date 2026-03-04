@@ -114,6 +114,15 @@ definitions:
       backupApiEnabled:
         type: boolean
         description: Whether the backup API is enabled or not.
+      applianceKeyEncryption:
+        type: boolean
+        description: Enables TPM2-based appliance key encryption on all Appliances.
+        default: false
+      ppModeEnabled:
+        type: boolean
+        readOnly: true
+        description: Whether Protection Profile mode enabled or not. Limits certain functionalities.
+        default: false
       backupPassphrase:
         format: password
         type: string

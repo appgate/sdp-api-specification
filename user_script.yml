@@ -53,6 +53,43 @@ user-scripts:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/UserScript'
+user-scripts-bulk-upsert:
+  post:
+    summary: Bulk upsert User Scripts.
+    description: Create or update multiple user scripts in a single request.
+    tags:
+      - User Scripts
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/UserScript'
 user-scripts-id:
   get:
     summary: Get a specific User Claim Script.
@@ -162,3 +199,8 @@ definitions:
             type: string
             description: A JavaScript expression that returns an object.
             example: "return {'posture': 25};"
+
+components:
+  schemas:
+    UserScript:
+      $ref: '#/definitions/UserScript'

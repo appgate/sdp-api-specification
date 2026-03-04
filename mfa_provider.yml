@@ -49,6 +49,43 @@ mfa-providers:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/MfaProvider'
+mfa-providers-bulk-upsert:
+  post:
+    summary: Bulk upsert MFA Providers.
+    description: Create or update multiple mfa providers in a single request.
+    tags:
+      - MFA Providers
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/MfaProvider'
 mfa-providers-id:
   get:
     summary: Get a specific MFA Provider.
@@ -260,3 +297,8 @@ definitions:
             description: ->
               Password sent to RADIUS to initiate multi-factor authentication. Required if "useUserPassword" is not
               enabled.
+
+components:
+  schemas:
+    MfaProvider:
+      $ref: '#/definitions/MfaProvider'

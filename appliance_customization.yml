@@ -53,6 +53,43 @@ appliance-customizations:
         $ref: './common.yml#/responses/UnexpectedError'
     requestBody:
       $ref: '#/requestBodies/ApplianceCustomization'
+appliance-customizations-bulk-upsert:
+  post:
+    summary: Bulk upsert Appliance Customizations.
+    description: Create or update multiple appliance customizations in a single request.
+    tags:
+      - Appliance Customizations
+    responses:
+      '200':
+        description: Bulk upsert report.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/BulkUpsertReport'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+    requestBody:
+      required: true
+      description: Bulk upsert request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ApplianceCustomization'
 appliance-customizations-id:
   get:
     summary: Get a specific Appliance Customization.
@@ -175,3 +212,8 @@ definitions:
             readOnly: true
             description: Binary file's size in bytes.
             example: 854325
+
+components:
+  schemas:
+    ApplianceCustomization:
+      $ref: '#/definitions/ApplianceCustomization'

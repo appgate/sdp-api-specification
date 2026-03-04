@@ -297,6 +297,10 @@ definitions:
             type: number
             description: The amount of FIDO2 devices in the system at present.
             example: 2
+          sitesConnectedViaBroker:
+            type: number
+            description: The amount of sites Connection Brokers are connected to.
+            example: 2
           identityProviders:
             type: object
             description: The amount of non-built-in Identity Providers in the system at present broken out by type.
@@ -396,6 +400,9 @@ definitions:
       digitalExperienceMonitoring:
         type: boolean
         description: Whether the Digital Experience Monitoring feature is enabled.
+      collectiveReplication:
+        type: boolean
+        description: Whether the Collective Replication feature is enabled.
       verifiedDnsNames:
         type: object
         properties:

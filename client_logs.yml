@@ -3,7 +3,7 @@ client-logs-distinguished-name:
     summary: Download log files from Client by Distinguished Name.
     description: >-
       Sends a message to Client with the specified Distinguished Name to upload its logs. The logs are collected in a zip archive and returned as a byte stream in the response. 
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v23+zip**.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+zip**.
     tags:
       - Client Logs
     parameters:
