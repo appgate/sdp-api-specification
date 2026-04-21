@@ -250,6 +250,8 @@ paths:
     $ref: './replication_target.yml#/replication-targets-id-export'
   /replication-targets/register:
     $ref: './replication_target.yml#/replication-targets-register'
+  /replication-targets/unregister:
+    $ref: './replication_target.yml#/replication-targets-unregister'
   /replication-targets/status:
     $ref: './replication_target.yml#/replication-targets-status'
   /appliances/{id}/export/iso:
@@ -492,6 +494,10 @@ paths:
     $ref: './replication_source.yml#/replication-source'
   /replication-source/status:
     $ref: './replication_source.yml#/replication-source-status'
+  /replication-source/replication-started:
+    $ref: './replication_source.yml#/replication-source-started'
+  /replication-source/trigger-replication:
+    $ref: './replication_source.yml#/replication-source-trigger'
   /secrets:
     $ref: './secrets.yml#/secrets'
   /secrets/bulk-upsert:

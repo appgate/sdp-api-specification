@@ -132,6 +132,16 @@ definitions:
       geoIpSettings:
         $ref: '#/definitions/GeoIpSettings'
         description: GeoIP provider settings.
+      inactivityTimeoutEnabled:
+        type: boolean
+        description: Whether user session inactivity timeout is enabled or not.
+        default: true
+      inactivityTimeout:
+        type: number
+        description: Number of minutes of inactivity before a user session is terminated. Minimum value is 1 minute. Not applicable if inactivity timeout is disabled.
+        example: 15
+        default: 60
+        minimum: 1
       auditLogPersistenceMode:
         type: string
         description: Audit Log persistence mode.

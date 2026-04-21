@@ -228,6 +228,25 @@ replication-targets-register:
         $ref: './common.yml#/responses/ValidationError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
+replication-targets-unregister:
+  post:
+    summary: Unregister a replication target.
+    description: Unregister a replication target setting its status to Not Connected. This API endpoint can only be used by target collectives.
+    tags:
+      - Replication Targets
+    responses:
+      '204':
+        description: Replication target was unregistered successfully.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 replication-targets-status:
   post:
     summary: Update replication target state.
@@ -321,7 +340,7 @@ definitions:
         readOnly: true
       replicationTags:
         type: array
-        description: Tags used for selecting items to replicate to this target.
+        description: Tags used for selecting items to replicate to this target. The tag builtin is not permitted.
         items:
           type: string
       status:
@@ -337,6 +356,10 @@ definitions:
         type: string
         format: date-time
         description: Last replication timestamp.
+        readOnly: true
+      sourceHealthMessage:
+        type: string
+        description: Source-side health check message that explains a controller-detected issue affecting this target’s status.
         readOnly: true
       lastReplicationDetails:
         $ref: './replication_source.yml#/definitions/ReplicationDetails'

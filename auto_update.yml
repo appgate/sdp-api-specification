@@ -70,6 +70,7 @@ definitions:
         $ref: '#/definitions/Client'
       redHat8:
         deprecated: true
+        description: Deprecated as of 6.6. Use 'redHat'.
         $ref: '#/definitions/Client'
       redHat:
         $ref: '#/definitions/Client'

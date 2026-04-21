@@ -766,11 +766,6 @@ definitions:
                       - '192.100.111.31'
                   allowDestinations:
                     $ref: './appliance.yml#/definitions/AllowResources'
-                  defaultTtlSeconds:
-                    type: integer
-                    deprecated: true
-                    description: Deprecated as of 6.4. This will apply whenever Gateway gets a DNS response which has no TTL set.
-                    default: 300
                   matchDomains:
                     type: array
                     description: The match domains to use for automatic Client DNS configuration.

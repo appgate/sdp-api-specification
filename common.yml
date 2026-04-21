@@ -233,9 +233,7 @@ definitions:
         nullable: true
         description: Name from the request item, if available.
       error:
-        oneOf:
-          - $ref: '#/definitions/Error'
-          - $ref: '#/definitions/ValidationError'
+        $ref: '#/definitions/ValidationError'
   BulkUpsertReport:
     type: object
     properties:

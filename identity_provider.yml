@@ -381,7 +381,9 @@ definitions:
           blockLocalDnsRequests:
             type: boolean
             deprecated: true
-            description: Whether the Windows Client will block local DNS requests or not.
+            description: >-
+              Whether the Windows Client will block local DNS requests or not.
+              Deprecated as of 6.6. Use DNS Policies.
             default: false
           onDemandClaimMappings:
             $ref: '#/definitions/OnDemandClaimMappings'
@@ -400,7 +402,7 @@ definitions:
         deprecated: true
         description: >-
           The DNS servers to be assigned to the Clients of the users in this Identity Provider.
-          Deprecated as of 6.4. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
+          Deprecated as of 6.6. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
         items:
           type: string
         example:
@@ -411,7 +413,7 @@ definitions:
         deprecated: true
         description: >-
           The DNS search domains to be assigned to Clients of the users in this Identity Provider.
-          Deprecated as of 6.4. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
+          Deprecated as of 6.6. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
         items:
           type: string
         example:

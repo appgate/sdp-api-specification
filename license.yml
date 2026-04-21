@@ -197,10 +197,6 @@ definitions:
             type: number
             description: The amount of grouped Connector clients in the system at present.
             example: 4
-          multiUserClients:
-            type: number
-            description: The amount of licensed multi-user clients in the system at present.
-            example: 10
           clientTypes:
             type: object
             description: Counts of the current client types in the system at present.

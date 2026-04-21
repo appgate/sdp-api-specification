@@ -16,7 +16,7 @@ login:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthorizationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -120,7 +120,7 @@ authentication:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthenticationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -251,7 +251,7 @@ authentication-otp:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthenticationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -297,7 +297,7 @@ authorization:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthorizationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -399,7 +399,32 @@ definitions:
       accessToken:
         type: string
         description: Access Token received from OIDC provider. Required if an OIDC based Identity Provider is used.
-  LoginResponse:
+  LoginAuthenticationResponse:
+    type: object
+    properties:
+      user:
+        type: object
+        description: Information about logged in user, such as username and email address, if exists.
+        properties:
+          name:
+            type: string
+            description: Username.
+            example: admin
+          needTwoFactorAuth:
+            type: boolean
+            description: If true, it is not possible to complete login process without providing MFA.
+            example: false
+          canAccessAuditLogs:
+            type: boolean
+            description: Whether there is a LogServer deployed and the user has privileges to access to it.
+      token:
+        type: string
+        description: The AuthToken required for subsequent API calls.
+      expires:
+        type: string
+        format: date-time
+        description: Token expiration time.
+  LoginAuthorizationResponse:
     type: object
     properties:
       user:
@@ -451,3 +476,13 @@ definitions:
       ppModeEnabled:
         type: boolean
         description: Whether Protection Profile mode is enabled or not. Limits certain functionalities.
+      inactivityTimeoutEnabled:
+        type: boolean
+        description: Whether user session inactivity timeout is enabled or not.
+        default: true
+      inactivityTimeoutMinutes:
+        type: number
+        description: Number of minutes of inactivity before a user session is terminated. Minimum value is 1 minute. Not applicable if inactivity timeout is disabled.
+        example: 15
+        default: 60
+        minimum: 1

@@ -1318,6 +1318,8 @@ definitions:
         $ref: 'common.yml#/definitions/ApplianceRole'
       metricsAggregator:
         $ref: 'common.yml#/definitions/ApplianceRole'
+      collectiveReplication:
+        $ref: 'common.yml#/definitions/ApplianceRole'
       connectionBroker:
         $ref: 'common.yml#/definitions/ConnectionBrokerRole'
       gateway:
@@ -1797,7 +1799,12 @@ definitions:
                       type: string
                       description: Type of key to use for secure NTP communication.
                       enum:
+                        - MD5
+                        - SHA
+                        - SHA1
+                        - SHA256
                         - SHA512
+                        - RMD160
                     keyNo:
                       type: integer
                       description: Identifier number for the key.
@@ -1874,6 +1881,10 @@ definitions:
               enabled:
                 type: boolean
                 description: Whether the Collective Replication Service is enabled on this Appliance or not. It's managed by registering and unregistering Replication Source.
+                readOnly: true
+              paused:
+                type: boolean
+                description: Whether the Collective Replication Service is paused due to licensing state.
                 readOnly: true
           logServer:
             type: object
@@ -1989,6 +2000,11 @@ definitions:
                 description: Coralogix endpoints to connect and send the audit logs to.
                 items:
                   $ref: '#/definitions/Coralogix'
+              kafkaClients:
+                type: array
+                description: Kafka endpoints to connect and send the audit logs to.
+                items:
+                  $ref: '#/definitions/Kafka'
               sites:
                 type: array
                 description: The sites to collect logs from and forward.
@@ -2463,6 +2479,57 @@ definitions:
         type: string
         description: Subsystem name to use for the logs.
         example: appgate-sdp
+  Kafka:
+    type: object
+    required:
+      - bootstrapServers
+      - authenticationType
+    properties:
+      topic:
+        type: string
+        description: Topic to publish logs to.
+        example: appgate-audit
+      compression:
+        type: string
+        description: Compression codec to use when sending Kafka messages.
+        enum:
+          - gzip
+          - snappy
+          - lz4
+          - zstd
+      bootstrapServers:
+        type: array
+        description: List of Kafka bootstrap servers (hostname or IP).
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+          example: kafka.example.com
+      useTLS:
+        type: boolean
+        description: Whether to use TLS for Kafka connections.
+        default: true
+      authenticationType:
+        type: string
+        description: Authentication mode used for Kafka.
+        enum:
+          - none
+          - basic
+          - token
+        default: none
+      authorizationToken:
+        format: password
+        type: string
+        description: Authorization token used when authenticationType is token.
+        writeOnly: true
+      username:
+        type: string
+        description: Username used when authenticationType is basic.
+      password:
+        format: password
+        type: string
+        description: Password used when authenticationType is basic.
+        writeOnly: true
   ApplianceSeedISO:
     type: object
     description: The ISO file blob in JSON.

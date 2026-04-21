@@ -101,6 +101,52 @@ replication-source-status:
         $ref: './common.yml#/responses/ValidationError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
+replication-source-started:
+  post:
+    summary: Mark replication as started.
+    description: Mark replication as ongoing. It's an internal API to be used by the local replication service when a replication run begins.
+    tags:
+      - Replication Source
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+replication-source-trigger:
+  post:
+    summary: Trigger replication.
+    description: Trigger a replication run on the local replication service.
+    tags:
+      - Replication Source
+    responses:
+      '204':
+        description: Replication run triggered.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
 
 responses:
   ReplicationSourceStatus:
@@ -131,6 +177,9 @@ definitions:
           - error
           - warning
           - healthy
+      replicationInProgress:
+        type: boolean
+        description: Whether a replication run is currently in progress.
       lastReplicationTime:
         type: string
         format: date-time
@@ -156,6 +205,8 @@ definitions:
     properties:
       administrativeRoles:
         $ref: '#/definitions/ReplicationReportItem'
+      clientProfiles:
+        $ref: '#/definitions/ReplicationReportItem'
       conditions:
         $ref: '#/definitions/ReplicationReportItem'
       criteriaScripts:
@@ -170,15 +221,17 @@ definitions:
         $ref: '#/definitions/ReplicationReportItem'
       ipPools:
         $ref: '#/definitions/ReplicationReportItem'
-      policies:
+      mfaProviders:
         $ref: '#/definitions/ReplicationReportItem'
-      profiles:
+      policies:
         $ref: '#/definitions/ReplicationReportItem'
       ringfenceRules:
         $ref: '#/definitions/ReplicationReportItem'
       sites:
         $ref: '#/definitions/ReplicationReportItem'
       tags:
+        $ref: '#/definitions/ReplicationReportItem'
+      userClaimScripts:
         $ref: '#/definitions/ReplicationReportItem'
   ReplicationReportItem:
     type: object
