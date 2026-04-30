@@ -308,7 +308,7 @@ definitions:
             type: string
             format: date-time
             description: >-
-              Exported time is the last time when the client profile is exported either using 
+              Exported time is the last time when the client profile is exported either using
               the URL or Barcode.
             example: "2022-05-20T13:35:31.836392Z"
   ClientProfileGroup:
@@ -342,6 +342,11 @@ definitions:
         type: string
         format: uuid
         description: Identifier to track the object on update since all the other fields are write-only. A random one will be assigned if left empty.
+      url:
+        type: string
+        writeOnly: true
+        description: Appgate URL exported from Client Profiles.
+        example: appgate://appgate.company.com/eyJjYUZpbmdlcnByaW50IjoiMmM4ZTBiNTM5YTM4NjRkYmVkYzhiOWRkMTcwYzM0NGFhMjZjZTVhNjA4MmY3YTI0YzRkZTU4ZGQ3NWRjNWZhMCIsImlkZW50aXR5UHJvdmlkZXJOYW1lIjoibG9jYWwifQ==
       hostname:
         type: string
         readOnly: true
