@@ -424,6 +424,12 @@ definitions:
         type: string
         format: date-time
         description: Token expiration time.
+      rotatedReplicationAccessToken:
+        type: string
+        description: Rotated replication access token. For internal use.
+      nextReplicationAccessToken:
+        type: string
+        description: Next replication access token. For internal use.
   LoginAuthorizationResponse:
     type: object
     properties:
