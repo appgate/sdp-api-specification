@@ -264,6 +264,9 @@ definitions:
       message:
         type: string
         description: Failure reason.
+      field:
+        type: string
+        description: Optional field name that caused the failure, if applicable.
     required:
       - name
       - message

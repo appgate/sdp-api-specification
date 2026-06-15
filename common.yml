@@ -102,6 +102,14 @@ definitions:
               type: string
               description: Failure reason.
               example: may not be null
+            displayField:
+              type: string
+              description: Name of the field that should be displayed in the UI. It's an internal field to be used by the local replication service.
+              example: Name
+            replicationMessage:
+              type: string
+              description: Message to be displayed in the replication UI. It's an internal field to be used by the local replication service.
+              example: Name is required.
   BaseEntity:
     type: object
     required:
@@ -357,17 +365,17 @@ definitions:
       - type: object
         properties:
           relayed:
-              type: object
-              properties:
-                sessions:
-                  type: integer
-                  description: Number of active sessions relayed by the Connection Broker.
-                  example: 42
-                dataThroughputBitsPerSecond:
-                  type: number
-                  format: float
-                  description: Current throughput on the Connection Broker in bits per second.
-                  example: 156.34
+            type: object
+            properties:
+              sessions:
+                type: integer
+                description: Number of active sessions relayed by the Connection Broker.
+                example: 42
+              dataThroughputBitsPerSecond:
+                type: number
+                format: float
+                description: Current throughput on the Connection Broker in bits per second.
+                example: 156.34
   GatewayRole:
     allOf:
       - $ref: '#/definitions/ApplianceWithSessionsRole'
