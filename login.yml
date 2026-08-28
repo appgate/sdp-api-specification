@@ -7,6 +7,7 @@ login:
       Multi-Factor Authentication is not supported by Login call, API user must be exempt from Admin MFA requirement.
       It is important to restrict API user's permissions strictly as-needed basis and restrict IP access to API port to
       trusted networks.
+    security: [ ]
     tags:
       - Login
     responses:
@@ -15,7 +16,7 @@ login:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthorizationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -37,6 +38,7 @@ identity-provider-names:
   get:
     summary: Get the list of identity providers available for admin login.
     description: Get the list of identity providers available for admin login.
+    security: [ ]
     tags:
       - Login
     responses:
@@ -64,6 +66,7 @@ identity-provider-names:
                         enum:
                           - Credentials
                           - Saml
+                          - Oidc
                           - Certificate
                       redirectUrl:
                         type: string
@@ -74,6 +77,22 @@ identity-provider-names:
                         description: The prioritization of which client certificate to use.
                         items:
                           type: object # won't get into it as it's irrelevant.
+                      authUrl:
+                        type: string
+                        description: Authorization endpoint URL for OIDC login.
+                        example: "https://oidc.company.com/oauth2/auth"
+                      tokenUrl:
+                        type: string
+                        description: Token endpoint URL for OIDC login. Only present for public clients.
+                        example: "https://oidc.company.com/oauth2/token"
+                      clientId:
+                        type: string
+                        description: Client ID for OIDC login.
+                        example: "b7258f30-6a5e-4846-9f1d-d247d68b2f1f"
+                      scope:
+                        type: string
+                        description: OIDC scope for getting user information.
+                        example: openid profile offline_access
                 bannerMessage:
                   type: string
                   description: Configured banner message to display before login.
@@ -89,6 +108,7 @@ authentication:
       First step for logging in is sending the credentials and retrieving partial AuthToken.
       If the response has the "needTwoFactorAuth:true", then either API user must be extempt from Admin MFA or two-step
       MFA process must be completed before Authorization.
+    security: [ ]
     tags:
       - Login
     responses:
@@ -97,11 +117,13 @@ authentication:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthenticationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: '#/responses/AuthenticationError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -120,8 +142,6 @@ authentication-otp-initialize:
       This API starts the Multi-Factor Authentication process.
       It requires the partial AuthToken from Authentication call.
       The Controller will initiate the flow and return details required to continue MFA.
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     tags:
       - Login
     responses:
@@ -194,6 +214,8 @@ authentication-otp-initialize:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -218,8 +240,6 @@ authentication-otp:
       This API starts the Multi-Factor Authentication process.
       It requires the partial AuthToken from Authentication call.
       The fields required depends on the initialization.
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     tags:
       - Login
     responses:
@@ -228,11 +248,13 @@ authentication-otp:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthenticationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: '#/responses/AuthenticationError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -264,8 +286,6 @@ authorization:
       API Scripts are recommended to use the Login call instead of separate Authentication & Authorization calls.
 
       Last step for logging in is sending the partial AuthToken for authorization and retrieving the AuthToken.
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     tags:
       - Login
     responses:
@@ -274,7 +294,7 @@ authorization:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/LoginResponse'
+              $ref: '#/definitions/LoginAuthorizationResponse'
       '400':
         $ref: './common.yml#/responses/JsonError'
       '401':
@@ -285,6 +305,8 @@ authorization:
           application/json:
             schema:
               $ref: './common.yml#/definitions/Error'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -293,8 +315,6 @@ logout:
   post:
     summary: Logout
     description: The tokens for this session will be revoked
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     tags:
       - Login
     responses:
@@ -302,6 +322,8 @@ logout:
         description: Logout was successful. The tokens are revoked immediately.
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
 
@@ -368,7 +390,61 @@ definitions:
       samlResponse:
         type: string
         description: SAMLResponse received from SAML provider. Required if a SAML based Identity Provider is used.
-  LoginResponse:
+      idToken:
+        type: string
+        description: ID Token received from OIDC provider. Required if an OIDC based Identity Provider is used and the provider does not have a client secret (public client flow).
+      accessToken:
+        type: string
+        description: Access Token received from OIDC provider. Optional for OIDC authentication.
+      oidcCodeExchange:
+        type: object
+        description: OIDC authorization code exchange parameters. Required if an OIDC based Identity Provider is used and the provider has a client secret configured (backend token exchange flow).
+        required:
+          - authCode
+          - redirectUri
+          - codeVerifier
+        properties:
+          authCode:
+            type: string
+            description: Authorization code received from OIDC provider after user authentication.
+          redirectUri:
+            type: string
+            description: Redirect URI used in authorization request. Must match exactly for OAuth security.
+          codeVerifier:
+            type: string
+            description: PKCE code verifier generated by client.
+  LoginAuthenticationResponse:
+    type: object
+    properties:
+      user:
+        type: object
+        description: Information about logged in user, such as username and email address, if exists.
+        properties:
+          name:
+            type: string
+            description: Username.
+            example: admin
+          needTwoFactorAuth:
+            type: boolean
+            description: If true, it is not possible to complete login process without providing MFA.
+            example: false
+          canAccessAuditLogs:
+            type: boolean
+            description: Whether there is a LogServer deployed and the user has privileges to access to it.
+      token:
+        type: string
+        description: The AuthToken required for subsequent API calls.
+      expires:
+        type: string
+        format: date-time
+        description: Token expiration time.
+      rotatedReplicationAccessToken:
+        type: string
+        description: Rotated replication access token. For internal use.
+      nextReplicationAccessToken:
+        type: string
+        description: Next replication access token. For internal use.
+  LoginAuthorizationResponse:
     type: object
     properties:
       user:
@@ -402,3 +478,31 @@ definitions:
         type: string
         description: Message of the day configured by an admin.
         example: Welcome to Appgate SDP.
+      ztpCollectiveType:
+        type: string
+        description: ZTP type of the collective.
+        enum:
+          - hosted
+          - connected
+      ztpAccountType:
+        type: string
+        description: ZTP account type.
+        enum:
+          - standard
+          - demo
+      crlEnabled:
+        type: boolean
+        description: Whether X509 CRL is enabled for the system or not. Issued Certificates is disabled if it's not enabled.
+      ppModeEnabled:
+        type: boolean
+        description: Whether Protection Profile mode is enabled or not. Limits certain functionalities.
+      inactivityTimeoutEnabled:
+        type: boolean
+        description: Whether user session inactivity timeout is enabled or not.
+        default: true
+      inactivityTimeoutMinutes:
+        type: number
+        description: Number of minutes of inactivity before a user session is terminated. Minimum value is 1 minute. Not applicable if inactivity timeout is disabled.
+        example: 15
+        default: 60
+        minimum: 1

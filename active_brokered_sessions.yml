@@ -1,0 +1,190 @@
+active-brokered-sessions:
+  get:
+    summary: Get Active Brokered Sessions.
+    description: >-
+      Get a list of all Active Brokered Sessions from every Gateway in the system.
+    tags:
+      - Active Brokered Sessions
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: Active Brokered Sessions.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ActiveBrokeredSessionList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+active-brokered-session-terminate:
+  post:
+    summary: Terminate an Active Brokered Session.
+    description: Terminates an Active Brokered Session by its ID.
+    tags:
+      - Active Brokered Sessions
+    parameters:
+      - name: id
+        in: path
+        description: The ID of the Active Brokered Session to terminate.
+        required: true
+        schema:
+          type: string
+          description: Session ID.
+          example: 45be770b0d9dcb47eb57ec4fb117f65e
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/TerminateBrokeredSessionRequest'
+    responses:
+      '204':
+        description: Session terminated successfully.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+active-brokered-session-observe:
+  get:
+    summary: Observe an Active Brokered Session live.
+    description: >-
+      Streams a live, read-only view of an Active Brokered Session as a sequence of Guacamole
+      protocol frames. The response is a long-lived octet stream the client renders with a
+      Guacamole static HTTP tunnel; it ends when the session ends or the client disconnects.
+    tags:
+      - Active Brokered Sessions
+    parameters:
+      - name: id
+        in: path
+        description: The ID of the Active Brokered Session to observe.
+        required: true
+        schema:
+          type: string
+          description: A 32-char raw-hex guac session token, not a UUID.
+          example: 45be770b0d9dcb47eb57ec4fb117f65e
+      - name: gatewayId
+        in: query
+        description: The ID of the Gateway that owns the session. Returned by the list API.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      - name: distinguishedName
+        in: query
+        description: >-
+          The distinguished name of the session owner. Returned by the list API.
+        required: true
+        schema:
+          type: string
+          example: "CN=user,OU=users,DC=example,DC=com"
+    responses:
+      '200':
+        description: Live read-only session stream.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+definitions:
+  TerminateBrokeredSessionRequest:
+    type: object
+    required:
+      - gatewayId
+      - distinguishedName
+      - reason
+    properties:
+      gatewayId:
+        type: string
+        format: uuid
+        description: The ID of the Gateway that owns the session. Returned by the list API.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      distinguishedName:
+        type: string
+        description: The distinguished name of the session owner. Returned by the list API. Sent to the Gateway for verification.
+        example: "CN=user,OU=users,DC=example,DC=com"
+      reason:
+        type: string
+        description: A human-readable reason for terminating the session.
+        example: Security policy violation.
+  ActiveBrokeredSessionList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/ActiveBrokeredSession'
+  ActiveBrokeredSession:
+    allOf:
+      - $ref: './common.yml#/definitions/DeviceAndUser'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: Unique identifier of the brokered session. A 32-char raw-hex guac session token, not a UUID.
+            example: 45be770b0d9dcb47eb57ec4fb117f65e
+          gatewayId:
+            type: string
+            format: uuid
+            description: The ID of the Gateway that reported this session. Use this when terminating the session.
+            example: 7f1a3c22-d9b4-41f0-b17c-9a8e2f5d6c11
+          type:
+            type: string
+            description: The type of the brokered session.
+            example: RDP
+          site:
+            type: string
+            format: uuid
+            description: The ID of the Site the Gateway is assigned to.
+            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          siteName:
+            type: string
+            description: The name of the Site the Gateway is assigned to.
+            example: us-east
+          entitlement:
+            type: string
+            format: uuid
+            description: The ID of the Entitlement the session is associated with.
+            example: 12699e27-b584-464a-81ee-5b4784b6d425
+          entitlementName:
+            type: string
+            description: The name of the Entitlement the session is associated with.
+            example: web-access
+          host:
+            type: string
+            description: The host the session is connected to.
+            example: 10.0.0.1
+          durationSeconds:
+            type: integer
+            format: int64
+            description: The duration of the session in seconds.
+            example: 3600

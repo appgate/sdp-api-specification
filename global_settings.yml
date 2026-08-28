@@ -4,8 +4,6 @@ global-settings:
     description: View various Global Settings.
     tags:
       - Global Settings
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '200':
         description: Global Settings.
@@ -17,6 +15,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   delete:
@@ -24,8 +24,6 @@ global-settings:
     description: Reset all Global Settings to the default values.
     tags:
       - Global Settings
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: Global Settings were reset successfully.
@@ -33,6 +31,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
   put:
@@ -40,8 +40,6 @@ global-settings:
     description: Update all Global Settings.
     tags:
       - Global Settings
-    parameters:
-      - $ref: './common.yml#/parameters/authorization'
     responses:
       '204':
         description: Global Settings were updated successfully.
@@ -51,6 +49,8 @@ global-settings:
         $ref: './common.yml#/responses/TokenError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
       '422':
         $ref: './common.yml#/responses/ValidationError'
       '500':
@@ -89,15 +89,23 @@ definitions:
         type: number
         description: Number of minutes the VPN certificates is valid for clients.
         example: 525600
+      registeredDeviceExpirationDays:
+        type: number
+        description: Number of days registered devices are kept in storage before being deleted.
+        example: 90
       spaMode:
         type: string
         description: SPA mode.
         enum:
           - TCP
           - 'UDP-TCP'
+      spaTimeWindowSeconds:
+        type: number
+        description: Number of seconds the time skew SPA will allow.
+        default: 600
       loginBannerMessage:
         type: string
-        description: The configured message will be displayed on the login UI.
+        description: The configured message will be displayed on the sign-in UI.
         example: Authorized use only.
       messageOfTheDay:
         type: string
@@ -106,21 +114,34 @@ definitions:
       backupApiEnabled:
         type: boolean
         description: Whether the backup API is enabled or not.
+      applianceKeyEncryption:
+        type: boolean
+        description: Enables TPM2-based appliance key encryption on all Appliances.
+        default: false
+      ppModeEnabled:
+        type: boolean
+        readOnly: true
+        description: Whether Protection Profile mode enabled or not. Limits certain functionalities.
+        default: false
       backupPassphrase:
         format: password
         type: string
         writeOnly: true
         description: The passphrase to encrypt Appliance Backups when backup API is used.
         example: 'tSW3!QBv(rj{UuLY'
-      fips:
+      geoIpSettings:
+        $ref: '#/definitions/GeoIpSettings'
+        description: GeoIP provider settings.
+      inactivityTimeoutEnabled:
         type: boolean
-        description: FIPS 140-2 Compliant Tunneling.
-        deprecated: true
-        example: false
-      geoIpUpdates:
-        type: boolean
-        description: Whether the automatic GeoIp updates are enabled or not.
-        example: false
+        description: Whether user session inactivity timeout is enabled or not.
+        default: true
+      inactivityTimeout:
+        type: number
+        description: Number of minutes of inactivity before a user session is terminated. Minimum value is 1 minute. Not applicable if inactivity timeout is disabled.
+        example: 15
+        default: 60
+        minimum: 1
       auditLogPersistenceMode:
         type: string
         description: Audit Log persistence mode.
@@ -128,33 +149,73 @@ definitions:
           - Default
           - Guaranteed
           - Performance
-      appDiscoveryDomains:
-        type: array
-        description: Domains to monitor for for App Discovery feature.
-        items:
-          type: string
-          example: company.com
-      # Not fully implemented yet
-      #      dnsRedirectionHosts:
-      #        type: array
-      #        description: Redirection hosts to use in DNS Rules.
-      #        items:
-      #          type: object
-      #          required:
-      #            - host
-      #          properties:
-      #            id:
-      #              type: string
-      #              format: uuid
-      #              description: ID for the host.
-      #              example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
-      #            host:
-      #              type: string
-      #              description: Host to redirect.
-      #              example: dns-redirect.company.com
+      profileHostname:
+        type: string
+        description: The hostname to use for generating profile URLs.
+        example: appgate.company.com
+      collectiveName:
+        type: string
+        description: Friendly name for the Collective.
+        example: Test Collective
       collectiveId:
         type: string
         format: uuid
         readOnly: true
         description: A randomly generated ID during first installation to identify the Collective.
         example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+
+  GeoIpSettings:
+    type: object
+    description: |
+      GeoIP provider settings supporting multiple providers.
+    properties:
+      updates:
+        type: string
+        description: Selected GeoIP provider when enabled.
+        default: Disabled
+        enum:
+          - Disabled
+          - Default
+          - Maxmind
+          - IPInfo
+          - Custom
+        example: Default
+      maxmind:
+        type: object
+        description: MaxMind provider configuration. Required if provider is Maxmind.
+        properties:
+          accountId:
+            type: integer
+            minimum: 1
+            description: MaxMind account ID.
+            example: 123456
+          licenseKey:
+            type: string
+            format: password
+            writeOnly: true
+            description: MaxMind license key. Not returned by GET.
+            example: mm-license-key
+      ipInfo:
+        type: object
+        description: IPInfo provider configuration. Required if provider is IPInfo.
+        properties:
+          databaseId:
+            type: string
+            description: |
+              Can be one of the predefined values: "ipinfo_lite", "ipinfo_core", "ipinfo_plus", "ipinfo_location", "location_extended_v2",
+              or a custom database name for future IPinfo additions.
+            example: ipinfo_lite
+          token:
+            type: string
+            format: password
+            writeOnly: true
+            description: IPInfo token. Not returned by GET.
+            example: ipinfo-token
+      custom:
+        type: object
+        description: Custom provider configuration. Required if provider is Custom.
+        properties:
+          url:
+            type: string
+            description: Custom provider base URL.
+            example: https://geoip.example.com

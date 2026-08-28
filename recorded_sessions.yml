@@ -1,0 +1,356 @@
+recorded-sessions:
+  get:
+    summary: Get Recorded Sessions.
+    description: >-
+      Get a list of recorded (past) embedded SSH/RDP sessions from every Gateway in the system.
+      Recordings are stored on the Gateway that hosted the session; this API fans out across all
+      Gateways and merges the results. The operation may take long if one or more Gateways take
+      long to respond.
+    tags:
+      - Recorded Sessions
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: './common.yml#/parameters/filterBy'
+      - name: siteName
+        in: query
+        description: Filter results to Gateways in the Site with this name.
+        required: false
+        schema:
+          type: string
+          example: us-east
+    responses:
+      '200':
+        description: Recorded Sessions.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/RecordedSessionList'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+recorded-session-convert:
+  post:
+    summary: Convert a Recording to MP4.
+    description: >-
+      Requests an on-demand transcode of a recording's raw .guac stream to MP4 on the owning
+      Gateway. Returns immediately with the export status; poll the list API's exportStatus field
+      until it reaches "complete", then download the MP4.
+    tags:
+      - Recorded Sessions
+    parameters:
+      - name: id
+        in: path
+        description: The recording session id (Gateway session token).
+        required: true
+        schema:
+          type: string
+          example: 779a7685902e18ddc87e36b7101654de
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/ConvertRecordingRequest'
+    responses:
+      '200':
+        description: Conversion accepted.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ConvertRecordingResponse'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+recorded-session-download:
+  get:
+    summary: Download a Recording Artifact.
+    description: >-
+      Streams a recording artifact from the owning Gateway through the Controller to the caller.
+      The format selects which artifact: auto (MP4 if converted, else raw .guac), guac (the raw
+      stream, for the in-browser player), mp4 (the MP4 export, 404 if not yet converted), or
+      typescript (the SSH keystroke log).
+    tags:
+      - Recorded Sessions
+    parameters:
+      - name: id
+        in: path
+        description: The recording session id (Gateway session token).
+        required: true
+        schema:
+          type: string
+          example: 779a7685902e18ddc87e36b7101654de
+      - name: gatewayId
+        in: query
+        description: The ID of the Gateway that owns the recording. Returned by the list API.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 7f1a3c22-d9b4-41f0-b17c-9a8e2f5d6c11
+      - name: format
+        in: query
+        description: Which artifact to download.
+        required: false
+        schema:
+          type: string
+          enum: [auto, guac, mp4, typescript]
+          default: auto
+      - name: Range
+        in: header
+        description: >-
+          Optional closed byte range in the form "bytes=start-end". Only the closed form is
+          supported; the client drives chunking with explicit windows. Omitted for a full download.
+        required: false
+        schema:
+          type: string
+          example: bytes=0-1048575
+    responses:
+      '200':
+        description: The full recording artifact.
+        headers:
+          Accept-Ranges:
+            description: Always "bytes"; advertises range-request support.
+            schema:
+              type: string
+              example: bytes
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '206':
+        description: A byte range of the recording artifact.
+        headers:
+          Accept-Ranges:
+            schema:
+              type: string
+              example: bytes
+          Content-Range:
+            description: The range of bytes returned and the total size (if known).
+            schema:
+              type: string
+              example: bytes 0-1048575/5242880
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+recorded-session-export:
+  delete:
+    summary: Delete a Recording's MP4 Export.
+    description: >-
+      Removes the MP4 export artifact from the owning Gateway. The raw .guac source is not affected
+      and can be re-converted later.
+    tags:
+      - Recorded Sessions
+    parameters:
+      - name: id
+        in: path
+        description: The recording session id (Gateway session token).
+        required: true
+        schema:
+          type: string
+          example: 779a7685902e18ddc87e36b7101654de
+      - name: gatewayId
+        in: query
+        description: The ID of the Gateway that owns the recording. Returned by the list API.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 7f1a3c22-d9b4-41f0-b17c-9a8e2f5d6c11
+    responses:
+      '200':
+        description: Deletion result.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/DeleteExportResponse'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+definitions:
+  ConvertRecordingRequest:
+    type: object
+    required:
+      - gatewayId
+    properties:
+      gatewayId:
+        type: string
+        format: uuid
+        description: The ID of the Gateway that owns the recording. Returned by the list API.
+        example: 7f1a3c22-d9b4-41f0-b17c-9a8e2f5d6c11
+  ConvertRecordingResponse:
+    type: object
+    properties:
+      exportStatus:
+        type: string
+        description: The MP4 export lifecycle state after the request.
+        enum: [converting, complete]
+        example: converting
+  DeleteExportResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        description: >-
+          The delete result reported by the Gateway. "deleted" if the MP4 export was removed;
+          "converting" if a conversion was in progress and could not be interrupted.
+        enum: [deleted, converting]
+        example: deleted
+  RecordingDiskUsage:
+    type: object
+    description: >-
+      Aggregate recording-volume capacity summed across the reporting Gateways. Used bytes is
+      derived (total - free) by the caller.
+    properties:
+      totalBytes:
+        type: integer
+        format: int64
+        description: Total capacity of the recording volumes, in bytes.
+        example: 107374182400
+      freeBytes:
+        type: integer
+        format: int64
+        description: Free capacity across the recording volumes, in bytes.
+        example: 42949672960
+  RecordedSessionList:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/RecordedSession'
+          diskUsage:
+            description: >-
+              Aggregate recording-volume capacity
+            nullable: true
+            allOf:
+              - $ref: '#/definitions/RecordingDiskUsage'
+  RecordedSession:
+    allOf:
+      - $ref: './common.yml#/definitions/DeviceAndUser'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: The recording session id (Gateway session token).
+            example: 779a7685902e18ddc87e36b7101654de
+          gatewayId:
+            type: string
+            format: uuid
+            description: The ID of the Gateway that owns this recording. Use this when converting or downloading.
+            example: 7f1a3c22-d9b4-41f0-b17c-9a8e2f5d6c11
+          type:
+            type: string
+            description: The protocol of the recorded session.
+            example: SSH
+          site:
+            type: string
+            format: uuid
+            description: The ID of the Site the Gateway is assigned to.
+            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+          siteName:
+            type: string
+            description: The name of the Site the Gateway is assigned to.
+            example: us-east
+          entitlementName:
+            type: string
+            description: The name of the Entitlement that authorized the session.
+            example: guac-remote-session
+          host:
+            type: string
+            description: The host the session was connected to.
+            example: 10.0.0.1
+          sessionStart:
+            type: string
+            description: RFC3339 timestamp when the session started.
+            example: "2026-07-13T10:00:00Z"
+          sessionEnd:
+            type: string
+            description: RFC3339 timestamp when the session ended.
+            example: "2026-07-13T10:15:00Z"
+          sourceIp:
+            type: string
+            description: The client tunnel IP the session originated from.
+            example: 15.0.170.1
+          status:
+            type: string
+            description: The recording status.
+            enum: [complete, failed, recording, terminated]
+            example: complete
+          failureReason:
+            type: string
+            description: >-
+              Why a terminated or failed capture ended; null for a clean recording.
+            example: "gateway restarted mid-capture"
+          hasExport:
+            type: boolean
+            description: Whether an MP4 export is already available.
+            example: true
+          downloadFormat:
+            type: string
+            description: The preferred download format for the primary artifact.
+            example: m4v
+          exportStatus:
+            type: string
+            description: The MP4 export lifecycle state. Poll this after requesting a conversion.
+            enum: [none, converting, complete, failed]
+            example: complete
+          exportProgress:
+            type: integer
+            description: >-
+              Live convert percent (0-100) while exportStatus is "converting"; null otherwise.
+            example: 42
+          integrityHash:
+            type: string
+            description: The tamper-evidence hash of the raw .guac recording.
+            example: "sha256:94daed5abe2deca81986002f26684168553cbd8f2ec56d33717de14fe081e2ad"
+          exportHash:
+            type: string
+            description: The sha256 hash of the converted MP4, present once exportStatus is complete.
+            example: "sha256:5aa93d7c1d7f8b0c7e2c0e4a6f8d2e9b1a3c5f7e9b0d1c2a3b4c5d6e7f8091a2"
+          recordingBytes:
+            type: integer
+            format: int64
+            description: On-disk size of the raw .guac recording, in bytes. Null when the file is absent.
+            example: 5242880
+          exportBytes:
+            type: integer
+            format: int64
+            description: On-disk size of the MP4 export, in bytes. Null when no export exists.
+            example: 3145728

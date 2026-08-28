@@ -1,0 +1,272 @@
+replication-source:
+  get:
+    summary: View replication status.
+    description: View replication status.
+    tags:
+      - Replication Source
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  post:
+    summary: Enable replication.
+    description: Register the Controller as a replication target using the provided token.
+    tags:
+      - Replication Source
+    requestBody:
+      description: Token to register the Controller as a replication target.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/ReplicationRegistrationToken'
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '400':
+        $ref: './common.yml#/responses/JsonError'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is already enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+  delete:
+    summary: Disable replication source.
+    description: Disable replication source registration.
+    tags:
+      - Replication Source
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+replication-source-status:
+  post:
+    summary: Update replication status.
+    description: Update replication status. It's an internal API to be used by the local replication service.
+    tags:
+      - Replication Source
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: './replication_target.yml#/definitions/ReplicationStatusUpdate'
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '422':
+        $ref: './common.yml#/responses/ValidationError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+replication-source-started:
+  post:
+    summary: Mark replication as started.
+    description: Mark replication as ongoing. It's an internal API to be used by the local replication service when a replication run begins.
+    tags:
+      - Replication Source
+    responses:
+      '200':
+        $ref: '#/responses/ReplicationSourceStatus'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+replication-source-trigger:
+  post:
+    summary: Trigger replication.
+    description: Trigger a replication run on the local replication service.
+    tags:
+      - Replication Source
+    responses:
+      '204':
+        description: Replication run triggered.
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '412':
+        description: Replication source is not enabled.
+        content:
+          application/json:
+            schema:
+              $ref: './common.yml#/definitions/Error'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+responses:
+  ReplicationSourceStatus:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ReplicationSourceStatus'
+    description: Replication source status.
+
+definitions:
+  ReplicationRegistrationToken:
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: Registration token provided by the replication source.
+        example: <base64 token>
+  ReplicationSourceStatus:
+    type: object
+    properties:
+      status:
+        type: string
+        description: Replication status.
+        enum:
+          - notConnected
+          - error
+          - warning
+          - healthy
+      replicationInProgress:
+        type: boolean
+        description: Whether a replication run is currently in progress.
+      lastReplicationTime:
+        type: string
+        format: date-time
+        description: Time of the most recent replication attempt.
+      nextReplicationTime:
+        type: string
+        format: date-time
+        description: Scheduled time for the next replication attempt.
+      lastReplicationDetails:
+        $ref: '#/definitions/ReplicationDetails'
+        description: Details of the most recent replication attempt.
+  ReplicationDetails:
+    type: object
+    properties:
+      error:
+        type: string
+        description: Error message from the last replication attempt that failed.
+      items:
+        $ref: '#/definitions/ReplicationItems'
+        description: Detailed replication results per object type.
+  ReplicationItems:
+    type: object
+    properties:
+      administrativeRoles:
+        $ref: '#/definitions/ReplicationReportItem'
+      clientProfiles:
+        $ref: '#/definitions/ReplicationReportItem'
+      conditions:
+        $ref: '#/definitions/ReplicationReportItem'
+      criteriaScripts:
+        $ref: '#/definitions/ReplicationReportItem'
+      deviceClaimScripts:
+        $ref: '#/definitions/ReplicationReportItem'
+      entitlementScripts:
+        $ref: '#/definitions/ReplicationReportItem'
+      entitlements:
+        $ref: '#/definitions/ReplicationReportItem'
+      identityProviders:
+        $ref: '#/definitions/ReplicationReportItem'
+      ipPools:
+        $ref: '#/definitions/ReplicationReportItem'
+      mfaProviders:
+        $ref: '#/definitions/ReplicationReportItem'
+      policies:
+        $ref: '#/definitions/ReplicationReportItem'
+      ringfenceRules:
+        $ref: '#/definitions/ReplicationReportItem'
+      sites:
+        $ref: '#/definitions/ReplicationReportItem'
+      tags:
+        $ref: '#/definitions/ReplicationReportItem'
+      userClaimScripts:
+        $ref: '#/definitions/ReplicationReportItem'
+  ReplicationReportItem:
+    type: object
+    properties:
+      successCount:
+        type: number
+        description: Number of successful replications for this object type.
+      failureCount:
+        type: number
+        description: Number of failed replications for this object type.
+      errors:
+        type: array
+        description: Errors for individual objects that failed to replicate.
+        items:
+          $ref: '#/definitions/ReplicationReportError'
+    required:
+      - successCount
+      - failureCount
+      - errors
+  ReplicationReportError:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: ID of the object that failed, if available.
+      name:
+        type: string
+        description: Name of the object that failed to replicate.
+      message:
+        type: string
+        description: Failure reason.
+      field:
+        type: string
+        description: Optional field name that caused the failure, if applicable.
+    required:
+      - name
+      - message

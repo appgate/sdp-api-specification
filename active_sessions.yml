@@ -1,0 +1,414 @@
+active-sessions-dn:
+  get:
+    summary: Get Active Client Sessions grouped by Distinguished Names.
+    description: >-
+      Get session data from currently Active Client Sessions grouped by distinguished name.
+      This API makes the Controller to query every Gateway in the system to collect the session data.
+      The operation may take long if one or more Gateways take long to respond.
+    tags:
+      - Active Sessions
+    parameters:
+      - $ref: './common.yml#/parameters/query'
+      - $ref: './common.yml#/parameters/range'
+      - $ref: './common.yml#/parameters/orderBy'
+      - $ref: './common.yml#/parameters/descending'
+      - $ref: '#/parameters/geolocationQuery'
+      - $ref: './common.yml#/parameters/filterBy'
+    responses:
+      '200':
+        description: >-
+          Active Client Sessions per user.
+          Disconnected Clients disappear after 5 minutes.
+          When a Client fails over to another Gateway, the API may return the Client on multiple Gateways until during
+          this period.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/ActiveSessionsDn'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+active-sessions-dashboard:
+  get:
+    summary: Get Dashboard Data for Active Sessions.
+    description: >-
+      Retrieves dashboard data related to active sessions. This includes information about the total count of
+      sessions, geolocation data, and client version support.
+
+
+      **NOTE:** This endpoint is intended for internal use and may be changed or removed at any point.
+    tags:
+      - Active Sessions
+    responses:
+      '200':
+        description: Dashboard data for active sessions.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/DashboardSessionsDto'
+            examples:
+              example1:
+                value:
+                  totalCount: 6
+                  geoIpData:
+                    - sessionCount: 3
+                      latitude: 55.8667
+                      longitude: 12.8333
+                      countryCode: "SE"
+                      continentCode: "EU"
+                      ips: [ "192.0.2.1", "192.0.2.2" ]
+                    - sessionCount: 1
+                      latitude: 37.751
+                      longitude: -97.822
+                      countryCode: "US"
+                      continentCode: "NA"
+                      ips: [ "198.51.100.1" ]
+                    - sessionCount: 1
+                      latitude: 20.0
+                      longitude: 77.0
+                      countryCode: "IN"
+                      continentCode: "AS"
+                      ips: [ "203.0.113.1" ]
+                  versions:
+                    "6.0.0-release-1234":
+                      supportStatus: "full"
+                      sessionCount: 3
+                    "5.5.0-release-1234":
+                      supportStatus: "partial"
+                      sessionCount: 2
+                    "5.4.1-release-1234":
+                      supportStatus: "none"
+                      sessionCount: 1
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'
+
+parameters:
+  geolocationQuery:
+    name: geolocationQuery
+    description: Query parameters for finding active sessions in a given radius in the world.
+    in: query
+    schema:
+      $ref: '#/definitions/GeolocationQuery'
+    style: form
+    explode: true
+    allowEmptyValue: true
+    example:
+      latitude: 59.408
+      longitude: 17.8678
+      radiusKilometers: 200
+
+definitions:
+  ActiveSessionsDn:
+    allOf:
+      - $ref: './common.yml#/definitions/ResultList'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/ActiveSession'
+          geolocationQuery:
+            $ref: '#/definitions/GeolocationQuery'
+  DashboardSessionsDto:
+    type: object
+    properties:
+      totalCount:
+        type: integer
+        description: The total count of active sessions.
+      geoIpData:
+        type: array
+        items:
+          $ref: '#/definitions/SessionGeoData'
+        description: Geolocation data related to active sessions.
+      versions:
+        additionalProperties:
+          $ref: '#/definitions/ClientVersionSupport'
+  SessionGeoData:
+    type: object
+    properties:
+      sessionCount:
+        type: integer
+        description: The count of sessions for this geolocation.
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
+      countryCode:
+        type: string
+        description: The country code associated with the geolocation.
+      continentCode:
+        type: string
+        description: The continent code associated with the geolocation.
+      ips:
+        type: array
+        items:
+          type: string
+        description: The IP addresses associated with the sessions in this geolocation.
+  ClientVersionSupport:
+    type: object
+    description: Information about the client versions in use.
+    properties:
+      supportStatus:
+        type: string
+        description: The support status of the client version.
+      sessionCount:
+        type: integer
+        description: The count of sessions using this client version.
+  ActiveSession:
+    allOf:
+      - $ref: './common.yml#/definitions/DeviceAndUser'
+      - type: object
+        properties:
+          geoIpLatitude:
+            type: number
+            format: double
+            description: GeoIP Latitude of the client.
+            example: 59.408
+          geoIpLongitude:
+            type: number
+            format: double
+            description: GeoIP Latitude of the client.
+            example: 17.8678
+          hostname:
+            type: string
+            description: Hostname or Device name reported by the Client as Device Claim.
+            example: cmp325
+          osFamily:
+            type: string
+            description: Family of the operating system of the Client.
+            example: windows
+          osName:
+            type: string
+            description: Name of the operating system of the Client.
+            example: Microsoft Windows 10 Enterprise N
+          osParent:
+            type: string
+            description: Parent of the operating system of the Client. Typically available for Linux.
+            example: fedora
+          clientVersion:
+            type: string
+            description: Client version.
+            example: 6.1.2-32120-release
+          clientType:
+            type: string
+            description: Client type.
+            example: headless
+          clientSupport:
+            type: string
+            description: The support status of the client.
+            enum:
+              - full
+              - partial
+              - none
+  GeolocationQuery:
+    type: object
+    description: Query parameters for finding active sessions in a given radius in the world.
+    properties:
+      latitude:
+        type: number
+        format: double
+        description: Latitude of the central point of the query.
+        example: 59.408
+      longitude:
+        type: number
+        format: double
+        description: Longitude of the central point of the query.
+        example: 17.8678
+      radiusKilometers:
+        type: number
+        format: double
+        description: Radius of the query in kilometers.
+        example: 200
+  SessionInfoDistinguishedName:
+    type: object
+    properties:
+      deviceId:
+        type: string
+        format: uuid
+        description: The device ID, same as the one in the Distinguished Name.
+        example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+      username:
+        type: string
+        description: The username, same as the one in the Distinguished Name.
+        example: user
+      providerName:
+        type: string
+        description: The provider name of the user, same as the one in the Distinguished Name.
+        example: ldap
+      data:
+        type: object
+        description: >-
+          The session details per Gateway.
+          The key is the Appliance name and the value contains the Active Client Session details.
+        additionalProperties:
+          type: object
+          description: Session Details reported by the Gateway.
+          properties:
+            userClaims:
+              type: object
+              additionalProperties: true
+              example:
+                username: admin
+                groups:
+                  - 'CN=test,OU=unit,DC=company,DC=com'
+                  - 'CN=finance,OU=unit,DC=company,DC=com'
+            deviceClaims:
+              type: object
+              additionalProperties: true
+              example:
+                os:
+                  name: Microsoft Windows 10 Pro
+                  platform: x64
+                  type: desktop
+                isUserAdmin: true
+                language: en-us
+            systemClaims:
+              type: object
+              additionalProperties: true
+              example:
+                connectTime: 2018-11-16T13:25:15.672Z
+                tunIPv4: 15.0.0.24
+                clientSrcIP: 192.168.111.184
+            entitlementInfos:
+              type: object
+              description: Entitlement information reported by the Gateway. The key is the Entitlement name.
+              additionalProperties:
+                type: object
+                description: Entitlement details.
+                properties:
+                  access:
+                    type: boolean
+                    description: Whether the Entitlement is accessible or not.
+                  conditionLogic:
+                    type: string
+                    description: Whether all the Conditions must succeed to have access to this Entitlement or just one.
+                    enum:
+                      - and
+                      - or
+                  conditionResults:
+                    type: object
+                    description: >-
+                      Current results of the Condition evaluations.
+                      Entitlement access is decided according to these results. The key is the Condition name.
+                    additionalProperties:
+                      type: boolean
+                    example:
+                      MFASuccess: true
+                      InternalNetwork: false
+                  firewallRules:
+                    type: array
+                    description: >-
+                      Current Firewall Rules assigned after evaluating all the Entitlements, Conditions and
+                      Name Resolvers.
+                    items:
+                      type: object
+                      description: Firewall Rule.
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the rule.
+                          example: entitlement-1
+                        protocol:
+                          type: string
+                          description: The protocol for the Firewall Rule.
+                          example: tcp
+                        direction:
+                          type: string
+                          description: The direction of the Firewall Rrule.
+                          example: up
+                        action:
+                          type: string
+                          description: The action for the Firewall Rule.
+                          example: allow
+                        subnets:
+                          type: array
+                          description: The subnets the Firewall Rule applies to.
+                          items:
+                            type: string
+                            example: 172.31.4.105
+                        urls:
+                          type: array
+                          description: The URLs the Firewall Rule applies to in case of http_up subtype.
+                          items:
+                            type: string
+                            example: "https://server.company.com/test"
+                        ports:
+                          type: array
+                          description: The ports the Firewall Rule applies to.
+                          items:
+                            type: string
+                            example: 443
+                        types:
+                          type: array
+                          description: The ICMP types the Firewall Rule applies to. Valid for ICMP.
+                          items:
+                            type: string
+                            example: 0-255
+                  policyNames:
+                    type: array
+                    description: Names of the Policies that has granted this Entitlement.
+                    items:
+                      type: string
+                      example: Finance
+                  primarySite:
+                    type: string
+                    description: The name of the primary Site if this entitlements is currently active as part of backup Site feature.
+                    example: AWS Site
+                  domainEntitlement:
+                    type: boolean
+                    description: Whether the Entitlement has only domain:// type actions. When that is the case, the firewallRules being empty is a normal scenario.
+            vpn:
+              type: object
+              description: VPN details of the session
+              additionalProperties: true
+            site:
+              type: string
+              description: The Site name for the Gateway.
+              example: AWS Site
+
+session-info-distinguished-name:
+  get:
+    summary: Get details of a specific Active Client Session.
+    description: >-
+      Get the details of a specific Active Client Session from all Gateways.
+      This API makes the Controller to query very Gateway in the system to collect the session data.
+      The operation may take long if one or more Gateways take long to respond.
+    tags:
+      - Active Sessions
+    parameters:
+      - $ref: './common.yml#/parameters/distinguishedName'
+    responses:
+      '200':
+        description: >-
+          Details of an Active Client Session per Gateway.
+          Disconnected Clients disappear after 5 minutes.
+          When a Client fails over to another Gateway, the API may return the Client on multiple Gateways until during
+          this period.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/SessionInfoDistinguishedName'
+      '401':
+        $ref: './common.yml#/responses/TokenError'
+      '403':
+        $ref: './common.yml#/responses/PermissionError'
+      '404':
+        $ref: './common.yml#/responses/NotFoundError'
+      '406':
+        $ref: './common.yml#/responses/NotAcceptableError'
+      '500':
+        $ref: './common.yml#/responses/UnexpectedError'

@@ -1,0 +1,4 @@
+rules:
+  operation-operationId: off
+  security-defined: off
+  operation-4xx-response: off
