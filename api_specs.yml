@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: AppGate SDP Controller REST API
-  version: API version 25.0
+  version: API version 24.0
   license:
     name: Proprietary
     url: https://www.appgate.com
@@ -26,7 +26,7 @@ info:
 
       All requests must have the **Accept** header as:
 
-      **application/vnd.appgate.peer-v25+json**
+      **application/vnd.appgate.peer-v24+json**
 
       An exception is made for the **/admin/version** endpoint which instead expects an **application/json** Accept header.
     # API Conventions
@@ -110,6 +110,7 @@ x-tagGroups:
       - Policies
       - Conditions
       - Entitlements
+      - Risk Model
       - Ringfence Rules
       - Admin Roles
       - Criteria Scripts
@@ -142,8 +143,6 @@ x-tagGroups:
   - name: Usage
     tags:
       - Active Sessions
-      - Active Brokered Sessions
-      - Recorded Sessions
       - Client Logs
       - Discovered Apps
       - Health
@@ -187,28 +186,16 @@ paths:
     $ref: './dashboard.yml#/admin-messages-summarize'
   /admin-messages/{id}:
     $ref: './dashboard.yml#/admin-messages-metadata'
+  /stats/appliances:
+    $ref: './dashboard.yml#/stats-appliances'
   /stats/top-entitlements:
     $ref: './dashboard.yml#/top-entitlements'
   /stats/active-sessions/dn:
-    $ref: './active_sessions.yml#/active-sessions-dn'
-  /active-brokered-sessions:
-    $ref: './active_brokered_sessions.yml#/active-brokered-sessions'
-  /active-brokered-sessions/{id}/terminate:
-    $ref: './active_brokered_sessions.yml#/active-brokered-session-terminate'
-  /active-brokered-sessions/{id}/observe:
-    $ref: './active_brokered_sessions.yml#/active-brokered-session-observe'
-  /recorded-sessions:
-    $ref: './recorded_sessions.yml#/recorded-sessions'
-  /recorded-sessions/{id}/convert:
-    $ref: './recorded_sessions.yml#/recorded-session-convert'
-  /recorded-sessions/{id}/download:
-    $ref: './recorded_sessions.yml#/recorded-session-download'
-  /recorded-sessions/{id}/export:
-    $ref: './recorded_sessions.yml#/recorded-session-export'
+    $ref: './dashboard.yml#/active-sessions-dn'
   /stats/active-sessions/dashboard:
-    $ref: './active_sessions.yml#/active-sessions-dashboard'
+    $ref: './dashboard.yml#/active-sessions-dashboard'
   /session-info/{distinguished-name}:
-    $ref: './active_sessions.yml#/session-info-distinguished-name'
+    $ref: './dashboard.yml#/session-info-distinguished-name'
   /stats/user-logins:
     $ref: './dashboard.yml#/user-logins'
   /stats/on-boarded-devices:
@@ -235,10 +222,6 @@ paths:
     $ref: './entitlement.yml#/entitlements-bulk-upsert'
   /entitlements/{id}:
     $ref: './entitlement.yml#/entitlements-id'
-  /entitlements/{id}/optimization:
-    $ref: './entitlement.yml#/entitlements-id-optimization'
-  /entitlements/optimization/stats:
-    $ref: './entitlement.yml#/entitlements-optimization-stats'
   /entitlements/app-shortcuts/groups:
     $ref: './entitlement.yml#/app-shortcuts-groups'
   /entitlements/cloud-migrations:
@@ -277,8 +260,6 @@ paths:
     $ref: './appliance.yml#/appliances-switch-partition'
   /appliances/{id}/renew-certificate:
     $ref: './appliance.yml#/appliances-renew-certificate'
-  /appliances/{id}/admin-interface/csr:
-    $ref: './appliance.yml#/appliances-admin-interface-csr'
   /appliances/{id}/deactivate:
     $ref: './appliance.yml#/appliances-deactivate'
   /appliances/{id}/reboot:
@@ -447,6 +428,8 @@ paths:
     $ref: './client_profile.yml#/client-profiles-barcode'
   /client-logs/{distinguished-name}:
     $ref: './client_logs.yml#/client-logs-distinguished-name'
+  /risk-model:
+    $ref: './risk_model.yml#/risk-model'
   /auto-update-settings:
     $ref: './auto_update.yml#/auto-update-settings'
   /certificate-authority/ca:

@@ -112,7 +112,7 @@ appliances-backup-id:
     summary: Download an Appliance Backup.
     description: >-
       Download a completed Appliance Backup with the given ID of an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v25+gpg** as it returns a GPG
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+gpg** as it returns a GPG
       file as blob instead of JSON.
     tags:
       - Appliance Backup
@@ -153,7 +153,7 @@ appliances-backup-id:
     summary: Delete an Appliance Backup.
     description: >-
       Delete an Appliance Backup file from an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v25+gpg**.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+gpg**.
     tags:
       - Appliance Backup
     parameters:

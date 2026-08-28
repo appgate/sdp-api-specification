@@ -404,7 +404,7 @@ appliances-ping-command:
     summary: Runs ICMP ping command on an Appliance.
     description: >-
       Runs ICMP ping command on an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v25+text** as it returns plain text instead of JSON.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+text** as it returns plain text instead of JSON.
     tags:
       - Appliances
     parameters:
@@ -456,7 +456,7 @@ appliances-tcpdump-command:
     summary: Runs tcpdump command on an Appliance.
     description: >-
       Runs tcpdump command on an Appliance.
-      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v25+text** as it returns plain text instead of JSON.
+      This API call must be made with **Accept** header of **application/vnd.appgate.peer-v24+text** as it returns plain text instead of JSON.
     tags:
       - Appliances
     parameters:
@@ -942,35 +942,6 @@ appliances-chronyc-command:
                 type: integer
                 description: The number of seconds to run/wait before timing out.
                 default: 5
-appliances-admin-interface-csr:
-  post:
-    summary: Generate a CSR for the Appliance admin interface HTTPS certificate.
-    description: >-
-      Generate a Certificate Signing Request (CSR) for the admin interface HTTPS certificate of an Appliance.
-      The CSR can then be signed by an external Certificate Authority and uploaded back as public certificate.
-    tags:
-      - Appliances
-    parameters:
-      - $ref: './common.yml#/parameters/id'
-    responses:
-      '200':
-        description: CSR generated successfully.
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/CertificateSigningRequest'
-      '401':
-        $ref: './common.yml#/responses/TokenError'
-      '403':
-        $ref: './common.yml#/responses/PermissionError'
-      '404':
-        $ref: './common.yml#/responses/NotFoundError'
-      '406':
-        $ref: './common.yml#/responses/NotAcceptableError'
-      '422':
-        $ref: './common.yml#/responses/ValidationError'
-      '500':
-        $ref: './common.yml#/responses/UnexpectedError'
 appliances-switch-partition:
   post:
     summary: Switch partition on the Appliance, regardless of the upgrade status.
@@ -1179,13 +1150,6 @@ requestBodies:
     required: true
 
 definitions:
-  CertificateSigningRequest:
-    type: object
-    description: A PEM-encoded Certificate Signing Request (CSR).
-    properties:
-      csrPem:
-        type: string
-        description: The PEM-encoded CSR content.
   ApplianceWithStatusList:
     description: List of appliances with status.
     allOf:
@@ -1354,8 +1318,6 @@ definitions:
         $ref: 'common.yml#/definitions/ApplianceRole'
       metricsAggregator:
         $ref: 'common.yml#/definitions/ApplianceRole'
-      telemetryAggregator:
-        $ref: 'common.yml#/definitions/ApplianceRole'
       collectiveReplication:
         $ref: 'common.yml#/definitions/ApplianceRole'
       connectionBroker:
@@ -1377,27 +1339,6 @@ definitions:
             type: boolean
             description: Portal will verify upstream certificate of the endpoints.
             default: true
-  portalSubdomainMapping:
-    type: object
-    description: Maps a short public subdomain alias to an internal app domain.
-    required:
-      - subdomain
-      - appDomain
-    properties:
-      subdomain:
-        type: string
-        description: >-
-          The leftmost DNS label of the public alias (e.g. 'crm').
-          Must be a valid DNS label: letters, digits, and hyphens only,
-          no leading or trailing hyphen, maximum 63 characters.
-        example: crm
-      appDomain:
-        type: string
-        description: >-
-          The fully-qualified internal app domain that traffic is proxied to.
-          Does not need to be publicly resolvable. It is resolved through the
-          client's VPN tunnel.
-        example: crm.your-companies-domain.com
   Elasticsearch:
     allOf:
       - $ref: '#/definitions/AwsBase'
@@ -1512,15 +1453,6 @@ definitions:
               writeOnly: true
               description: Appgate URL exported from Client Profiles.
               example: appgate://appgate.company.com/eyJjYUZpbmdlcnByaW50IjoiMmM4ZTBiNTM5YTM4NjRkYmVkYzhiOWRkMTcwYzM0NGFhMjZjZTVhNjA4MmY3YTI0YzRkZTU4ZGQ3NWRjNWZhMCIsImlkZW50aXR5UHJvdmlkZXJOYW1lIjoibG9jYWwifQ==
-      subdomainMappings:
-        type: array
-        description: >-
-          Maps short public subdomain aliases to internal app domains, allowing
-          clients to reach internal resources without requiring those domains to
-          be publicly resolvable. Traffic to the alias is proxied through the
-          client's VPN session to the configured app domain.
-        items:
-          $ref: '#/definitions/portalSubdomainMapping'
       signInCustomization:
         type: object
         description: Visual customizations to make on the Portal sign-in page.
@@ -1637,7 +1569,7 @@ definitions:
                 default: 443
               dtlsPort:
                 type: integer
-                description: Port to connect for the Clients that connect to Gateways on QUIC if enabled.
+                description: Port to connect for the Clients that connects to vpnd on DTLS if enabled.
                 default: 443
               stunPort:
                 type: integer
@@ -1682,23 +1614,6 @@ definitions:
                 $ref: '#/definitions/AllowSources'
               httpsP12:
                 $ref: '#/definitions/P12'
-              httpsCertificateType:
-                type: string
-                readOnly: true
-                description: >-
-                  Indicates how the admin interface HTTPS certificate is currently configured.
-                enum:
-                  - None
-                  - PKCS12
-                  - CSR
-              httpsSignedCertificatePem:
-                type: string
-                writeOnly: true
-                description: >-
-                  A PEM-encoded signed certificate to complete a pending CSR flow.
-                  Provide this field when submitting the CA-signed certificate obtained after generating a CSR.
-                  Requires a pending CSR key pair (generated via POST /appliances/{id}/admin-interface/csr).
-                  The certificate must match the public key from the CSR and cover the appliance hostname.
           networking:
             type: object
             description: Networking configuration of the system.
@@ -2122,106 +2037,6 @@ definitions:
                     UUID of a site.
                     Use '6f6fa9d9-17b2-4157-9f68-e97662acccdf' to collect logs from all the appliances.
                     Use '6263435b-c9f6-4b7f-99f8-37e2e6b006a9' to collect logs from appliances without a site.
-          telemetryAggregator:
-            type: object
-            description: TelemetryAggregator settings. It aggregates telemetry from the appliances in the given sites and exports it to the configured destinations.
-            properties:
-              enabled:
-                type: boolean
-                description: Whether TelemetryAggregator is enabled on this appliance or not.
-                default: false
-              datadogExporters:
-                type: array
-                description: Datadog exporters.
-                items:
-                  type: object
-                  required:
-                    - name
-                    - site
-                  properties:
-                    name:
-                      type: string
-                      description: Name used to identify the exporter, must be unique.
-                    site:
-                      type: string
-                      description: The Datadog site to export telemetry to.
-                      example: datadoghq.com
-                    apiKey:
-                      type: string
-                      description: The Datadog API key.
-                      writeOnly: true
-              otlpExporters:
-                type: array
-                description: Standard OTLP exporters.
-                items:
-                  type: object
-                  required:
-                    - name
-                    - endpoint
-                    - protocol
-                  properties:
-                    name:
-                      type: string
-                      description: Name used to identify the exporter, must be unique.
-                    endpoint:
-                      type: string
-                      description: The OTLP endpoint to export telemetry to.
-                    protocol:
-                      type: string
-                      description: The OTLP transport protocol.
-                      enum:
-                        - http
-                        - grpc
-                    insecure:
-                      type: boolean
-                      description: Whether to connect to the endpoint without transport security.
-                      default: false
-                    username:
-                      type: string
-                      description: Username for basic authentication against the OTLP endpoint.
-                    password:
-                      type: string
-                      format: password
-                      writeOnly: true
-                      description: Password for basic authentication against the OTLP endpoint.
-                    headers:
-                      type: array
-                      description: Additional HTTP headers to send with each OTLP request. Header names must be unique within an exporter.
-                      items:
-                        type: object
-                        required:
-                          - name
-                        properties:
-                          name:
-                            type: string
-                            description: The header name.
-                          value:
-                            type: string
-                            format: password
-                            writeOnly: true
-                            description: The header value. Treated as a secret; write-only.
-                    compression:
-                      type: boolean
-                      description: Whether to enable compression on the OTLP transport.
-                      default: true
-                    encoding:
-                      type: string
-                      description: The OTLP payload encoding.
-                      enum:
-                        - proto
-                        - json
-                      default: proto
-              sites:
-                type: array
-                description: The sites to collect telemetry from.
-                items:
-                  type: string
-                  format: uuid
-                  x-uuid-ref: Site
-                  description: >
-                    UUID of a site.
-                    Use '6f6fa9d9-17b2-4157-9f68-e97662acccdf' to collect telemetry from all the appliances.
-                    Use '6263435b-c9f6-4b7f-99f8-37e2e6b006a9' to collect telemetry from appliances without a site.
           connectionBroker:
             type: object
             description: Connection Broker settings.

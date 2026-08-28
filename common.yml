@@ -401,7 +401,6 @@ definitions:
       - Connector
       - Portal
       - Metrics Aggregator
-      - Telemetry Aggregator
       - Connection Broker
   SessionCounts:
     type: object

@@ -420,14 +420,24 @@ definitions:
                     description: TLS version.
                     default: TLSv1.3
                     enum:
+                      - TLSv1.2
                       - TLSv1.3
+                      - TLSv23
+              dtls:
+                type: object
+                deprecated: true
+                description: Deprecated as of 6.6. VPN over DTLS protocol configuration.
+                properties:
+                  enabled:
+                    type: boolean
+                    default: false
               quic:
                 type: object
                 description: VPN over QUIC protocol configuration.
                 properties:
                   enabled:
                     type: boolean
-                    default: false
+                    default: false                    
               routeVia:
                 type: object
                 description: Override routing for tunnel traffic.
@@ -497,6 +507,11 @@ definitions:
                       type: boolean
                       description: Perform zones transfer.
                       default: false
+                    defaultTtlSeconds:
+                      type: integer
+                      deprecated: true
+                      description: Deprecated as of 6.4. This will apply whenever Gateway gets a DNS response which has no TTL set.
+                      default: 300
                     servers:
                       type: array
                       description: DNS Server addresses that will be used to resolve hostnames within the Site. Leave it empty to use the Gateways' own DNS configuration.
@@ -727,42 +742,6 @@ definitions:
                       type: string
                       description: Password for the username.
                       writeOnly: true
-              colorTokensResolvers:
-                type: array
-                description: Resolvers to resolve names by querying ColorTokens.
-                items:
-                  type: object
-                  required:
-                    - name
-                    - clusterName
-                    - tenantId
-                    - userId
-                    - fingerprint
-                  properties:
-                    name:
-                      type: string
-                      description: Identifier name. Has no functional effect.
-                    updateInterval:
-                      type: integer
-                      description: How often will the resolver poll the server. In seconds.
-                      default: 60
-                    clusterName:
-                      type: string
-                      description: The hostname of the ColorTokens cluster used as the base URL for API requests.
-                      example: fra.colortokens.com
-                    tenantId:
-                      type: string
-                      description: Tenant ID of the ColorTokens Resolver.
-                    userId:
-                      type: string
-                      description: User ID of the ColorTokens Resolver.
-                    fingerprint:
-                      type: string
-                      description: Key fingerprint of the ColorTokens Resolver.
-                    privateKey:
-                      type: string
-                      description: Private key for authentication.
-                      writeOnly: true
               dnsForwarding:
                 type: object
                 description: DNS Forwarding feature. Always enabled and will be filled if there is no object is passed.
@@ -823,7 +802,6 @@ definitions:
       - azure
       - gcp
       - illumio
-      - colortokens
       - esx
       - dns
   ResourceType:
@@ -878,8 +856,6 @@ definitions:
       - rds-db-instances
       - rds-db-instances-tags
       - rds-db-instances-tag-values
-      - assets-tags
-      - assets-tag-values
 
 components:
   schemas:

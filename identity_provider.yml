@@ -337,6 +337,7 @@ definitions:
   ConfigurableIdentityProvider:
     allOf:
       - $ref: '#/definitions/BaseIdentityProvider'
+      - $ref: '#/definitions/DnsSettings'
       - $ref: '#/definitions/DeviceLimitPerUser'
       - type: object
         properties:
@@ -377,6 +378,13 @@ definitions:
           enforceWindowsNetworkProfileAsDomain:
             type: boolean
             description: If enabled, Windows Client will configure the network profile as "DomainAuthenticated".
+          blockLocalDnsRequests:
+            type: boolean
+            deprecated: true
+            description: >-
+              Whether the Windows Client will block local DNS requests or not.
+              Deprecated as of 6.6. Use DNS Policies.
+            default: false
           onDemandClaimMappings:
             $ref: '#/definitions/OnDemandClaimMappings'
   DeviceLimitPerUser:
@@ -386,6 +394,30 @@ definitions:
         type: integer
         description: The device limit per user. The existing on-boarded devices will still be able to sign in even if the limit is exceeded.
         default: 100
+  DnsSettings:
+    type: object
+    properties:
+      dnsServers:
+        type: array
+        deprecated: true
+        description: >-
+          The DNS servers to be assigned to the Clients of the users in this Identity Provider.
+          Deprecated as of 6.6. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
+        items:
+          type: string
+        example:
+          - '172.17.18.19'
+          - '192.100.111.31'
+      dnsSearchDomains:
+        type: array
+        deprecated: true
+        description: >-
+          The DNS search domains to be assigned to Clients of the users in this Identity Provider.
+          Deprecated as of 6.6. Use either the Automatic Client DNS feature in Site DNS resolvers or DNS Policies.
+        items:
+          type: string
+        example:
+          - 'internal.company.com'
   ClaimMappings:
     type: array
     description: The mapping of Identity Provider attributes to claims.
@@ -401,7 +433,7 @@ definitions:
           example: 'SAMAccountName'
         claimName:
           type: string
-          description: The name of the user claim to be used in AppGate SDP.
+          description: The name of the user claim to be used in Appgate SDP.
           example: 'username'
         list:
           type: boolean
@@ -508,6 +540,7 @@ definitions:
   ServiceDatabaseProvider:
     allOf:
       - $ref: '#/definitions/BaseIdentityProvider'
+      - $ref: '#/definitions/DnsSettings'
       - $ref: '#/definitions/DeviceLimitPerUser'
       - $ref: '#/definitions/LocalProviderSettings'
       - type: object
@@ -658,6 +691,14 @@ definitions:
             type: string
             description: The subset of the LDAP server to search users from. If not set, root of the server is used.
             example: 'OU=Users,DC=company,DC=com'
+          objectClass:
+            type: string
+            deprecated: true
+            description: >-
+              The object class of the users to be authenticated and queried.
+              This field is translated to '(objectClass=value)' as user filter.
+              Deprecated as of 6.2. Use userFilter instead.
+            example: 'user'
           userFilter:
             type: string
             description: The LDAP filter to apply when searching for user during authentication.

@@ -327,6 +327,9 @@ definitions:
                 type: number
               mixed:
                 type: number
+          riskModel:
+            type: boolean
+            description: Whether the risk model is utilized or not.
           geoLocationUpdates:
             type: string
             description: GeoIP provider in use.
@@ -374,6 +377,12 @@ definitions:
           The maximum sites allowed by the license.
           If it's the usage details, then it's the amount of sites in the system at present.
         example: 5
+      maxAccessPolicies:
+        type: number
+        description: >-
+          The maximum access policies allowed by the license.
+          If it's the usage details, then it's the amount of access policies in the system at present.
+        example: 5
       maxConnectorGroups:
         type: number
         description: The maximum Connector groups allowed by the license.
@@ -416,7 +425,7 @@ definitions:
             example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
           version:
             type: number
-            description: License version.
+            description: License version. There can be only one v1 License in the system, while v2 Licenses can be added as extra.
             example: 2
           type:
             type: number
