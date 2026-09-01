@@ -77,6 +77,17 @@ identity-provider-names:
                         description: The prioritization of which client certificate to use.
                         items:
                           type: object # won't get into it as it's irrelevant.
+                      certificateSanType:
+                        type: string
+                        description: The Subject Alternative Name type the client should filter offered certificates by.
+                        enum:
+                          - Any
+                          - OtherName
+                          - UserPrincipalName
+                          - Rfc822Name
+                          - DnsName
+                          - UniformResourceIdentifier
+                        default: Any
                       authUrl:
                         type: string
                         description: Authorization endpoint URL for OIDC login.

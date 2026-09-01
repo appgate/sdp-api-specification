@@ -747,6 +747,19 @@ definitions:
                   type: string
                   description: The value to compare to the certificate attribute.
                   example: 1.3.6.1.4.1.311.21.8.3025710.4393146.2181807.13924342.9568199.8
+          certificateSanType:
+            type: string
+            description: >-
+              Which Subject Alternative Name of the Client certificate to map to an LDAP user. Any, the default, accepts any otherName,
+              rfc822Name or dNSName. UserPrincipalName matches only the otherName with OID 1.3.6.1.4.1.311.20.2.3.
+            enum:
+              - Any
+              - OtherName
+              - UserPrincipalName
+              - Rfc822Name
+              - DnsName
+              - UniformResourceIdentifier
+            default: Any
 
 components:
   schemas:
