@@ -243,6 +243,10 @@ paths:
     $ref: './entitlement.yml#/app-shortcuts-groups'
   /entitlements/cloud-migrations:
     $ref: './entitlement.yml#/cloud-migrations'
+  /entitlements/protocol-templates:
+    $ref: './protocol_template.yml#/protocol-templates'
+  /entitlements/protocol-templates/{id}:
+    $ref: './protocol_template.yml#/protocol-templates-id'
   /ringfence-rules:
     $ref: './ringfence_rule.yml#/ringfence-rules'
   /ringfence-rules/bulk-upsert:
