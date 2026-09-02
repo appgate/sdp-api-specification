@@ -2158,7 +2158,6 @@ definitions:
                   required:
                     - name
                     - endpoint
-                    - protocol
                   properties:
                     name:
                       type: string
@@ -2169,21 +2168,10 @@ definitions:
                     protocol:
                       type: string
                       description: The OTLP transport protocol.
+                      default: http
                       enum:
                         - http
                         - grpc
-                    insecure:
-                      type: boolean
-                      description: Whether to connect to the endpoint without transport security.
-                      default: false
-                    username:
-                      type: string
-                      description: Username for basic authentication against the OTLP endpoint.
-                    password:
-                      type: string
-                      format: password
-                      writeOnly: true
-                      description: Password for basic authentication against the OTLP endpoint.
                     headers:
                       type: array
                       description: Additional HTTP headers to send with each OTLP request. Header names must be unique within an exporter.
