@@ -381,12 +381,20 @@ definitions:
       riskEngine:
         type: boolean
         description: Whether the Risk Engine feature is enabled.
+      optimizer:
+        type: boolean
+        description: Whether the Optimizer features are enabled.
       applicationDiscovery:
         type: boolean
-        description: Whether the Application Discovery feature is enabled.
+        description: The old license feature name for Optimizer, kept for backward compatibility. Deprecated as of 7.0.
+        deprecated: true
+      observability:
+        type: boolean
+        description: Whether the Observability features are enabled.
       digitalExperienceMonitoring:
         type: boolean
-        description: Whether the Digital Experience Monitoring feature is enabled.
+        description: The old license feature name for Observability, kept for backward compatibility. Deprecated as of 7.0.
+        deprecated: true
       collectiveReplication:
         type: boolean
         description: Whether the Collective Replication feature is enabled.

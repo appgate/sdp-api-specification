@@ -170,7 +170,7 @@ entitlements-id-optimization:
     summary: Get optimization details for a specific Entitlement.
     description: >-
       Returns optimization details for a specific Entitlement, including a suggested operation and suggested action removals based on usage data.
-      Requires the Application Discovery licensed feature.
+      Requires the Optimizer licensed feature.
     tags:
       - Entitlements
     parameters:
@@ -193,7 +193,7 @@ entitlements-id-optimization:
       '406':
         $ref: './common.yml#/responses/NotAcceptableError'
       '412':
-        description: Precondition failed. ZTP is not registered or Application Discovery is not enabled.
+        description: Precondition failed. ZTP is not registered or Optimizer is not enabled.
         content:
           application/json:
             schema:
@@ -205,7 +205,7 @@ entitlements-optimization-stats:
     summary: Get aggregate optimization stats for all Entitlements.
     description: >-
       Returns aggregate counts of Entitlements grouped by optimization score, used to power dashboard widgets.
-      Requires the Application Discovery licensed feature.
+      Requires the Optimizer licensed feature.
     tags:
       - Entitlements
     responses:
@@ -226,7 +226,7 @@ entitlements-optimization-stats:
       '406':
         $ref: './common.yml#/responses/NotAcceptableError'
       '412':
-        description: Precondition failed. ZTP is not registered or Application Discovery is not enabled.
+        description: Precondition failed. ZTP is not registered or Optimizer is not enabled.
         content:
           application/json:
             schema:

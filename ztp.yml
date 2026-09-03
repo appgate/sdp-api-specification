@@ -215,13 +215,13 @@ definitions:
                 type: number
                 default: 3
                 description: Fallback risk value when Controller cannot reach ZTP services. 1 - LOW, 2 - MEDIUM, 3 - HIGH
-      applicationDiscovery:
+      optimizer:
         type: object
-        description: Settings for Application Discovery integration.
+        description: Settings for Optimizer integration.
         properties:
           enabled:
             type: boolean
-            description: Whether the Application Discovery integration is enabled or not.
+            description: Whether the Optimizer features are enabled or not.
             default: true
   ZtpVersionStatus:
     type: object
