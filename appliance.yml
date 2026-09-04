@@ -1398,6 +1398,13 @@ definitions:
           Does not need to be publicly resolvable. It is resolved through the
           client's VPN tunnel.
         example: crm.your-companies-domain.com
+      verifyUpstreamCertificate:
+        type: boolean
+        description: >-
+          Whether to verify the app domain's TLS certificate when proxying.
+          Set to false if the app server uses a self-signed or internally-signed
+          certificate. Defaults to true.
+        default: true
   Elasticsearch:
     allOf:
       - $ref: '#/definitions/AwsBase'
