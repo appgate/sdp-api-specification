@@ -2131,7 +2131,7 @@ definitions:
                     Use '6263435b-c9f6-4b7f-99f8-37e2e6b006a9' to collect logs from appliances without a site.
           telemetryAggregator:
             type: object
-            description: TelemetryAggregator settings. It aggregates telemetry from the appliances in the given sites and exports it to the configured destinations.
+            description: TelemetryAggregator settings. It aggregates telemetry from all the appliances and exports it to the configured destinations.
             properties:
               enabled:
                 type: boolean
@@ -2206,17 +2206,6 @@ definitions:
                         - proto
                         - json
                       default: proto
-              sites:
-                type: array
-                description: The sites to collect telemetry from.
-                items:
-                  type: string
-                  format: uuid
-                  x-uuid-ref: Site
-                  description: >
-                    UUID of a site.
-                    Use '6f6fa9d9-17b2-4157-9f68-e97662acccdf' to collect telemetry from all the appliances.
-                    Use '6263435b-c9f6-4b7f-99f8-37e2e6b006a9' to collect telemetry from appliances without a site.
           connectionBroker:
             type: object
             description: Connection Broker settings.
