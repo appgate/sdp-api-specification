@@ -344,8 +344,6 @@ definitions:
       - gre_up
       - gre_down
       - http_up
-      - ssh_up
-      - rdp_up
   AnyEntitlement:
     description: >-
       An Entitlement of any type. The shape of the object depends on the `type` field.
