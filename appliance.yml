@@ -1905,6 +1905,12 @@ definitions:
                       type: string
                       description: Key to use for secure NTP communication.
                       writeOnly: true
+                    version:
+                      type: integer
+                      minimum: 3
+                      maximum: 4
+                      description: >-
+                        NTP protocol version to use for this server. When unset, chrony's default is used.
           sshServer:
             type: object
             description: SSH server configuration.
