@@ -188,3 +188,7 @@ definitions:
             format: int64
             description: The duration of the session in seconds.
             example: 3600
+          recording:
+            type: boolean
+            description: Whether the session is being recorded.
+            example: true
