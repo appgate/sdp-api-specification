@@ -358,6 +358,12 @@ definitions:
                           items:
                             type: string
                             example: 0-255
+                        hostnames:
+                          type: array
+                          description: The hostnames the Firewall Rule applies to for name-based Entitlements.
+                          items:
+                            type: string
+                            example: server.company.com
                   policyNames:
                     type: array
                     description: Names of the Policies that has granted this Entitlement.
