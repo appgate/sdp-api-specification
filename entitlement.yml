@@ -41,6 +41,8 @@ entitlements:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '406':
@@ -70,6 +72,8 @@ entitlements-bulk-upsert:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '406':
@@ -133,6 +137,8 @@ entitlements-id:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':

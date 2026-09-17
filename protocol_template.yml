@@ -19,6 +19,8 @@ protocol-templates:
               $ref: '#/definitions/ProtocolTemplateList'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '406':
@@ -41,6 +43,8 @@ protocol-templates:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '406':
@@ -70,6 +74,8 @@ protocol-templates-id:
               $ref: '#/definitions/ProtocolTemplate'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':
@@ -96,6 +102,8 @@ protocol-templates-id:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':
@@ -120,6 +128,8 @@ protocol-templates-id:
         description: Protocol Template was deleted successfully.
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':

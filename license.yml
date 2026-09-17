@@ -189,6 +189,18 @@ definitions:
             type: number
             description: The amount of licensed service users in the system at present.
             example: 2
+          brokeredAccessSlots:
+            type: number
+            description: The amount of Brokered Access slots in use at present.
+            example: 24
+          sessionGovernanceSlots:
+            type: number
+            description: The amount of Session Governance slots in use at present.
+            example: 24
+          singleSiteUsers:
+            type: number
+            description: The amount of licensed Single Site client users in the system at present.
+            example: 24
           sites:
             type: number
             description: The amount of Sites in the system at present.
@@ -398,6 +410,36 @@ definitions:
       collectiveReplication:
         type: boolean
         description: Whether the Collective Replication feature is enabled.
+      operationalTechnology:
+        type: boolean
+        description: Whether the Operational Technology features are enabled.
+      maxBrokeredAccess:
+        type: number
+        description: The maximum amount of brokered access allowed by the license.
+        example: 100
+      brokeredAccessLeaseTimeHours:
+        type: number
+        description: >-
+          Number of hours Brokered Access will be reserved for users before they are reclaimable by others.
+        example: 720
+      maxSessionGovernance:
+        type: number
+        description: The maximum amount of session governance allowed by the license.
+        example: 100
+      sessionGovernanceLeaseTimeHours:
+        type: number
+        description: >-
+          Number of hours Session Governance will be reserved for users before they are reclaimable by others.
+        example: 720
+      maxUsersSingleSite:
+        type: number
+        description: The maximum Single Site client users allowed by the license.
+        example: 200
+      usersSingleSiteLeaseTimeHours:
+        type: number
+        description: >-
+          Number of hours Single Site User Licenses will be reserved for users before they are reclaimable by others.
+        example: 720
       verifiedDnsNames:
         type: object
         properties:
