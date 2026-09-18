@@ -763,6 +763,38 @@ definitions:
                       type: string
                       description: Private key for authentication.
                       writeOnly: true
+              clarotyResolvers:
+                type: array
+                description: Resolvers to resolve names by querying a Claroty CTD server.
+                items:
+                  type: object
+                  required:
+                    - name
+                    - hostname
+                    - username
+                  properties:
+                    name:
+                      type: string
+                      description: Identifier name. Has no functional effect.
+                    updateInterval:
+                      type: integer
+                      description: How often will the resolver poll the server. In seconds.
+                      default: 60
+                    hostname:
+                      type: string
+                      description: Hostname of the Claroty CTD server.
+                      example: ctd.example.com
+                    port:
+                      type: integer
+                      description: Port number of the Claroty CTD server.
+                      default: 443
+                    username:
+                      type: string
+                      description: Username with access to the Claroty CTD server.
+                    password:
+                      type: string
+                      description: Password for the username.
+                      writeOnly: true
               dnsForwarding:
                 type: object
                 description: DNS Forwarding feature. Always enabled and will be filled if there is no object is passed.
@@ -824,6 +856,7 @@ definitions:
       - gcp
       - illumio
       - colortokens
+      - claroty
       - esx
       - dns
   ResourceType:
@@ -880,6 +913,9 @@ definitions:
       - rds-db-instances-tag-values
       - assets-tags
       - assets-tag-values
+      - assets
+      - assets-fields
+      - assets-field-values
 
 components:
   schemas:
