@@ -560,6 +560,18 @@ definitions:
             maximum: 1440
             default: 30
             description: Idle-session timeout in minutes. The session is terminated after this many minutes without user activity.
+          hostOptimizationExempted:
+            type: boolean
+            default: false
+            description: >-
+              Whether this Entitlement's host is exempt from Entitlement Optimization analysis.
+              When true, traffic to the host is not considered when calculating the optimization score.
+          portOptimizationExempted:
+            type: boolean
+            default: false
+            description: >-
+              Whether this Entitlement's port is exempt from Entitlement Optimization analysis.
+              When true, traffic on the port is not considered when calculating the optimization score.
 
   BrokeredRdpEntitlement:
     allOf:

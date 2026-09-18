@@ -2141,7 +2141,7 @@ definitions:
             properties:
               enabled:
                 type: boolean
-                description: Whether TelemetryAggregator is enabled on this appliance or not.
+                description: Whether TelemetryAggregator is enabled on this appliance or not. Enabling it requires the Observability license.
                 default: false
               datadogExporters:
                 type: array
