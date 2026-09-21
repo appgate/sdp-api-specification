@@ -978,6 +978,9 @@ definitions:
       suggestedForRemoval:
         type: boolean
         description: Whether this value is suggested to be removed based on usage analysis.
+      notAnalyzed:
+        type: boolean
+        description: Whether this value could not be analyzed (unsupported host, or a port in an action with an unsupported host).
   EntitlementMigrationInfo:
     type: object
     description: Migration details of a specific Action of a specific Entitlement.
