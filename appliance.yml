@@ -1804,6 +1804,9 @@ definitions:
                             dns:
                               type: boolean
                               description: Whether to use DHCP for setting IPv6 DNS settings on the Appliance.
+                            routers:
+                              type: boolean
+                              description: Whether to use DHCP for setting IPv6 default gateway on the appliance.
                             ntp:
                               type: boolean
                               description: Whether to use DHCP for setting NTP on the appliance.
