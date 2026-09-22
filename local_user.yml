@@ -206,6 +206,11 @@ definitions:
           - firstName
           - lastName
         properties:
+          labels:
+            type: object
+            description: Labels of the user. Will be used as claim.
+            additionalProperties:
+              type: string
           firstName:
             type: string
             description: First name of the user. May be used as claim.

@@ -363,7 +363,8 @@ definitions:
         example: 200
       maxServiceUsers:
         type: number
-        description: The maximum Service users allowed by the license.
+        description: The maximum Service users allowed by the license. Deprecated, use Local Users instead.
+        deprecated: true
         example: 200
       usersLeaseTimeHours:
         type: number
@@ -379,6 +380,8 @@ definitions:
         type: number
         description: >-
           Number of hours User Licenses will be reserved for Service users before they are reclaimable by others.
+          Deprecated, use Local Users instead.
+        deprecated: true
         example: 720
       maxSites:
         type: number
