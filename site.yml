@@ -763,7 +763,7 @@ definitions:
                       type: string
                       description: Private key for authentication.
                       writeOnly: true
-              clarotyResolvers:
+              clarotyCtdResolvers:
                 type: array
                 description: Resolvers to resolve names by querying a Claroty CTD server.
                 items:
@@ -856,7 +856,7 @@ definitions:
       - gcp
       - illumio
       - colortokens
-      - claroty
+      - clarotyCtd
       - esx
       - dns
   ResourceType:
