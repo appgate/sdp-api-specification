@@ -478,19 +478,6 @@ definitions:
           Numeric percentage score representing how optimized this Entitlement is based on usage data.
           Licensed feature.
 
-  SessionRecording:
-    type: object
-    description: Session recording configuration.
-    properties:
-      enabled:
-        type: boolean
-        description: Whether sessions to this entitlement are recorded.
-        default: false
-      disclosureMessage:
-        type: string
-        description: Disclosure message shown to the user before the session starts. Only relevant when enabled is true.
-        default: This session has policy conditions set by the administrator that allow for session recording and live monitoring. Proceeding means you accept those policy conditions. If you do not wish to continue, please go back.
-
   BrokeredShortcut:
     type: object
     description: Shortcut configuration for the brokered session, displayed to the user in the client.
@@ -534,8 +521,17 @@ definitions:
             maximum: 65535
             description: Port number of the target host.
             example: 3389
-          sessionRecording:
-            $ref: '#/definitions/SessionRecording'
+          recordingEnabled:
+            type: boolean
+            description: Whether sessions to this entitlement are recorded.
+            default: false
+          monitoringEnabled:
+            type: boolean
+            description: Whether sessions to this entitlement can be monitored live.
+            default: false
+          disclosureMessage:
+            type: string
+            description: Optional message shown to the user before the session starts. When set, the client requires the user to accept it before connecting.
           credentials:
             type: string
             format: uuid
@@ -1052,8 +1048,6 @@ components:
       $ref: '#/definitions/BrokeredRdpEntitlement'
     BrokeredSshEntitlement:
       $ref: '#/definitions/BrokeredSshEntitlement'
-    SessionRecording:
-      $ref: '#/definitions/SessionRecording'
     BrokeredShortcut:
       $ref: '#/definitions/BrokeredShortcut'
     BaseEntitlementFields:

@@ -192,3 +192,7 @@ definitions:
             type: boolean
             description: Whether the session is being recorded.
             example: true
+          monitoring:
+            type: boolean
+            description: Whether the session can be observed live.
+            example: true
