@@ -264,8 +264,8 @@ app-shortcuts-groups:
         $ref: './common.yml#/responses/UnexpectedError'
 cloud-migrations:
   post:
-    summary: Migrate Entitlement host cloud resources in deprecated format to current format.
-    description: Migrates Entitlement Action's hosts referencing cloud resources in deprecated format to current format.
+    summary: Migrate Entitlement host resources in deprecated format to current format.
+    description: Migrates Entitlement Action's hosts in deprecated format to current format.
     tags:
       - Entitlements
     parameters:
@@ -1008,6 +1008,12 @@ definitions:
           The value after being migrated. This can be the same as originalHost if problems were encountered
           while migrating the value.
         example: "gcp://{\"public-ips\":true}"
+      additionalHosts:
+        type: array
+        description: A list of new hosts added as a result of the migration
+        items:
+          type: string
+          example: "dnsfwd://*.foo.com"
       migrationErrors:
         type: array
         description: A list of any error messages encountered while migrating this value.
