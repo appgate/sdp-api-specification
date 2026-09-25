@@ -136,6 +136,8 @@ sites-id:
         $ref: './common.yml#/responses/JsonError'
       '401':
         $ref: './common.yml#/responses/TokenError'
+      '402':
+        $ref: './common.yml#/responses/PaymentError'
       '403':
         $ref: './common.yml#/responses/PermissionError'
       '404':
@@ -765,7 +767,7 @@ definitions:
                       writeOnly: true
               clarotyCtdResolvers:
                 type: array
-                description: Resolvers to resolve names by querying a Claroty CTD server.
+                description: Resolvers to resolve names by querying a Claroty CTD server. Requires the Operational Technology licensed feature.
                 items:
                   type: object
                   required:
