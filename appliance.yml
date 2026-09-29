@@ -1499,7 +1499,9 @@ definitions:
           - 443
       proxyP12s:
         type: array
-        description: P12 files for proxying traffic to HTTPS endpoints.
+        description: >-
+          P12 files for proxying traffic to HTTPS endpoints. Required when Portal
+          is enabled and no subdomain mappings are configured.
         items:
           $ref: '#/definitions/portal12'
       profiles:
