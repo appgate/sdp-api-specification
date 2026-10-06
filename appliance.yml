@@ -2227,7 +2227,7 @@ definitions:
                 default: false
               sites:
                 type: array
-                description: The sites to broker connections for.
+                description: The sites to broker connections for. Must contain at least one entry when the Connection Broker is enabled.
                 items:
                   type: string
                   format: uuid
