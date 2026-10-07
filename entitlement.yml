@@ -627,7 +627,7 @@ definitions:
               - rdp
               - vmconnect
               - any
-            default: nla
+            default: any
             description: >-
               RDP security protocol to negotiate with the target host.
               `nla` (Network Level Authentication) is preferred; `any` lets the server pick.
