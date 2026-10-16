@@ -532,14 +532,12 @@ definitions:
           disclosureMessage:
             type: string
             description: Optional message shown to the user before the session starts. When set, the client requires the user to accept it before connecting.
-          credentials:
+          credentialsName:
             type: string
-            format: uuid
-            x-uuid-ref: Secret
             description: >-
-              ID of the Credentials secret used for injection at session establishment.
+              Name of the Credentials secret used for injection at session establishment.
               The secret must be of the Credentials or SSH Key type.
-            example: 4c07bc67-57ea-42dd-b702-c2d6c45419fc
+            example: RDP_SERVICE_ACCOUNT
           appShortcut:
             $ref: '#/definitions/BrokeredShortcut'
           clipboardSharing:
