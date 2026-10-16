@@ -726,8 +726,12 @@ definitions:
           skipX509ExternalChecks:
             type: boolean
             description: >-
-              By default, Controller contacts the endpoints on the certificate extensions in order to verify revocation status and pull the intermediate CA certificates.
-              Set this flag in order to skip them.
+              By default, Controller contacts the endpoints listed in the client certificate's extensions: CRL Distribution Points and OCSP responders
+              in Authority Information Access to verify revocation status, and CA Issuers in Authority Information Access to download intermediate CA certificates.
+              Revocation status is checked only when the client certificate lists at least one CRL Distribution Point or OCSP responder;
+              certificates without either are accepted without a revocation check.
+              If such an endpoint is listed but the revocation status cannot be determined, authentication fails.
+              Set this flag to skip all of these external checks.
           certificatePriorities:
             type: array
             description: Client will order the available certificates according to the given priority list.
