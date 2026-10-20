@@ -2373,7 +2373,7 @@ definitions:
       useHTTPS:
         type: boolean
         description: Whether to use HTTP or HTTPS for the exporter.
-        default: false
+        default: true
       httpsP12:
         $ref: '#/definitions/P12'
       basicAuth:
