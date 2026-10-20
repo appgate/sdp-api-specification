@@ -1900,6 +1900,7 @@ definitions:
                         - SHA
                         - SHA1
                         - SHA256
+                        - SHA384
                         - SHA512
                         - RMD160
                     keyNo:
