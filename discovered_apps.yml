@@ -266,25 +266,6 @@ discovered-app-id-reset:
         $ref: './common.yml#/responses/ValidationError'
       '500':
         $ref: './common.yml#/responses/UnexpectedError'
-discovered-app-start-analysis:
-  post:
-    summary: Trigger Application Discovery analysis
-    description: Initiates an on-demand analysis of the current Application Discovery status.
-    tags:
-      - Discovered Apps
-    responses:
-      '200':
-        description: Analysis started
-      '401':
-        $ref: './common.yml#/responses/TokenError'
-      '403':
-        $ref: './common.yml#/responses/PermissionError'
-      '404':
-        $ref: './common.yml#/responses/NotFoundError'
-      '406':
-        $ref: './common.yml#/responses/NotAcceptableError'
-      '500':
-        $ref: './common.yml#/responses/UnexpectedError'
 discovered-app-stats:
   get:
     summary: Get Application Discovery stats

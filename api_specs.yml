@@ -541,8 +541,6 @@ paths:
     $ref: './discovered_apps.yml#/discovered-app-id-common-groups-count'
   /discovered-apps/{id}/reset:
     $ref: './discovered_apps.yml#/discovered-app-id-reset'
-  /discovered-apps/start-analysis:
-    $ref: './discovered_apps.yml#/discovered-app-start-analysis'
   /discovered-apps/stats:
     $ref: './discovered_apps.yml#/discovered-app-stats'
   /discovered-apps/configuration:
