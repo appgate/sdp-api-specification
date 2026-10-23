@@ -668,11 +668,11 @@ definitions:
               - OFF
               - TOFU
               - ENFORCED
-            default: ENFORCED
+            default: TOFU
             description: >-
               Host key verification policy applied when establishing the SSH session.
               `OFF` disables verification, `TOFU` (trust-on-first-use) records the host key on first connection and enforces it thereafter,
-              `ENFORCED` requires a pre-known host key.
+              `ENFORCED` requires a pre-known host key. The Gateway does not verify host keys yet; the policy takes effect in a later release.
 
   Entitlement:
     allOf:
